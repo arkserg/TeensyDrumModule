@@ -1,0 +1,56 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:models="clr-namespace:Arkserg.TeensyDrumModule.DrumSettings.Models">
+    
+    <DataTemplate x:Key="YamahaPcyTemplate" DataType="models:YamahaPcyCymbalViewModel">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Name:"/>
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=Name, Mode=TwoWay }"/>
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Piezo Channel:"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Channel, Mode=TwoWay}"/>
+
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Zone Sensor Channel:"/>
+            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=ZoneSensorChannel, Mode=TwoWay}"/>
+
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Bow Note:"/>
+            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Path=PadNote, Mode=TwoWay}"/>
+
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="Bell Note:"/>
+            <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Path=BellNote, Mode=TwoWay}"/>
+
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="Edge Note:"/>
+            <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Path=EdgeNote, Mode=TwoWay}"/>
+
+            <TextBlock Grid.Row="6" Grid.Column="0" Text="Min Threshold:"/>
+            <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding Path=ThresholdMin, Mode=TwoWay}"/>
+
+            <TextBlock Grid.Row="7" Grid.Column="0" Text="Max Threshold:"/>
+            <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding Path=ThresholdMax, Mode=TwoWay}"/>
+
+            <TextBlock Grid.Row="8" Grid.Column="0" Text="Sensor Scan Time:"/>
+            <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding Path=SensorScantime, Mode=TwoWay}"/>
+
+            <TextBlock Grid.Row="9" Grid.Column="0" Text="Sensor Mask Time:"/>
+            <TextBox Grid.Row="9" Grid.Column="1" Text="{Binding Path=SensorMasktime, Mode=TwoWay}"/>
+
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>

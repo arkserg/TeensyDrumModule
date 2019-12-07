@@ -1,0 +1,123 @@
+﻿<Window x:Class="Arkserg.TeensyDrumModule.DrumSettings.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Arkserg.TeensyDrumModule.DrumSettings"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:models="clr-namespace:Arkserg.TeensyDrumModule.DrumSettings.Models"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="17"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Drums.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <x:Array Type="models:SinglePiezoPadViewModel" x:Key="modelsList">
+                <models:SinglePiezoPadViewModel Channel="1" Name="Snare" PadNote="32" ThresholdMin="10" ThresholdMax="1023" SensorScantime="3" SensorMasktime="70"/>
+                <models:SinglePiezoPadViewModel Channel="2" Name="High Tom Left" PadNote="32" ThresholdMin="10" ThresholdMax="1023" SensorScantime="3" SensorMasktime="70"/>
+                <models:SinglePiezoPadViewModel Channel="3" Name="High Tom Right" PadNote="32" ThresholdMin="10" ThresholdMax="1023" SensorScantime="3" SensorMasktime="70"/>
+                <models:SinglePiezoPadViewModel Channel="4" Name="Floor Tom" PadNote="32" ThresholdMin="10" ThresholdMax="1023" SensorScantime="3" SensorMasktime="70"/>
+                <models:SinglePiezoPadViewModel Channel="5" Name="Kick" PadNote="32" ThresholdMin="10" ThresholdMax="1023" SensorScantime="3" SensorMasktime="70"/>
+                <models:SinglePiezoPadViewModel Channel="6" Name="Hi-Hat" PadNote="32" ThresholdMin="10" ThresholdMax="1023" SensorScantime="3" SensorMasktime="70"/>
+                <models:SinglePiezoPadViewModel Channel="7" Name="Crash" PadNote="32" ThresholdMin="10" ThresholdMax="1023" SensorScantime="3" SensorMasktime="70"/>
+                <models:SinglePiezoPadViewModel Channel="8" Name="Ride" PadNote="32" ThresholdMin="10" ThresholdMax="1023" SensorScantime="3" SensorMasktime="70"/>
+            </x:Array>
+            <local:DrumsTemplateSelector x:Key="DrumsTemplateSelector"/>
+            <models:SinglePiezoPadViewModel x:Key="example" Channel="1" Name="Snare" PadNote="127" ThresholdMin="500" ThresholdMax="1023" SensorScantime="88" SensorMasktime="188"/>            
+            <DataTemplate x:Key="SinglePiezoPadTemplate" DataType="models:SinglePiezoPadViewModel">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.3*"/>
+                        <ColumnDefinition Width="0.7*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" Content="Name:"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=Name, Mode=TwoWay }"/>
+
+                    <Label Grid.Row="1" Grid.Column="0" Content="Channel:"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Channel, Mode=TwoWay}" />
+
+                    <Label Grid.Row="2" Grid.Column="0" Content="Note:" VerticalAlignment="Center"/>
+                    <DockPanel Grid.Row="2" Grid.Column="1" LastChildFill="False">
+                        <Button Margin="10,10,0,10" Padding="0" Width="36" Style="{DynamicResource MaterialDesignRaisedButton}">
+                            <Viewbox Width="28" Height="32" Margin="0,0,2,0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Canvas Width="24" Height="24">
+                                    <Path Data="M19,13H5V11H19V13Z" Fill="White" />
+                                </Canvas>
+                            </Viewbox>
+                        </Button>                        
+                        <Label Content="{Binding Path=PadNote, Mode=TwoWay}"
+                             Margin="0, 10, 0, 10"
+                             Width="50" 
+                             VerticalAlignment="Center"
+                             HorizontalContentAlignment="Center"/>
+                        <Button Margin="0, 10, 10, 10" Padding="0" Width="36">
+                            <Viewbox Width="32" Height="32" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Canvas Width="24" Height="24">
+                                    <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" Fill="White" />
+                                </Canvas>
+                            </Viewbox>
+                        </Button>
+                    </DockPanel>                    
+
+                    <Label Grid.Row="3" Grid.Column="0" Content="Min Threshold:"/>
+                    <local:NumericSpinner Grid.Row="3" Grid.Column="1" Padding="10" 
+                                          Value="{Binding Path=ThresholdMin, Mode=TwoWay}"
+                                          MinValue="0"
+                                          MaxValue="1023"
+                                          Step="1"/>                    
+
+                    <Label Grid.Row="4" Grid.Column="0" Content="Max Threshold:"/>
+                    <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Path=ThresholdMax, Mode=TwoWay}"/>
+
+                    <Label Grid.Row="5" Grid.Column="0" Content="Sensor Scan Time:"/>
+                    <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Path=SensorScantime, Mode=TwoWay}"/>
+
+                    <Label Grid.Row="6" Grid.Column="0" Content="Sensor Mask Time:"/>
+                    <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding Path=SensorMasktime, Mode=TwoWay}"/>
+
+                </Grid>                
+            </DataTemplate>
+        </ResourceDictionary>
+    </Window.Resources>
+    <DockPanel LastChildFill="True">
+        <Grid DockPanel.Dock="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.25*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <DockPanel x:Name="DrumsPanel" Grid.Column="0" LastChildFill="True" Background="{DynamicResource PrimaryHueMidBrush}">
+                <!--<ListBox DockPanel.Dock="Bottom" x:Name="DrumsList"/>-->
+                <ListBox DockPanel.Dock="Bottom" ItemsSource="{StaticResource modelsList}"/>
+            </DockPanel>
+
+            <DockPanel x:Name="DrumSettingsPanel" Grid.Column="1" LastChildFill="False">
+                <!--<ContentControl x:Name="DrumSettings" 
+                                DockPanel.Dock="Top"
+                                Content="{Binding ElementName=DrumsList, Path=SelectedItem}"
+                                ContentTemplateSelector="{StaticResource DrumsTemplateSelector}"/>-->
+                <ContentControl DockPanel.Dock="Top"
+                                Content="{StaticResource example}"
+                                ContentTemplate="{StaticResource SinglePiezoPadTemplate}"/>
+            </DockPanel>
+        </Grid>
+    </DockPanel>
+</Window>
