@@ -1,6 +1,4 @@
-﻿// SinglePiezoPad.h
-
-#ifndef _SINGLEPIEZOPAD_h
+﻿#ifndef _SINGLEPIEZOPAD_h
 #define _SINGLEPIEZOPAD_h
 
 #if defined(ARDUINO) && ARDUINO >= 100

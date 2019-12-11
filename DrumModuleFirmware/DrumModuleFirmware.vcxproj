@@ -109,6 +109,7 @@
     <ClInclude Include="EmptyDrumPad.h" />
     <ClInclude Include="hardware.h" />
     <ClInclude Include="HiHatController.h" />
+    <ClInclude Include="PiezoReader.h" />
     <ClInclude Include="SinglePiezoPad.h" />
     <ClInclude Include="DualZoneCymbal.h" />
     <ClInclude Include="ThreeZoneCymbal.h" />
@@ -120,6 +121,7 @@
     <ClCompile Include="DrumPad.cpp" />
     <ClCompile Include="EmptyDrumPad.cpp" />
     <ClCompile Include="HiHatController.cpp" />
+    <ClCompile Include="PiezoReader.cpp" />
     <ClCompile Include="SinglePiezoPad.cpp" />
     <ClCompile Include="DualZoneCymbal.cpp" />
     <ClCompile Include="ThreeZoneCymbal.cpp" />
