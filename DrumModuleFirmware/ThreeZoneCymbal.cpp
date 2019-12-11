@@ -1,39 +1,34 @@
-#include "ThreeZoneCymbal.h"
+#include "threezonecymbal.h"
 #include "hardware.h"
+#include "helper.h"
 
-ThreeZoneCymbal::ThreeZoneCymbal(byte channel, String name, ChannelSelector* channelSelector,
-	byte bowNote, byte edgeNote, byte bellNote, 
-	int thresholdMin, int thresholdMax, int sensorScantime, int sensorMasktime) :
-	DualZoneCymbal(TYPE_ThreeZoneCymbal, channel, name, channelSelector, 
-		bowNote, edgeNote, thresholdMin, thresholdMax, sensorScantime, sensorMasktime),
-	bellNote(bellNote)
+ThreeZoneCymbal::ThreeZoneCymbal(byte channel, String name, bool enabled,
+	byte bowNote, byte edgeNote, byte bellNote, int thresholdMin, int thresholdMax, 
+	int sensorScantime, int sensorMasktime, byte amplification) :	
+	DualZoneCymbal(TYPE_ThreeZoneCymbal, channel,name, enabled, bowNote, edgeNote, 
+		thresholdMin, thresholdMax, sensorScantime, sensorMasktime, amplification), 
+	bellNote_(bellNote)
 {
 }
 
-ThreeZoneCymbal::ThreeZoneCymbal(JsonObject* json, ChannelSelector* channelSelector)
-	: DualZoneCymbal(channelSelector)
+ThreeZoneCymbal::ThreeZoneCymbal(JsonObject& json)
+	: DualZoneCymbal(json)
 {
-	setParameters(json);
+	bellNote_ = json["BellNote"];
 }
 
 void ThreeZoneCymbal::sendNote(byte pitch, byte velocity)
 {
-	if (zoneSensorValue > 1000)
-		DrumPad::sendNote(padNote, velocity);
-	else if (zoneSensorValue > 100)
-		DrumPad::sendNote(edgeNote, velocity);
+	if (lastZoneSensorValue_ > 1000)
+		Helper::sendNoteOnOff(padNote_, velocity);
+	else if (lastZoneSensorValue_ > 100)
+		Helper::sendNoteOnOff(edgeNote_, velocity);
 	else
-		DrumPad::sendNote(bellNote, velocity);
+		Helper::sendNoteOnOff(bellNote_, velocity);
 }
 
-void ThreeZoneCymbal::serializeParameters(JsonObject* result)
+void ThreeZoneCymbal::serializeParameters(JsonObject& result)
 {
 	DualZoneCymbal::serializeParameters(result);
-	(*result)["BellNote"] = bellNote;
-}
-
-void ThreeZoneCymbal::setParameters(JsonObject* json)
-{
-	DualZoneCymbal::setParameters(json);
-	bellNote = (*json)["BellNote"];
+	result["BellNote"] = bellNote_;
 }

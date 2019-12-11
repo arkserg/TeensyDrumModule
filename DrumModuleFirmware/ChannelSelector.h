@@ -1,5 +1,3 @@
-// ChannelSelector.h
-
 #ifndef _CHANNELSELECTOR_h
 #define _CHANNELSELECTOR_h
 
@@ -9,20 +7,13 @@
 	#include "WProgram.h"
 #endif
 
-class ChannelSelector {
-	byte s0;
-	byte s1;
-	byte s2;
-	byte s3;
-	byte drain;
+class ChannelSelector {	
 public:
-	ChannelSelector(byte s0, byte s1, byte s2, byte s3, byte drain);
-	void Setup();
-	void enableChannel(byte num);
-	void enableDrain();
-	void disableDrain();
-	void drainCycle();
+	static void setup();
+	static void enableChannel(byte num);
+	static void enableDrain();
+	static void disableDrain();
+	static void drainCycle();
 };
 
 #endif
-

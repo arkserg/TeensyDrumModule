@@ -15,14 +15,18 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
         [DataMember]
         public string Name { get; set; }
 
+        [DataMember]
+        public bool Enabled { get; set; }
+
         protected DrumPad()
         {
         }
 
-        protected DrumPad(DrumType type, byte channel)
+        protected DrumPad(DrumType type, byte channel, bool enabled = true)
         {
             Type = type;
             Channel = channel;
+            Enabled = enabled;
         }
     }
 }

@@ -24,6 +24,9 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
         [DataMember]
         public byte SensorMasktime { get; set; }
 
+        [DataMember]
+        public byte Amplification { get; set; }
+
         protected SinglePiezoPad()
         {
         }

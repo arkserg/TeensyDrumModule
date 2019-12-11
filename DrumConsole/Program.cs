@@ -167,6 +167,15 @@ namespace Arkserg.TeensyDrumModule.DrumConsole
                         case 5:
                             ReloadSettingsAsync(megaDrum).Wait();
                             break;
+                        case 6:
+                            EnableDrumAsync(megaDrum).Wait();
+                            break;
+                        case 7:
+                            DisableDrumAsync(megaDrum).Wait();
+                            break;
+                        case 8:
+                            DeleteAllDrumsAsync(megaDrum).Wait();
+                            break;
                         case 9:
                             loopFlag = false;
                             continue;
@@ -189,6 +198,9 @@ namespace Arkserg.TeensyDrumModule.DrumConsole
             Console.WriteLine("3. Set drum parameters");
             Console.WriteLine("4. Save settings to EEPROM");
             Console.WriteLine("5. Reload settings from EEPROM");
+            Console.WriteLine("6. Enable drum");
+            Console.WriteLine("7. Disable drum");
+            Console.WriteLine("8. Delete all drums");
 
             Console.WriteLine("9. Exit");
         }
@@ -223,16 +235,16 @@ namespace Arkserg.TeensyDrumModule.DrumConsole
         {
             var command = new SetDrumParametersCommand(Interlocked.Increment(ref CommandId))
             {
-                Drum = new ThreeZoneCymbal(0)
+                Drum = new SinglePiezoPad(0)
                 {
-                    Name = "Completely new drum",
-                    PadNote = 12,
-                    BellNote = 14,
-                    EdgeNote = 15,
-                    SensorScantime = 1,
+                    Name = "Snare",
+                    PadNote = 38,
+                    SensorScantime = 3,
                     SensorMasktime = 70,
-                    ThresholdMin = 17,
-                    ThresholdMax = 717,
+                    ThresholdMin = 30,
+                    ThresholdMax = 1023,
+                    Enabled = true,
+                    Amplification = 10
                 }
             };
             var response = await megaDrum.InvokeCommandAsync(command);
@@ -261,6 +273,38 @@ namespace Arkserg.TeensyDrumModule.DrumConsole
             var message = result != null ? "Success" : "Error";
 
             Console.WriteLine(message);
+        }
+
+        private static async Task EnableDrumAsync(MegaDrumHelper megaDrum)
+        {
+            var command = new EnableDrumCommand(Interlocked.Increment(ref CommandId)) { ChannelId = 0 };
+            var result = await megaDrum.InvokeCommandAsync(command);
+
+            var message = result != null ? "Success" : "Error";
+
+            Console.WriteLine(message);
+        }
+
+        private static async Task DisableDrumAsync(MegaDrumHelper megaDrum)
+        {
+            var command = new DisableDrumCommand(Interlocked.Increment(ref CommandId)) { ChannelId = 0 };
+            var result = await megaDrum.InvokeCommandAsync(command);
+
+            var message = result != null ? "Success" : "Error";
+
+            Console.WriteLine(message);
+        }
+
+        private static async Task DeleteAllDrumsAsync(MegaDrumHelper megaDrum)
+        {
+            for(int i = 0; i< 12; i++)
+            {
+                var drum = new EmptyDrumPad((byte)i);
+                var command = new SetDrumParametersCommand(Interlocked.Increment(ref CommandId)) { Drum = drum };
+                var result = await megaDrum.InvokeCommandAsync(command);
+                var message = result != null ? $"{i} Success" : $"{i} Error";
+                Console.WriteLine(message);
+            }
         }
     }    
 }

@@ -1,109 +1,69 @@
-﻿#include "SinglePiezoPad.h"
+﻿#include "singlepiezopad.h"
 #include "hardware.h"
+#include "helper.h"
 
-SinglePiezoPad::SinglePiezoPad(byte channel, String name, ChannelSelector *channelSelector, 
-	byte padNote, int thresholdMin, int thresholdMax, int sensorScantime, int sensorMasktime) :
-	DrumPad(TYPE_SinglePiezoPad, channel, name, channelSelector), padNote(padNote), thresholdMin(thresholdMin),
-	thresholdMax(thresholdMax), sensorScantime(sensorScantime), sensorMasktime(sensorMasktime)
+SinglePiezoPad::SinglePiezoPad(byte channel, String name, bool enabled,
+	byte padNote, int thresholdMin, int thresholdMax, int sensorScantime, 
+	int sensorMasktime,	byte amplification) :
+	DrumPad(TYPE_SinglePiezoPad, channel, name, enabled), padNote_(padNote),
+	piezoReader_(new PiezoReader(channel, 0, thresholdMin, thresholdMax, sensorScantime, sensorMasktime, amplification))
 {
-	lightHitMasktime = sensorMasktime * 4;
 }
 
-SinglePiezoPad::SinglePiezoPad(byte type, byte channel, String name, ChannelSelector *channelSelector,
-	byte padNote, int thresholdMin, int thresholdMax, int sensorScantime, int sensorMasktime) :
-	DrumPad(type, channel, name, channelSelector), padNote(padNote), thresholdMin(thresholdMin),
-	thresholdMax(thresholdMax), sensorScantime(sensorScantime), sensorMasktime(sensorMasktime)
+SinglePiezoPad::SinglePiezoPad(byte type, byte channel, String name, bool enabled,
+	byte padNote, int thresholdMin, int thresholdMax, int sensorScantime, 
+	int sensorMasktime,	byte amplification) :
+	DrumPad(type, channel, name, enabled), padNote_(padNote),
+	piezoReader_(new PiezoReader(channel, 0, thresholdMin, thresholdMax, sensorScantime, sensorMasktime, amplification))
 {
-	lightHitMasktime = sensorMasktime * 4;
 }
 
-SinglePiezoPad::SinglePiezoPad(JsonObject* json, ChannelSelector* channelSelector)
-	: DrumPad(channelSelector)
+SinglePiezoPad::SinglePiezoPad(JsonObject& json)
+	: DrumPad(json)
 {
-	setParameters(json);
+	padNote_ = json["PadNote"];
+	int thresholdMin = json["ThresholdMin"];
+	int thresholdMax = json["ThresholdMax"];
+	int sensorScantime = json["SensorScantime"];
+	int sensorMasktime = json["SensorMasktime"];
+	byte amplification = json["Amplification"];
+	piezoReader_ = new PiezoReader(channel_, 0, thresholdMin, thresholdMax, sensorScantime, sensorMasktime, amplification);
 }
 
-SinglePiezoPad::SinglePiezoPad(ChannelSelector* channelSelector)
-	: DrumPad(channelSelector)
+SinglePiezoPad::~SinglePiezoPad()
 {
+	delete piezoReader_;
+}
+
+void SinglePiezoPad::loopImplementation()
+{
+	int sensorValue = analogRead(0); //todo: sarkashin
+	int velocity = piezoReader_->loop(sensorValue);
+
+	if (velocity == PiezoReader::AfterShock)
+	{
+		ChannelSelector::drainCycle();
+	}
+	else if (velocity != 0)
+	{
+		Helper::sendNoteOnOff(padNote_, velocity);
+		ChannelSelector::drainCycle();
+	}
 }
 
 void SinglePiezoPad::setup()
 {
+	DrumPad::setup();
+	piezoReader_->setup();
 }
 
-void SinglePiezoPad::loop()
-{
-	unsigned long currentMillis = millis();
-
-	if (nextHitAllowed)
-	{
-		//todo: вернуть или убрать
-		channelSelector->enableChannel(channel);
-		int sensorValue = analogRead(0); //todo: sarkashin
-
-		if (!hitInProgress && sensorValue > thresholdMin)
-		{
-			hitInProgress = true;
-			hitStartMillis = currentMillis;
-		}
-
-		if (hitInProgress)
-		{
-			measurments++;
-
-			if (sensorValue > currentValue)
-			{
-				lastIncreaseMillis = currentMillis;
-				currentValue = sensorValue;			
-			}
-
-			if ((currentMillis - lastIncreaseMillis) > sensorScantime)
-			{
-				int velocity = normalizeSensor(currentValue, thresholdMin, thresholdMax);
-				if (velocity > (previousHitValue >> 2) || (currentMillis - previousHitMillis) > lightHitMasktime)
-				{
-					sendNote(padNote, velocity);
-					previousHitValue = velocity;
-					previousHitMillis = currentMillis;
-					nextHitAllowed = false;
-				}
-				resetCurrentValue();
-				hitInProgress = false;
-				channelSelector->drainCycle();
-				//sendNote(1, measurments/(currentMillis - hitStartMillis));
-				Serial.println(measurments / (currentMillis - hitStartMillis));
-				measurments = 0;				
-			}
-		}
-	}
-	else if ((currentMillis - previousHitMillis) > sensorMasktime)
-	{
-		nextHitAllowed = true;
-	}
-}
-
-void SinglePiezoPad::resetCurrentValue()
-{
-	currentValue = 0;
-}
-
-void SinglePiezoPad::serializeParameters(JsonObject* result)
+void SinglePiezoPad::serializeParameters(JsonObject& result)
 {
 	DrumPad::serializeParameters(result);
-	(*result)["PadNote"] = padNote;
-	(*result)["ThresholdMin"] = thresholdMin;
-	(*result)["ThresholdMax"] = thresholdMax;
-	(*result)["SensorScantime"] = sensorScantime;
-	(*result)["SensorMasktime"] = sensorMasktime;
-}
-
-void SinglePiezoPad::setParameters(JsonObject* json)
-{
-	DrumPad::setParameters(json);
-	padNote = (*json)["PadNote"];
-	thresholdMin = (*json)["ThresholdMin"];
-	thresholdMax = (*json)["ThresholdMax"];
-	sensorScantime = (*json)["SensorScantime"];
-	sensorMasktime = (*json)["SensorMasktime"];
+	result["PadNote"] = padNote_;
+	result["ThresholdMin"] = piezoReader_->thresholdMin_;
+	result["ThresholdMax"] = piezoReader_->thresholdMax_;
+	result["SensorScantime"] = piezoReader_->sensorScantime_;
+	result["SensorMasktime"] = piezoReader_->sensorMasktime_;
+	result["Amplification"] = piezoReader_->amplification_;
 }

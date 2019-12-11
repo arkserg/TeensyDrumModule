@@ -1,21 +1,16 @@
-﻿#include "EmptyDrumPad.h"
+﻿#include "emptydrumpad.h"
 #include "hardware.h"
 
 EmptyDrumPad::EmptyDrumPad(byte channel) :
-	DrumPad(TYPE_EmptyDrumPad, channel, 0, 0)
+	DrumPad(TYPE_EmptyDrumPad, channel, 0, false)
 {
 }
 
-EmptyDrumPad::EmptyDrumPad(JsonObject* json)
-	: DrumPad(0)
-{
-	DrumPad::setParameters(json);
-}
-
-void EmptyDrumPad::setup()
+EmptyDrumPad::EmptyDrumPad(JsonObject& json)
+	: DrumPad(json)
 {
 }
 
-void EmptyDrumPad::loop()
+void EmptyDrumPad::loopImplementation()
 {	
 }

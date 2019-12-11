@@ -7,17 +7,18 @@
 #include "WProgram.h"
 #endif
 
-#include "DrumPad.h"
-#include <ArduinoJson.hpp>
-#include <ArduinoJson.h>
+#include "drumpad.h"
+#include <arduinojson.hpp>
+#include <arduinojson.h>
 
 class EmptyDrumPad : public DrumPad {
 
 public:
 	EmptyDrumPad(byte channel);
-	EmptyDrumPad(JsonObject* json);
-	void setup();
-	void loop();
+	EmptyDrumPad(JsonObject& json);
+
+protected:
+	void loopImplementation();
 };
 
 #endif

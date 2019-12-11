@@ -9,38 +9,32 @@
 	#include "WProgram.h"
 #endif
 
-#include "DrumPad.h"
-#include "ChannelSelector.h"
-#include "SinglePiezoPad.h"
-#include <ArduinoJson.hpp>
-#include <ArduinoJson.h>
+#include "drumpad.h"
+#include "channelselector.h"
+#include "singlepiezopad.h"
+#include <arduinojson.hpp>
+#include <arduinojson.h>
 
 class DualZoneCymbal : public SinglePiezoPad {
-	void ZoneSensorLoop();
-
 public:
-	DualZoneCymbal(byte channel, String name, ChannelSelector *channelSelector, 
+	DualZoneCymbal(byte channel, String name, bool enabled,
 		byte bowNote, byte edgeNote,  int thresholdMin, int thresholdMax,
-		int sensorScantime, int sensorMasktime);
-	DualZoneCymbal(JsonObject* json, ChannelSelector* channelSelector);
+		int sensorScantime, int sensorMasktime, byte amplification);
+	DualZoneCymbal(JsonObject& json);
 
-	void setup();
-	void loop();
-	void serializeParameters(JsonObject* result);
-	void setParameters(JsonObject* json);
+	void serializeParameters(JsonObject& result);
 
-	byte edgeNote;
+	byte edgeNote_;
 
 protected:
-	DualZoneCymbal(byte type, byte channel, String name, ChannelSelector* channelSelector, 
+	DualZoneCymbal(byte type, byte channel, String name, bool enabled,
 		byte bowNote, byte edgeNote, int thresholdMin, int thresholdMax,
-		int sensorScantime, int sensorMasktime);
-	DualZoneCymbal(ChannelSelector* channelSelector);
+		int sensorScantime, int sensorMasktime, byte amplification);
 
-	void resetCurrentValue();
 	void sendNote(byte pitch, byte velocity);
+	void loopImplementation();
 
-	int zoneSensorValue;
+	int lastZoneSensorValue_;
 };
 
 #endif

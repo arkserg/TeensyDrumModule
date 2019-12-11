@@ -12,7 +12,7 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
         {
         }       
 
-        public EmptyDrumPad(byte channel) : base(DrumType.EmptyDrumPad, channel)
+        public EmptyDrumPad(byte channel) : base(DrumType.EmptyDrumPad, channel, false)
         {
         }
     }

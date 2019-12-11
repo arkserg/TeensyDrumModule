@@ -9,36 +9,27 @@
 	#include "WProgram.h"
 #endif
 
-#include "ChannelSelector.h"
-#include "MIDIUSB.h"
-#include <ArduinoJson.hpp>
-#include <ArduinoJson.h>
+#include "channelselector.h"
+#include "midiusb.h"
+#include <arduinojson.hpp>
+#include <arduinojson.h>
 
 class DrumPad {
 public:
-	byte type;
-	byte channel;
-	String name;
+	byte type_;
+	byte channel_;
+	String name_;
+	bool enabled_;
 
-
-	virtual void setup() = 0;
-	virtual void loop() = 0;
-	virtual void serializeParameters(JsonObject* result);
-	virtual void setParameters(JsonObject* json);
+	virtual void setup();
+	virtual void loop();
+	virtual void serializeParameters(JsonObject& result);
 
 protected:
-	DrumPad(byte type, byte channel, String name, ChannelSelector* channelSelector);
-	DrumPad(ChannelSelector* channelSelector);
-	virtual void sendNote(byte pitch, byte velocity);
-	void sendCC(byte control, byte value);
-	int normalizeSensor(int sensorValue, int thresholdMin, int thresholdMax);
+	DrumPad(byte type, byte channel, String name, bool enabled);
+	DrumPad(JsonObject& json);
 
-	ChannelSelector* channelSelector;
-
-private:
-	void noteOn(byte channel, byte pitch, byte velocity);
-	void noteOff(byte channel, byte pitch, byte velocity);
-	void controlChange(byte channel, byte control, byte value);
+	virtual void loopImplementation() = 0;
 };
 
 #endif

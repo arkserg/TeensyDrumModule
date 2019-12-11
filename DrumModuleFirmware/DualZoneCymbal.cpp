@@ -1,73 +1,62 @@
-﻿#include "DualZoneCymbal.h"
+﻿#include "dualzonecymbal.h"
 #include "hardware.h"
+#include "helper.h"
 
-DualZoneCymbal::DualZoneCymbal(byte channel, String name, ChannelSelector *channelSelector, 
-	byte bowNote, byte edgeNote, int thresholdMin, int thresholdMax, int sensorScantime, int sensorMasktime) :
-	SinglePiezoPad(TYPE_DualZoneCymbal, channel, name, channelSelector, bowNote, thresholdMin,
-		thresholdMax, sensorScantime, sensorMasktime), edgeNote(edgeNote)
+DualZoneCymbal::DualZoneCymbal(byte channel, String name, bool enabled,	byte bowNote, 
+	byte edgeNote, int thresholdMin, int thresholdMax, int sensorScantime, 
+	int sensorMasktime,	byte amplification) :
+	SinglePiezoPad(TYPE_DualZoneCymbal, channel, name, enabled, bowNote, thresholdMin,
+		thresholdMax, sensorScantime, sensorMasktime, amplification), edgeNote_(edgeNote)
 {
 }
 
-DualZoneCymbal::DualZoneCymbal(byte type, byte channel, String name, ChannelSelector *channelSelector, 
-	byte bowNote, byte edgeNote, int thresholdMin, int thresholdMax, int sensorScantime, int sensorMasktime) :
-	SinglePiezoPad(type, channel, name, channelSelector, bowNote, thresholdMin,
-		thresholdMax, sensorScantime, sensorMasktime), edgeNote(edgeNote)
+DualZoneCymbal::DualZoneCymbal(byte type, byte channel, String name, bool enabled,
+	byte bowNote, byte edgeNote, int thresholdMin, int thresholdMax, int sensorScantime, 
+	int sensorMasktime, byte amplification) :
+	SinglePiezoPad(type, channel, name, enabled, bowNote, thresholdMin,
+		thresholdMax, sensorScantime, sensorMasktime, amplification), edgeNote_(edgeNote)
 {
 }
 
-DualZoneCymbal::DualZoneCymbal(JsonObject* json, ChannelSelector* channelSelector)
-	: SinglePiezoPad(channelSelector)
+DualZoneCymbal::DualZoneCymbal(JsonObject& json)
+	: SinglePiezoPad(json)
 {
-	setParameters(json);
+	edgeNote_ = json["EdgeNote"];
 }
 
-DualZoneCymbal::DualZoneCymbal(ChannelSelector* channelSelector)
-	: SinglePiezoPad(channelSelector)
+void DualZoneCymbal::loopImplementation()
 {
-}
+	int sensorValue = analogRead(0); //todo:
+	int zoneSensorValue = analogRead(1); //todo:
+	int velocity = piezoReader_->loop(sensorValue);
 
-void DualZoneCymbal::setup()
-{
-}
-
-void DualZoneCymbal::loop()
-{
-	SinglePiezoPad::loop();
-	ZoneSensorLoop();
-}
-
-void DualZoneCymbal::resetCurrentValue()
-{
-	currentValue = 0;
-	zoneSensorValue = 1023;	
+	if (piezoReader_->hitInProgress_)
+	{
+		if (zoneSensorValue < lastZoneSensorValue_)
+			lastZoneSensorValue_ = zoneSensorValue;
+	}
+	if (velocity == PiezoReader::AfterShock)
+	{
+		ChannelSelector::drainCycle();
+	}
+	if (velocity != 0)
+	{
+		sendNote(padNote_, velocity);
+		lastZoneSensorValue_ = 1023;
+		ChannelSelector::drainCycle();
+	}
 }
 
 void DualZoneCymbal::sendNote(byte pitch, byte velocity)
 {
-	if (zoneSensorValue > 1000)
-		DrumPad::sendNote(padNote, velocity);
+	if (lastZoneSensorValue_ > 1000)
+		Helper::sendNoteOnOff(padNote_, velocity);
 	else
-		DrumPad::sendNote(edgeNote, velocity);
+		Helper::sendNoteOnOff(edgeNote_, velocity);
 }
 
-void DualZoneCymbal::ZoneSensorLoop()
-{	
-	if (hitInProgress)
-	{
-		int newValue = analogRead(1); //todo
-		if (newValue < zoneSensorValue)
-			zoneSensorValue = newValue;
-	}
-}
-
-void DualZoneCymbal::serializeParameters(JsonObject* result)
+void DualZoneCymbal::serializeParameters(JsonObject& result)
 {
 	SinglePiezoPad::serializeParameters(result);
-	(*result)["EdgeNote"] = edgeNote;
-}
-
-void DualZoneCymbal::setParameters(JsonObject* json)
-{
-	SinglePiezoPad::setParameters(json);
-	edgeNote = (*json)["EdgeNote"];
+	result["EdgeNote"] = edgeNote_;
 }

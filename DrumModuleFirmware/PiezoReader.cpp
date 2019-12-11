@@ -1,32 +1,39 @@
-#include "PiezoReader.h"
+#include "piezoreader.h"
 #include "hardware.h"
+#include "helper.h"
 
-PiezoReader::PiezoReader(int thresholdMin, int thresholdMax, int sensorScantime, int sensorMasktime) : 
-	thresholdMin(thresholdMin), thresholdMax(thresholdMax), 
-	sensorScantime(sensorScantime), sensorMasktime(sensorMasktime)
+PiezoReader::PiezoReader(byte channel, byte subChannel,	int thresholdMin, 
+	int thresholdMax, int sensorScantime, int sensorMasktime, byte amplification) :
+	thresholdMin_(thresholdMin), thresholdMax_(thresholdMax), sensorScantime_(sensorScantime),
+	sensorMasktime_(sensorMasktime), amplification_(amplification), potentiometer_(channel, subChannel)
 {
-	lightHitMasktime = sensorMasktime * 4;
+	lightHitMasktime_ = sensorMasktime * 4;
+}
+
+void PiezoReader::setup()
+{
+	potentiometer_.writeToPotentiometer(amplification_);
 }
 
 int PiezoReader::loop(int sensorValue)
 {
 	unsigned long currentMillis = millis();
 
-	if (nextHitAllowed)
+	if (nextHitAllowed_)
 	{
-		if (!hitInProgress && sensorValue > thresholdMin)
+		if (!hitInProgress_ && sensorValue > thresholdMin_)
 		{
-			hitInProgress = true;
+			hitInProgress_ = true;
 		}
 
-		if (hitInProgress)
+		if (hitInProgress_)
 		{
 			return ProcessHit(sensorValue, currentMillis);
 		}
 	}
-	else if ((currentMillis - previousHitMillis) > sensorMasktime)
+	else if ((currentMillis - previousHitMillis_) > sensorMasktime_)
 	{
-		nextHitAllowed = true;
+		nextHitAllowed_ = true;
 	}
 	return 0; //todo
 }
@@ -35,30 +42,28 @@ int PiezoReader::ProcessHit(int sensorValue, unsigned long currentMillis)
 {
 	int result = 0;
 
-	if (sensorValue > currentValue)
+	if (sensorValue > currentValue_)
 	{
-		lastIncreaseMillis = currentMillis;
-		currentValue = sensorValue;
+		lastIncreaseMillis_ = currentMillis;
+		currentValue_ = sensorValue;
 	}
 
-	if ((currentMillis - lastIncreaseMillis) > sensorScantime)
+	if ((currentMillis - lastIncreaseMillis_) > sensorScantime_)
 	{
-		int velocity = normalizeSensor(currentValue, thresholdMin, thresholdMax);
-		if (velocity > (previousHitValue >> 2) || (currentMillis - previousHitMillis) > lightHitMasktime)
+		int velocity = Helper::normalizeSensor(currentValue_, thresholdMin_, thresholdMax_);
+		if (velocity > (previousHitValue_ >> 2) || (currentMillis - previousHitMillis_) > lightHitMasktime_)
 		{
 			result = velocity;
-			previousHitValue = velocity;
-			previousHitMillis = currentMillis;
-			nextHitAllowed = false;
+			previousHitValue_ = velocity;
+			previousHitMillis_ = currentMillis;
+			nextHitAllowed_ = false;
 		}
 		else
 		{
-			result = -1; //todo: aftershock
+			result = AfterShock;
 		}
-		currentValue = 0;
-		hitInProgress = false;
-
-		//channelSelector->drainCycle(); todo: выше по стеку
+		currentValue_ = 0;
+		hitInProgress_ = false;
 	}
 	return result;
 }

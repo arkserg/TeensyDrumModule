@@ -15,70 +15,76 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="DrumModuleFirmware.ino" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="__vm\.DrumModuleFirmware.vsarduino.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ChannelSelector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DigitalPot.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DrumPad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="hardware.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HiHatController.h">
+    <ClInclude Include="channelselector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SinglePiezoPad.h">
+    <ClInclude Include="drumpad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DualZoneCymbal.h">
+    <ClInclude Include="dualzonecymbal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ThreeZoneCymbal.h">
+    <ClInclude Include="emptydrumpad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EmptyDrumPad.h">
+    <ClInclude Include="helper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PiezoReader.h">
+    <ClInclude Include="hihatcontroller.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="piezoreader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="singlepiezopad.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="threezonecymbal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="digitalpotentiometer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ChannelSelector.cpp">
+    <ClCompile Include="channelselector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DigitalPot.cpp">
+    <ClCompile Include="drumpad.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DrumPad.cpp">
+    <ClCompile Include="dualzonecymbal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HiHatController.cpp">
+    <ClCompile Include="emptydrumpad.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SinglePiezoPad.cpp">
+    <ClCompile Include="helper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DualZoneCymbal.cpp">
+    <ClCompile Include="hihatcontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ThreeZoneCymbal.cpp">
+    <ClCompile Include="piezoreader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EmptyDrumPad.cpp">
+    <ClCompile Include="singlepiezopad.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PiezoReader.cpp">
+    <ClCompile Include="threezonecymbal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="digitalpotentiometer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="drummodulefirmware.ino" />
   </ItemGroup>
 </Project>

@@ -1,54 +1,55 @@
-#include <ArduinoJson.hpp>
-#include <ArduinoJson.h>
-#include "ThreeZoneCymbal.h"
-#include "DigitalPot.h"
-#include "SinglePiezoPad.h"
-#include "DrumPad.h"
+#include <arduinojson.hpp>
+#include <arduinojson.h>
+#include <eeprom.h>
+#include "threezonecymbal.h"
+#include "digitalpotentiometer.h"
+#include "singlepiezopad.h"
+#include "drumpad.h"
 #include "hardware.h"
-#include "ChannelSelector.h"
-#include "HiHatController.h"
-#include "EmptyDrumPad.h"
-#include <EEPROM.h>
+#include "channelselector.h"
+#include "hihatcontroller.h"
+#include "emptydrumpad.h"
 
-DigitalPot potentiometers = DigitalPot(0x28);
-ChannelSelector channelSelector = ChannelSelector(S0, S1, S2, S3, DRAIN);
+DrumPad* drums[12];
 
-DrumPad *drums[12] = {
-	new SinglePiezoPad(0, "Snare", &channelSelector, 38, 20, 1023, 3, 70),
-	new ThreeZoneCymbal(1, "HiHat", &channelSelector, 20, 21, 18, 25, 500, 3, 70),
-	new HiHatController(2, "HiHatController", &channelSelector, 4, 0, 650),
-	new DualZoneCymbal(3, "Crash", &channelSelector, 15, 16, 20, 500, 3, 70),
-	new EmptyDrumPad(4),
-	new EmptyDrumPad(5),
-	new EmptyDrumPad(6),
-	new EmptyDrumPad(7),
-	new EmptyDrumPad(8),
-	new EmptyDrumPad(9),
-	new EmptyDrumPad(10),
-	new EmptyDrumPad(11),
-};
+//DrumPad* drums[12] =
+//{
+//	new SinglePiezoPad(0, "Snare", true, 38, 20, 750, 3, 70, 10),
+//	new EmptyDrumPad(1),
+//	new EmptyDrumPad(2),
+//	new EmptyDrumPad(3),
+//	new EmptyDrumPad(4),
+//	new EmptyDrumPad(5),
+//	new EmptyDrumPad(6),
+//	new EmptyDrumPad(7),
+//	new EmptyDrumPad(8),
+//	new EmptyDrumPad(9),
+//	new EmptyDrumPad(10),
+//	new EmptyDrumPad(11),
+//};
 
 void setup()
 {
-	channelSelector.Setup();
-
+	ChannelSelector::setup();
 	Wire.begin();
-	potentiometers.writeToPotentiometer(0, 20);//10
-	potentiometers.writeToPotentiometer(1, 17);//17
-	potentiometers.writeToPotentiometer(2, 20);//25
-	potentiometers.writeToPotentiometer(3, 20);//20
-	potentiometers.writeToPotentiometer(4, 20);//17
-	potentiometers.writeToPotentiometer(5, 20);//10
-	potentiometers.writeToPotentiometer(6, 20);//15
-	potentiometers.writeToPotentiometer(7, 20);//10
+	Serial.begin(115200);
+	loadSettingsFromEeprom();
 
 	for (int i = 0; i < 12; i++) {
 		DrumPad* pad = drums[i];
 		if (!pad) continue;
+		if (!pad->enabled_) continue;
 		pad->setup();
 	}
-  
-	Serial.begin(115200);
+
+	//potentiometers.writeToPotentiometer(0, 20);//10
+	//potentiometers.writeToPotentiometer(1, 17);//17
+	//potentiometers.writeToPotentiometer(2, 20);//25
+	//potentiometers.writeToPotentiometer(3, 20);//20
+	//potentiometers.writeToPotentiometer(4, 20);//17
+	//potentiometers.writeToPotentiometer(5, 20);//10
+	//potentiometers.writeToPotentiometer(6, 20);//15
+	//potentiometers.writeToPotentiometer(7, 20);//10
 }
 
 void loop()
@@ -58,25 +59,59 @@ void loop()
 	if (Serial.available())
 		handleCommand();
 
-
 	for (int i = 0; i < 12; i++) {
 		DrumPad* pad = drums[i];
 		if (!pad) continue;
-		//todo: uncommant
-		//pad->loop();
+		if (!pad->enabled_) continue;
+		pad->loop();
 	}
 }
 
-void readPotentiometersSettings()
+void potentiometersTest()
 {
-	int value;
-	for (byte i = 0; i < 8; i++)
-	{		
-		value = potentiometers.readFromPotentiometer(i);
-		Serial.println("Channel " + String(i) + ": " + String(value));
+	Serial.println();
+	Serial.println();
+	Serial.println("Old values");
+
+	for (int channel = 0; channel < 4; channel++)
+	{
+		byte oldValue0 = DigitalPotentiometer::readFromPotentiometer(channel, 0);
+		byte oldValue1 = DigitalPotentiometer::readFromPotentiometer(channel, 1);
+		Serial.print("Channel ");
+		Serial.print(channel);
+		Serial.print("| ");
+		Serial.print(oldValue0);
+		Serial.print(" : ");
+		Serial.println(oldValue1);
 	}
-	delay(3000);
+
+	DigitalPotentiometer::writeToPotentiometer(0, 0, 0);
+	DigitalPotentiometer::writeToPotentiometer(0, 1, 1);
+	DigitalPotentiometer::writeToPotentiometer(1, 0, 2);
+	DigitalPotentiometer::writeToPotentiometer(1, 1, 3);
+	DigitalPotentiometer::writeToPotentiometer(2, 0, 4);
+	DigitalPotentiometer::writeToPotentiometer(2, 1, 5);
+	DigitalPotentiometer::writeToPotentiometer(3, 0, 6);
+	DigitalPotentiometer::writeToPotentiometer(3, 1, 7);
+
+	Serial.println();
+	Serial.println();
+	Serial.println("New values");
+
+	for (int channel = 0; channel < 4; channel++)
+	{
+		byte oldValue0 = DigitalPotentiometer::readFromPotentiometer(channel, 0);
+		byte oldValue1 = DigitalPotentiometer::readFromPotentiometer(channel, 1);
+		Serial.print("Channel ");
+		Serial.print(channel);
+		Serial.print("| ");
+		Serial.print(oldValue0);
+		Serial.print(" : ");
+		Serial.println(oldValue1);
+	}
 }
+
+#pragma region Serial commands
 
 void handleCommand()
 {
@@ -95,13 +130,19 @@ void handleCommand()
 		getAllDrums(commandId);
 		break;
 	case COMMAND_SetDrumParameters:
-		setDrumParameters(&response, commandId);
+		setDrumParameters(response, commandId);
 		break;
 	case COMMAND_SaveSettings:
 		saveSettings(commandId);
 		break;
 	case COMMAND_ReloadSettings:
 		reloadSettings(commandId);
+		break;
+	case COMMAND_EnableDrum:
+		enableDrum(response, commandId);
+		break;
+	case COMMAND_DisableDrum:
+		disableDrum(response, commandId);
 		break;
 	default:
 		break;
@@ -115,7 +156,7 @@ void ping(int commandId)
 
 void getAllDrums(int commandId)
 {
-	const size_t capacity = JSON_ARRAY_SIZE(12) + JSON_OBJECT_SIZE(3) + 12 * JSON_OBJECT_SIZE(10) + 1780;
+	const size_t capacity = JSON_ARRAY_SIZE(12) + JSON_OBJECT_SIZE(3) + 12 * JSON_OBJECT_SIZE(10) + 3780;
 	DynamicJsonDocument response(capacity);
 
 	response["CommandType"] = COMMAND_GetAllDrums;
@@ -123,61 +164,75 @@ void getAllDrums(int commandId)
 
 	JsonArray drumsArray = response.createNestedArray("Drums");
 
-	getDrumsJsonArray(&drumsArray);
+	getDrumsJsonArray(drumsArray);
 
 	serializeJsonPretty(response, Serial); //todo:
 }
 
-void getDrumsJsonArray(JsonArray *result)
+void setDrumParameters(DynamicJsonDocument& request, int commandId)
 {
-	for (int i = 0; i < 12; i++) {
-		DrumPad* pad = drums[i];
-		JsonObject padJson = result->createNestedObject();		
-		if (!pad) continue;
-		pad->serializeParameters(&padJson);	
-	}
-}
+	JsonObject paramsJson = request["Drum"];
+	DrumPad* newDrum = setDrumParameters(paramsJson);
 
-void setDrumParameters(DynamicJsonDocument *request, int commandId)
-{
-	JsonObject paramsJson = (*request)["Drum"];
-	DrumPad* newDrum = setDrumParameters(&paramsJson);
-	sendSetDrumParametersResponse(newDrum, commandId);
-	//const char* Drum_Name = paramsJson["Name"];
-}
-
-void sendSetDrumParametersResponse(DrumPad *pad, int commandId)
-{
-	const size_t capacity = JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(10);
+	const size_t capacity = JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(10) + 170;
 	DynamicJsonDocument response(capacity);
 	response["CommandType"] = COMMAND_SetDrumParameters;
 	response["CommandId"] = commandId;
 
 	JsonObject newDrumJson = response.createNestedObject("Drum");
-	pad->serializeParameters(&newDrumJson);
+	newDrum->serializeParameters(newDrumJson);
 
 	serializeJson(response, Serial);
 }
 
-DrumPad* createDrumPad(JsonObject* json)
+void saveSettings(int commandId)
 {
-	byte type = (*json)["Type"];
-	switch (type) {
-	case TYPE_EmptyDrumPad:
-		return new EmptyDrumPad(json);
-	case TYPE_SinglePiezoPad:
-		return new SinglePiezoPad(json, &channelSelector);
-	case TYPE_DualPiezoPad:
-		return new SinglePiezoPad(json, &channelSelector); //todo
-	case TYPE_DualZoneCymbal:
-		return new DualZoneCymbal(json, &channelSelector);
-	case TYPE_ThreeZoneCymbal:
-		return new ThreeZoneCymbal(json, &channelSelector);
-	case TYPE_HiHatController:
-		return new HiHatController(json, &channelSelector);
-	default:
-		return 0;
+	const size_t capacity = JSON_ARRAY_SIZE(12) + JSON_OBJECT_SIZE(3) + 12 * JSON_OBJECT_SIZE(10) + 3780;
+	DynamicJsonDocument result(capacity);
+	JsonArray drumsArray = result.createNestedArray("Drums");
+	getDrumsJsonArray(drumsArray);
+
+	String jsonStr;
+	serializeJson(result, jsonStr);
+
+	int length = jsonStr.length();
+	byte byte1 = length & 0x00ff;
+	byte byte2 = (length & 0xff00) >> 8;
+	EEPROM.write(0, byte1);
+	EEPROM.write(1, byte2);
+
+	for (int i = 0; i < length; i++)
+		EEPROM.write(i + 2, jsonStr[i]);
+
+	sendSimpleCommandResponse(COMMAND_SaveSettings, commandId);
+}
+
+void reloadSettings(int commandId)
+{
+	loadSettingsFromEeprom();
+	sendSimpleCommandResponse(COMMAND_ReloadSettings, commandId);
+}
+
+void enableDrum(DynamicJsonDocument& request, int commandId)
+{
+	byte index = request["ChannelId"];
+	DrumPad* drum = drums[index];
+	if (drum)
+	{
+		drum->enabled_ = true;
 	}
+	sendSimpleCommandResponse(COMMAND_EnableDrum, commandId);
+}
+
+void disableDrum(DynamicJsonDocument& request, int commandId)
+{
+	byte index = request["ChannelId"];
+	DrumPad* drum = drums[index];
+	if (drum)
+	{
+		drum->enabled_ = false;
+	}
+	sendSimpleCommandResponse(COMMAND_DisableDrum, commandId);
 }
 
 void sendSimpleCommandResponse(byte commandType, int commandId)
@@ -191,33 +246,17 @@ void sendSimpleCommandResponse(byte commandType, int commandId)
 	serializeJson(doc, Serial);
 }
 
-void saveSettings(int commandId)
+void getDrumsJsonArray(JsonArray& result)
 {
-	const size_t capacity = JSON_ARRAY_SIZE(12) + JSON_OBJECT_SIZE(3) + 12 * JSON_OBJECT_SIZE(10) + 1780;
-	DynamicJsonDocument result(capacity);
-	JsonArray drumsArray = result.createNestedArray("Drums");
-	getDrumsJsonArray(&drumsArray);
-	
-	String jsonStr;
-	serializeJson(result, jsonStr);
-
-	int length = jsonStr.length();
-	byte byte1 = length & 0x00ff;
-	byte byte2 = (length & 0xff00) >> 8;
-	EEPROM.write(0, byte1);
-	EEPROM.write(1, byte2);
-
-	for (int i = 0; i < length; i++)	
-		EEPROM.write(i + 2, jsonStr[i]);	
-
-	sendSimpleCommandResponse(COMMAND_SaveSettings, commandId);
+	for (int i = 0; i < 12; i++) {
+		DrumPad* pad = drums[i];
+		JsonObject padJson = result.createNestedObject();
+		if (!pad) continue;
+		pad->serializeParameters(padJson);
+	}
 }
 
-void reloadSettings(int commandId)
-{
-	loadSettingsFromEeprom();
-	sendSimpleCommandResponse(COMMAND_ReloadSettings, commandId);
-}
+#pragma endregion
 
 void loadSettingsFromEeprom()
 {
@@ -238,37 +277,44 @@ void loadSettingsFromEeprom()
 	for (int i = 0; i < 12; i++)
 	{
 		JsonObject paramsJson = drumsArray[i];
-		setDrumParameters(&paramsJson);
+		setDrumParameters(paramsJson);
 	}
 }
 
-DrumPad* setDrumParameters(JsonObject* paramsJson)
+DrumPad* setDrumParameters(JsonObject& paramsJson)
 {
-	/*delay(300);
-	serializeJsonPretty(*paramsJson, Serial);
-	Serial.println();*/
-
-	byte channel = (*paramsJson)["Channel"];
-	byte type = (*paramsJson)["Type"];
-
-	/*Serial.print("Channel ");
-	Serial.println(channel);
-	Serial.print("Type ");
-	Serial.println(type);*/
+	byte channel = paramsJson["Channel"];
 
 	DrumPad* existing = drums[channel];
 	if (existing)
-	{
-		if (existing->type == type)
-		{
-			existing->setParameters(paramsJson);
-			return existing;
-		}
+	{		
 		delete existing;
 		existing = NULL;
 	}
 
 	DrumPad* newDrum = createDrumPad(paramsJson);
+	newDrum->setup();
 	drums[channel] = newDrum;
 	return newDrum;
+}
+
+DrumPad* createDrumPad(JsonObject& json)
+{
+	byte type = json["Type"];
+	switch (type) {
+	case TYPE_EmptyDrumPad:
+		return new EmptyDrumPad(json);
+	case TYPE_SinglePiezoPad:
+		return new SinglePiezoPad(json);
+	case TYPE_DualPiezoPad:
+		return new SinglePiezoPad(json); //todo
+	case TYPE_DualZoneCymbal:
+		return new DualZoneCymbal(json);
+	case TYPE_ThreeZoneCymbal:
+		return new ThreeZoneCymbal(json);
+	case TYPE_HiHatController:
+		return new HiHatController(json);
+	default:
+		return 0;
+	}
 }

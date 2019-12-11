@@ -8,6 +8,8 @@
 #define S3 3
 #define DRAIN 4
 
+#define POTENTIOMETERS_ADDRESS 0x28
+
 
 #define MIDICHANNEL 0
 
@@ -23,5 +25,7 @@
 #define COMMAND_SetDrumParameters	3
 #define COMMAND_SaveSettings		4
 #define COMMAND_ReloadSettings		5
+#define COMMAND_EnableDrum			6
+#define COMMAND_DisableDrum			7
 
 #endif

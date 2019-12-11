@@ -9,24 +9,23 @@
 #include "WProgram.h"
 #endif
 
-#include "DrumPad.h"
-#include "ChannelSelector.h"
-#include "SinglePiezoPad.h"
-#include "DualZoneCymbal.h"
-#include <ArduinoJson.hpp>
-#include <ArduinoJson.h>
+#include "drumpad.h"
+#include "channelselector.h"
+#include "singlepiezopad.h"
+#include "dualzonecymbal.h"
+#include <arduinojson.hpp>
+#include <arduinojson.h>
 
 class ThreeZoneCymbal : public DualZoneCymbal {
 public:
-	ThreeZoneCymbal(byte channel, String name, ChannelSelector* channelSelector, 
-		byte bowNote, byte bellNote, byte edgeNote,
-		int thresholdMin, int thresholdMax, int sensorScantime, int sensorMasktime);
-	ThreeZoneCymbal(JsonObject* json, ChannelSelector* channelSelector);
+	ThreeZoneCymbal(byte channel, String name, bool enabled, byte bowNote, 
+		byte bellNote, byte edgeNote, int thresholdMin, int thresholdMax, 
+		int sensorScantime, int sensorMasktime, byte amplification);
+	ThreeZoneCymbal(JsonObject& json);
 	
-	void serializeParameters(JsonObject* result);
-	void setParameters(JsonObject* json);
+	void serializeParameters(JsonObject& result);
 
-	byte bellNote;
+	byte bellNote_;
 
 protected:
 	void sendNote(byte pitch, byte velocity);

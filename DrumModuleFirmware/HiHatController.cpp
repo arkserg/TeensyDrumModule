@@ -1,58 +1,45 @@
-﻿#include "HiHatController.h"
+﻿#include "hihatcontroller.h"
 #include "hardware.h"
+#include "helper.h"
 
-HiHatController::HiHatController(byte channel, String name, ChannelSelector *channelSelector, 
+HiHatController::HiHatController(byte channel, String name, bool enabled,
 	byte ccControl,	int thresholdMin, int thresholdMax) 
-	: DrumPad(TYPE_HiHatController, channel, name, channelSelector),
-	ccControl(ccControl), thresholdMin(thresholdMin), thresholdMax(thresholdMax)
+	: DrumPad(TYPE_HiHatController, channel, name, enabled),
+	ccControl_(ccControl), thresholdMin_(thresholdMin), thresholdMax_(thresholdMax)
 {
 }
 
-HiHatController::HiHatController(JsonObject* json, ChannelSelector* channelSelector)
-	: DrumPad(channelSelector)
+HiHatController::HiHatController(JsonObject& json)
+	: DrumPad(json)
 {
-	setParameters(json);
+	ccControl_ = json["CcControl"];
+	thresholdMin_ = json["ThresholdMin"];
+	thresholdMax_ = json["ThresholdMax"];
 }
 
-void HiHatController::setup()
+void HiHatController::loopImplementation()
 {
-}
-
-void HiHatController::loop()
-{
-	//todo: sarkashin всё здесь
-
-	//channelSelector.enableChannel(zoneSensorChannel);
-
 	unsigned long currentMillis = millis();
 	int newValue = analogRead(2); //todo
-	newValue = 127 - DrumPad::normalizeSensor(newValue, thresholdMin, thresholdMax);
-	if (newValue != previousValue)
+	newValue = 127 - Helper::normalizeSensor(newValue, thresholdMin_, thresholdMax_);
+	if (newValue != previousValue_)
 	{
-		if (currentMillis - previousChangeMillis > 3)
+		if (currentMillis - previousChangeMillis_ > 3)
 		{
-			int diff = newValue - previousValue;
+			int diff = newValue - previousValue_;
 			if (diff > 2 || diff < -2) //todo
 			{
-				DrumPad::sendCC(ccControl, newValue);
-				previousValue = newValue;
+				Helper::sendControlChange(ccControl_, newValue);
+				previousValue_ = newValue;
 			}
 		}
 	}
 }
 
-void HiHatController::serializeParameters(JsonObject* result)
+void HiHatController::serializeParameters(JsonObject& result)
 {
 	DrumPad::serializeParameters(result);
-	(*result)["CcControl"] = ccControl;
-	(*result)["ThresholdMin"] = thresholdMin;
-	(*result)["ThresholdMax"] = thresholdMax;
-}
-
-void HiHatController::setParameters(JsonObject* json)
-{
-	DrumPad::setParameters(json);
-	ccControl = (*json)["CcControl"];
-	thresholdMin = (*json)["ThresholdMin"];
-	thresholdMax = (*json)["ThresholdMax"];
+	result["CcControl"] = ccControl_;
+	result["ThresholdMin"] = thresholdMin_;
+	result["ThresholdMax"] = thresholdMax_;
 }

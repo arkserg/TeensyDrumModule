@@ -9,27 +9,28 @@
 	#include "WProgram.h"
 #endif
 
-#include "DrumPad.h"
-#include "ChannelSelector.h"
-#include "SinglePiezoPad.h"
-#include <ArduinoJson.hpp>
-#include <ArduinoJson.h>
+#include "drumpad.h"
+#include "channelselector.h"
+#include "singlepiezopad.h"
+#include <arduinojson.hpp>
+#include <arduinojson.h>
 
 class HiHatController : public DrumPad {
-	int previousValue;
-	long previousChangeMillis;
+	int previousValue_;
+	long previousChangeMillis_;
 public:
-	HiHatController(byte channel, String name, ChannelSelector *channelSelector, 
+	HiHatController(byte channel, String name, bool enabled,
 		byte ccControl, int thresholdMin, int thresholdMax);
-	HiHatController(JsonObject* json, ChannelSelector* channelSelector);
-	void setup();
-	void loop();
-	void serializeParameters(JsonObject* result);
-	void setParameters(JsonObject* json);
+	HiHatController(JsonObject& json);
 
-	byte ccControl;
-	int thresholdMin;
-	int thresholdMax;
+	void serializeParameters(JsonObject& result);
+
+	byte ccControl_;
+	int thresholdMin_;
+	int thresholdMax_;
+
+protected:
+	void loopImplementation();
 };
 
 #endif

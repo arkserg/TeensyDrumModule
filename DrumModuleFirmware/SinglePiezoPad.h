@@ -7,44 +7,33 @@
 	#include "WProgram.h"
 #endif
 
-#include "DrumPad.h"
-#include "ChannelSelector.h"
-#include <ArduinoJson.hpp>
-#include <ArduinoJson.h>
+#include "piezoreader.h"
+#include "drumpad.h"
+#include "channelselector.h"
+#include <arduinojson.hpp>
+#include <arduinojson.h>
 
 class SinglePiezoPad : public DrumPad {	
 
 public:
-	SinglePiezoPad(byte channel, String name, ChannelSelector *channelSelector, byte padNote,
-		int thresholdMin, int thresholdMax, int sensorScantime, int sensorMasktime);
-	SinglePiezoPad(JsonObject* json, ChannelSelector* channelSelector);
-	void setup();
-	void loop();
-	void serializeParameters(JsonObject* result);
-	void setParameters(JsonObject* json);
+	SinglePiezoPad(byte channel, String name, bool enabled, byte padNote,
+		int thresholdMin, int thresholdMax, int sensorScantime, int sensorMasktime, 
+		byte amplification);
+	SinglePiezoPad(JsonObject& json);
+	~SinglePiezoPad();
 
-	int thresholdMin;
-	int thresholdMax;
-	int sensorScantime;
-	int sensorMasktime;
-	byte padNote;
+	void serializeParameters(JsonObject& result);
+	void setup();
+
+	byte padNote_;
 
 protected:
-	SinglePiezoPad(byte type, byte channel, String name, ChannelSelector* channelSelector, byte padNote,
-		int thresholdMin, int thresholdMax, int sensorScantime, int sensorMasktime);
-	SinglePiezoPad(ChannelSelector* channelSelector);
+	SinglePiezoPad(byte type, byte channel, String name, bool enabled, byte padNote,
+		int thresholdMin, int thresholdMax, int sensorScantime, int sensorMasktime,
+		byte amplification);
 
-	boolean nextHitAllowed = true;
-	boolean hitInProgress = false;
-	unsigned long previousHitMillis;
-	unsigned long lastIncreaseMillis;
-	int currentValue;
-	int previousHitValue;
-	int lightHitMasktime;
-	int measurments;
-	unsigned long hitStartMillis;
-
-	virtual void resetCurrentValue();
+	void loopImplementation();
+	PiezoReader *piezoReader_;
 };
 
 #endif
