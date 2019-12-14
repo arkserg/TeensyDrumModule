@@ -8,9 +8,9 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
     public class DrumPadViewModel : ReactiveObject
     {
         private DrumType? _type;
-        private byte _id;
-        private string _name;
         private byte _channel;
+        private string _name;
+        private bool _enabled;
 
         private bool _initialized;
 
@@ -35,10 +35,10 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
             set => this.RaiseAndSetIfChanged(ref _type, value);            
         }
 
-        public byte Id
+        public byte Channel
         {
-            get => _id;
-            set => this.RaiseAndSetIfChanged(ref _id, value);
+            get => _channel;
+            set => this.RaiseAndSetIfChanged(ref _channel, value);
         }
 
         public string Name
@@ -47,25 +47,61 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
             set => this.RaiseAndSetIfChanged(ref _name, value);
         }
 
-        public byte Channel
+        public bool Enabled
         {
-            get => _channel;
-            set => this.RaiseAndSetIfChanged(ref _channel, value);
+            get => _enabled;
+            set => this.RaiseAndSetIfChanged(ref _enabled, value);
         }
 
         public override string ToString()
         {
-            return Name;
+            return $"{_channel} {_name}";
+        }
+    }
+
+    public class EmptyDrumPadViewModel : DrumPadViewModel
+    {
+    }
+
+    public class HiHatControllerViewModel : DrumPadViewModel
+    {
+        private byte _ccControl;
+        private short _thresholdMin;
+        private short _thresholdMax;
+        
+        public byte CcControl
+        {
+            get => _ccControl;
+            set => this.RaiseAndSetIfChanged(ref _ccControl, value);
+        }
+
+        public Int16 ThresholdMin
+        {
+            get => _thresholdMin;
+            set => this.RaiseAndSetIfChanged(ref _thresholdMin, value);
+        }
+
+        public Int16 ThresholdMax
+        {
+            get => _thresholdMax;
+            set => this.RaiseAndSetIfChanged(ref _thresholdMax, value);
         }
     }
 
     public class SinglePiezoPadViewModel : DrumPadViewModel
     {
+        private byte _padNote;
         private short _thresholdMin;
         private short _thresholdMax;
         private byte _sensorScantime;
         private byte _sensorMasktime;
-        private byte _padNote;
+        private byte _amplification;
+        
+        public byte PadNote
+        {
+            get => _padNote;
+            set => this.RaiseAndSetIfChanged(ref _padNote, value);
+        }
 
         public Int16 ThresholdMin
         {
@@ -91,35 +127,32 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
             set => this.RaiseAndSetIfChanged(ref _sensorMasktime, value);
         }
 
-        public byte PadNote
+        public byte Amplification
         {
-            get => _padNote;
-            set => this.RaiseAndSetIfChanged(ref _padNote, value);
+            get => _amplification;
+            set => this.RaiseAndSetIfChanged(ref _amplification, value);
         }
     }
 
-    public class YamahaPcyCymbalViewModel : SinglePiezoPadViewModel
+    public class DualZoneCymbalViewModel : SinglePiezoPadViewModel
     {
-        private byte _zoneSensorChannel;
-        private byte _bellNote;
         private byte _edgeNote;
-
-        public byte ZoneSensorChannel
-        {
-            get => _zoneSensorChannel;
-            set => this.RaiseAndSetIfChanged(ref _zoneSensorChannel, value);
-        }
-
-        public byte BellNote
-        {
-            get => _bellNote;
-            set => this.RaiseAndSetIfChanged(ref _bellNote, value);
-        }
 
         public byte EdgeNote
         {
             get => _edgeNote;
             set => this.RaiseAndSetIfChanged(ref _edgeNote, value);
+        }
+    }
+
+    public class ThreeZoneCymbalViewModel : DualZoneCymbalViewModel
+    {
+        private byte _bellNote;
+
+        public byte BellNote
+        {
+            get => _bellNote;
+            set => this.RaiseAndSetIfChanged(ref _bellNote, value);
         }
     }
 }
