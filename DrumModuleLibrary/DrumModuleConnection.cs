@@ -13,20 +13,27 @@ using Arkserg.TeensyDrumModule.DrumModuleLibrary.Commands;
 using Newtonsoft.Json;
 using Arkserg.TeensyDrumModule.DrumModuleLibrary.Json;
 using System.Text;
+using Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels;
 
 namespace Arkserg.TeensyDrumModule.DrumModuleLibrary
 {
-    public class MegaDrumHelper : IDisposable
+    public class DrumModuleConnection : IDisposable
     {
+        public bool IsOpen => _port.IsOpen;
+
         private readonly SerialPort _port;
         private readonly Dictionary<int, CommandResultAwaiter> _responses;
-        private readonly ILogger<MegaDrumHelper> _log;
+        private readonly ILogger<DrumModuleConnection> _log;
         private readonly JsonSerializer _serializer;
         private readonly JsonSerializerSettings _serializerSettings;
+        private readonly SemaphoreSlim _semaphore;
         private CancellationTokenSource _cts;
         private Pipe _pipe;
 
-        public MegaDrumHelper(string portName, int baudRate, ILogger<MegaDrumHelper> log = null)
+        private static int _commandId;
+        private static int CommandId => Interlocked.Increment(ref _commandId);
+
+        public DrumModuleConnection(string portName, int baudRate, ILogger<DrumModuleConnection> log = null)
         {
             _port = new SerialPort(portName, baudRate);
             _port.Parity = Parity.None;
@@ -54,7 +61,8 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary
                     new CommandResponseJsonConverter(),
                 }
             };
-            _log = log ?? new NullLogger<MegaDrumHelper>();
+            _semaphore = new SemaphoreSlim(1, 1);
+            _log = log ?? new NullLogger<DrumModuleConnection>();
         }
 
         public void OpenConnection()
@@ -72,18 +80,18 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary
             _pipe = null;
         }
 
-        public async Task<TResponse> InvokeCommandAsync<TResponse>(DrumModuleCommand<TResponse> command)
+        private async Task<TResponse> InvokeCommandAsync<TResponse>(DrumModuleCommand<TResponse> command)
             where TResponse : DrumModuleCommandResponse
         {
-            var response = new CommandResultAwaiter(command.CommandId);
-            _responses.Add(command.CommandId, response);
-
-            var str = JsonConvert.SerializeObject(command, _serializerSettings);
-            var bytes = Encoding.UTF8.GetBytes(str);
-            _port.Write(bytes, 0, bytes.Length);
-
+            await _semaphore.WaitAsync();
             try
             {
+                var response = new CommandResultAwaiter(command.CommandId);
+                _responses.Add(command.CommandId, response);
+
+                var str = JsonConvert.SerializeObject(command, _serializerSettings);
+                var bytes = Encoding.UTF8.GetBytes(str);
+                _port.Write(bytes, 0, bytes.Length);
                 var result = await response.WaitAsync().ConfigureAwait(false);
                 return (TResponse) result; //todo: type check
             }
@@ -93,7 +101,8 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary
             }
             finally
             {
-                if(_responses.TryGetValue(command.CommandId, out var responseAwaiter))
+                _semaphore.Release();
+                if (_responses.TryGetValue(command.CommandId, out var responseAwaiter))
                 {
                     _responses.Remove(command.CommandId);
                     responseAwaiter.Dispose();
@@ -175,6 +184,59 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary
                 return _serializer.Deserialize<T>(jsonTextReader);
             }
         }
+
+        #region Commands
+
+        public async Task<bool> PingAsync()
+        {
+            var command = new PingCommand(CommandId);
+            var result = await InvokeCommandAsync(command);
+            return result != null;
+        }
+
+        public async Task<bool> DisableDrumAsync(int channelId)
+        {
+            var command = new DisableDrumCommand(CommandId) {ChannelId = channelId};
+            var result = await InvokeCommandAsync(command);
+            return result != null;
+        }
+
+        public async Task<bool> EnableDrumAsync(int channelId)
+        {
+            var command = new EnableDrumCommand(CommandId) { ChannelId = channelId };
+            var result = await InvokeCommandAsync(command);
+            return result != null;
+        }
+
+        public async Task<List<DrumPad>> GetAllDrumsAsync()
+        {
+            var command = new GetAllDrumsCommand(CommandId);
+            var result = await InvokeCommandAsync(command);
+            return result?.Drums;
+        }
+
+        public async Task<bool> ReloadSettingsAsync()
+        {
+            var command = new ReloadSettingsCommand(CommandId);
+            var result = await InvokeCommandAsync(command);
+            return result != null;
+        }
+
+        public async Task<bool> SaveSettingsAsync()
+        {
+            var command = new SaveSettingsCommand(CommandId);
+            var result = await InvokeCommandAsync(command);
+            return result != null;
+        }
+
+        public async Task<DrumPad> SetDrumParametersAsync(DrumPad drum)
+        {
+            var command = new SetDrumParametersCommand(CommandId) {Drum = drum};
+            var result = await InvokeCommandAsync(command);
+            return result?.Drum;
+        }
+
+        #endregion
 
         public void Dispose()
         {

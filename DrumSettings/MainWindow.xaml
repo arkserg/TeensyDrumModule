@@ -7,7 +7,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:models="clr-namespace:Arkserg.TeensyDrumModule.DrumSettings.Models"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="MainWindow" Height="550" Width="800"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="17"
@@ -20,27 +20,19 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Drums.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <x:Array Type="models:SinglePiezoPadViewModel" x:Key="modelsList">
-                <models:SinglePiezoPadViewModel Channel="1" Name="Snare" PadNote="32" ThresholdMin="10" ThresholdMax="1023" SensorScantime="3" SensorMasktime="70"/>
-                <models:SinglePiezoPadViewModel Channel="2" Name="High Tom Left" PadNote="32" ThresholdMin="10" ThresholdMax="1023" SensorScantime="3" SensorMasktime="70"/>
-                <models:SinglePiezoPadViewModel Channel="3" Name="High Tom Right" PadNote="32" ThresholdMin="10" ThresholdMax="1023" SensorScantime="3" SensorMasktime="70"/>
-                <models:SinglePiezoPadViewModel Channel="4" Name="Floor Tom" PadNote="32" ThresholdMin="10" ThresholdMax="1023" SensorScantime="3" SensorMasktime="70"/>
-                <models:SinglePiezoPadViewModel Channel="5" Name="Kick" PadNote="32" ThresholdMin="10" ThresholdMax="1023" SensorScantime="3" SensorMasktime="70"/>
-                <models:SinglePiezoPadViewModel Channel="6" Name="Hi-Hat" PadNote="32" ThresholdMin="10" ThresholdMax="1023" SensorScantime="3" SensorMasktime="70"/>
-                <models:SinglePiezoPadViewModel Channel="7" Name="Crash" PadNote="32" ThresholdMin="10" ThresholdMax="1023" SensorScantime="3" SensorMasktime="70"/>
-                <models:SinglePiezoPadViewModel Channel="8" Name="Ride" PadNote="32" ThresholdMin="10" ThresholdMax="1023" SensorScantime="3" SensorMasktime="70"/>
-            </x:Array>
             <local:DrumsTemplateSelector x:Key="DrumsTemplateSelector"/>
-            <models:SinglePiezoPadViewModel x:Key="example" Channel="1" Name="Snare" PadNote="127" ThresholdMin="500" ThresholdMax="1023" SensorScantime="88" SensorMasktime="188"/>            
-            <DataTemplate x:Key="SinglePiezoPadTemplate" DataType="models:SinglePiezoPadViewModel">
+            
+            <x:Array Type="models:DrumPadViewModel" x:Key="modelsList">
+                <models:SinglePiezoPadViewModel Channel="0" Enabled="true" Name="Snare" PadNote="38" ThresholdMin="500" ThresholdMax="1023" SensorScantime="88" SensorMasktime="188"/>
+                <models:DualZoneCymbalViewModel Channel="1" Enabled="true" Name="Crash" PadNote="39" EdgeNote="40" ThresholdMin="500" ThresholdMax="1023" SensorScantime="88" SensorMasktime="188"/>
+                <models:ThreeZoneCymbalViewModel Channel="2" Enabled="true" Name="Ride" PadNote="41" EdgeNote="42" BellNote="43" ThresholdMin="500" ThresholdMax="1023" SensorScantime="88" SensorMasktime="188"/>
+                <models:HiHatControllerViewModel Channel="3" Enabled="true" Name="HiHat controller" CcControl="127" ThresholdMin="500" ThresholdMax="1023"/>
+                <models:EmptyDrumPadViewModel Channel="4"/>                
+            </x:Array>
+
+            <DataTemplate x:Key="EmptyDrumPadTemplate" DataType="models:EmptyDrumPadViewModel">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
@@ -48,75 +40,324 @@
                         <ColumnDefinition Width="0.7*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Label Grid.Row="0" Grid.Column="0" Content="Name:"/>
-                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=Name, Mode=TwoWay }"/>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Channel"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=Channel, Mode=TwoWay}"/>
 
-                    <Label Grid.Row="1" Grid.Column="0" Content="Channel:"/>
-                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Channel, Mode=TwoWay}" />
+                </Grid>
+            </DataTemplate>
+            <DataTemplate x:Key="SinglePiezoPadTemplate" DataType="models:SinglePiezoPadViewModel">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.3*"/>
+                        <ColumnDefinition Width="0.7*"/>
+                    </Grid.ColumnDefinitions>
 
-                    <Label Grid.Row="2" Grid.Column="0" Content="Note:" VerticalAlignment="Center"/>
-                    <DockPanel Grid.Row="2" Grid.Column="1" LastChildFill="False">
-                        <Button Margin="10,10,0,10" Padding="0" Width="36" Style="{DynamicResource MaterialDesignRaisedButton}">
-                            <Viewbox Width="28" Height="32" Margin="0,0,2,0" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <Canvas Width="24" Height="24">
-                                    <Path Data="M19,13H5V11H19V13Z" Fill="White" />
-                                </Canvas>
-                            </Viewbox>
-                        </Button>                        
-                        <Label Content="{Binding Path=PadNote, Mode=TwoWay}"
-                             Margin="0, 10, 0, 10"
-                             Width="50" 
-                             VerticalAlignment="Center"
-                             HorizontalContentAlignment="Center"/>
-                        <Button Margin="0, 10, 10, 10" Padding="0" Width="36">
-                            <Viewbox Width="32" Height="32" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <Canvas Width="24" Height="24">
-                                    <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" Fill="White" />
-                                </Canvas>
-                            </Viewbox>
-                        </Button>
-                    </DockPanel>                    
+                    <Label Grid.Row="0" Grid.Column="0" Content="Channel:"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=Channel, Mode=TwoWay}" />
 
-                    <Label Grid.Row="3" Grid.Column="0" Content="Min Threshold:"/>
-                    <local:NumericSpinner Grid.Row="3" Grid.Column="1" Padding="10" 
+                    <Label Grid.Row="1" Grid.Column="0" Content="Name:"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Name, Mode=TwoWay }"/>
+
+                    <Label Grid.Row="2" Grid.Column="0" Content="Note:"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=PadNote, Mode=TwoWay}"/>
+
+                    <Label Grid.Row="3" Grid.Column="0" Content="Amplification:"/>
+                    <local:NumericSpinner Grid.Row="3" Grid.Column="1" Padding="5" 
+                                          Value="{Binding Path=Amplification, Mode=TwoWay}"
+                                          MinValue="0"
+                                          MaxValue="1023"
+                                          Step="1"/>
+
+                    <Label Grid.Row="4" Grid.Column="0" Content="Min Threshold:"/>
+                    <local:NumericSpinner Grid.Row="4" Grid.Column="1" Padding="5" 
                                           Value="{Binding Path=ThresholdMin, Mode=TwoWay}"
                                           MinValue="0"
                                           MaxValue="1023"
-                                          Step="1"/>                    
+                                          Step="1"/>
+
+                    <Label Grid.Row="5" Grid.Column="0" Content="Max Threshold:"/>
+                    <local:NumericSpinner Grid.Row="5" Grid.Column="1" Padding="5" 
+                                          Value="{Binding Path=ThresholdMax, Mode=TwoWay}"
+                                          MinValue="0"
+                                          MaxValue="1023"
+                                          Step="1"/>
+
+                    <Label Grid.Row="6" Grid.Column="0" Content="Sensor Scan Time:"/>
+                    <local:NumericSpinner Grid.Row="6" Grid.Column="1" Padding="5" 
+                                          Value="{Binding Path=SensorScantime, Mode=TwoWay}"
+                                          MinValue="0"
+                                          MaxValue="10"
+                                          Step="1"/>
+
+                    <Label Grid.Row="7" Grid.Column="0" Content="Sensor Mask Time:"/>
+                    <local:NumericSpinner Grid.Row="7" Grid.Column="1" Padding="5" 
+                                          Value="{Binding Path=SensorMasktime, Mode=TwoWay}"
+                                          MinValue="0"
+                                          MaxValue="1000"
+                                          Step="1"/>
+
+                    <Label Grid.Row="8" Grid.Column="0" Content="Enabled:"/>
+                    <ToggleButton Grid.Row="8" Grid.Column="1" 
+                                  Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                                  IsChecked="{Binding Path=Enabled, Mode=TwoWay}" 
+                                  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5,0,5"/>
+                </Grid>
+            </DataTemplate>
+            <DataTemplate x:Key="DualZoneCymbalTemplate" DataType="models:DualZoneCymbalViewModel">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.3*"/>
+                        <ColumnDefinition Width="0.7*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" Content="Channel:"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=Channel, Mode=TwoWay}" />
+
+                    <Label Grid.Row="1" Grid.Column="0" Content="Name:"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Name, Mode=TwoWay }"/>
+
+                    <Label Grid.Row="2" Grid.Column="0" Content="Bow Note:"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=PadNote, Mode=TwoWay}"/>
+
+                    <Label Grid.Row="3" Grid.Column="0" Content="Edge Note:"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Path=EdgeNote, Mode=TwoWay}"/>
+
+                    <Label Grid.Row="4" Grid.Column="0" Content="Amplification:"/>
+                    <local:NumericSpinner Grid.Row="4" Grid.Column="1" Padding="5" 
+                                          Value="{Binding Path=Amplification, Mode=TwoWay}"
+                                          MinValue="0"
+                                          MaxValue="1023"
+                                          Step="1"/>
+
+                    <Label Grid.Row="5" Grid.Column="0" Content="Min Threshold:"/>
+                    <local:NumericSpinner Grid.Row="5" Grid.Column="1" Padding="5" 
+                                          Value="{Binding Path=ThresholdMin, Mode=TwoWay}"
+                                          MinValue="0"
+                                          MaxValue="1023"
+                                          Step="1"/>
+
+                    <Label Grid.Row="6" Grid.Column="0" Content="Max Threshold:"/>
+                    <local:NumericSpinner Grid.Row="6" Grid.Column="1" Padding="5" 
+                                          Value="{Binding Path=ThresholdMax, Mode=TwoWay}"
+                                          MinValue="0"
+                                          MaxValue="1023"
+                                          Step="1"/>
+
+                    <Label Grid.Row="7" Grid.Column="0" Content="Sensor Scan Time:"/>
+                    <local:NumericSpinner Grid.Row="7" Grid.Column="1" Padding="5" 
+                                          Value="{Binding Path=SensorScantime, Mode=TwoWay}"
+                                          MinValue="0"
+                                          MaxValue="10"
+                                          Step="1"/>
+
+                    <Label Grid.Row="8" Grid.Column="0" Content="Sensor Mask Time:"/>
+                    <local:NumericSpinner Grid.Row="8" Grid.Column="1" Padding="5" 
+                                          Value="{Binding Path=SensorMasktime, Mode=TwoWay}"
+                                          MinValue="0"
+                                          MaxValue="1000"
+                                          Step="1"/>
+
+                    <Label Grid.Row="9" Grid.Column="0" Content="Enabled:"/>
+                    <ToggleButton Grid.Row="9" Grid.Column="1" 
+                                  Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                                  IsChecked="{Binding Path=Enabled, Mode=TwoWay}" 
+                                  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5,0,5"/>
+
+                </Grid>
+            </DataTemplate>
+            <DataTemplate x:Key="ThreeZoneCymbalTemplate" DataType="models:ThreeZoneCymbalViewModel">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.3*"/>
+                        <ColumnDefinition Width="0.7*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" Content="Channel:"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=Channel, Mode=TwoWay}" />
+
+                    <Label Grid.Row="1" Grid.Column="0" Content="Name:"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Name, Mode=TwoWay }"/>
+
+                    <Label Grid.Row="2" Grid.Column="0" Content="Bow Note:"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=PadNote, Mode=TwoWay}"/>
+
+                    <Label Grid.Row="3" Grid.Column="0" Content="Bell Note:"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Path=BellNote, Mode=TwoWay}"/>
+
+                    <Label Grid.Row="4" Grid.Column="0" Content="Edge Note:"/>
+                    <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Path=EdgeNote, Mode=TwoWay}"/>
+
+                    <Label Grid.Row="5" Grid.Column="0" Content="Amplification:"/>
+                    <local:NumericSpinner Grid.Row="5" Grid.Column="1" Padding="5" 
+                                          Value="{Binding Path=Amplification, Mode=TwoWay}"
+                                          MinValue="0"
+                                          MaxValue="1023"
+                                          Step="1"/>
+
+                    <Label Grid.Row="6" Grid.Column="0" Content="Min Threshold:"/>
+                    <local:NumericSpinner Grid.Row="6" Grid.Column="1" Padding="5" 
+                                          Value="{Binding Path=ThresholdMin, Mode=TwoWay}"
+                                          MinValue="0"
+                                          MaxValue="1023"
+                                          Step="1"/>
+
+                    <Label Grid.Row="7" Grid.Column="0" Content="Max Threshold:"/>
+                    <local:NumericSpinner Grid.Row="7" Grid.Column="1" Padding="5" 
+                                          Value="{Binding Path=ThresholdMax, Mode=TwoWay}"
+                                          MinValue="0"
+                                          MaxValue="1023"
+                                          Step="1"/>
+
+                    <Label Grid.Row="8" Grid.Column="0" Content="Sensor Scan Time:"/>
+                    <local:NumericSpinner Grid.Row="8" Grid.Column="1" Padding="5" 
+                                          Value="{Binding Path=SensorScantime, Mode=TwoWay}"
+                                          MinValue="0"
+                                          MaxValue="10"
+                                          Step="1"/>
+
+                    <Label Grid.Row="9" Grid.Column="0" Content="Sensor Mask Time:"/>
+                    <local:NumericSpinner Grid.Row="9" Grid.Column="1" Padding="5" 
+                                          Value="{Binding Path=SensorMasktime, Mode=TwoWay}"
+                                          MinValue="0"
+                                          MaxValue="1000"
+                                          Step="1"/>
+                    
+                    <Label Grid.Row="10" Grid.Column="0" Content="Enabled:"/>
+                    <ToggleButton Grid.Row="10" Grid.Column="1" 
+                                  Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                                  IsChecked="{Binding Path=Enabled, Mode=TwoWay}" 
+                                  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5,0,5"/>
+
+                </Grid>
+            </DataTemplate>
+            <DataTemplate x:Key="HiHatControllerTemplate" DataType="models:HiHatControllerViewModel">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.3*"/>
+                        <ColumnDefinition Width="0.7*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" Content="Channel:"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=Channel, Mode=TwoWay}" />
+
+                    <Label Grid.Row="1" Grid.Column="0" Content="Name:"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Name, Mode=TwoWay }"/>
+
+                    <Label Grid.Row="2" Grid.Column="0" Content="CC Control:"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=CcControl, Mode=TwoWay}"/>
+
+                    <Label Grid.Row="3" Grid.Column="0" Content="Min Threshold:"/>
+                    <local:NumericSpinner Grid.Row="3" Grid.Column="1" Padding="5" 
+                                          Value="{Binding Path=ThresholdMin, Mode=TwoWay}"
+                                          MinValue="0"
+                                          MaxValue="1023"
+                                          Step="1"/>
 
                     <Label Grid.Row="4" Grid.Column="0" Content="Max Threshold:"/>
-                    <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Path=ThresholdMax, Mode=TwoWay}"/>
+                    <local:NumericSpinner Grid.Row="4" Grid.Column="1" Padding="5" 
+                                          Value="{Binding Path=ThresholdMax, Mode=TwoWay}"
+                                          MinValue="0"
+                                          MaxValue="1023"
+                                          Step="1"/>
 
-                    <Label Grid.Row="5" Grid.Column="0" Content="Sensor Scan Time:"/>
-                    <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Path=SensorScantime, Mode=TwoWay}"/>
-
-                    <Label Grid.Row="6" Grid.Column="0" Content="Sensor Mask Time:"/>
-                    <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding Path=SensorMasktime, Mode=TwoWay}"/>
-
-                </Grid>                
+                    <Label Grid.Row="5" Grid.Column="0" Content="Enabled:"/>
+                    <ToggleButton Grid.Row="5" Grid.Column="1" 
+                                  Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                                  IsChecked="{Binding Path=Enabled, Mode=TwoWay}" 
+                                  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5,0,5"/>
+                </Grid>
             </DataTemplate>
         </ResourceDictionary>
     </Window.Resources>
     <DockPanel LastChildFill="True">
+        <DockPanel DockPanel.Dock="Top" LastChildFill="False">
+            <Menu VerticalAlignment="Top" DockPanel.Dock="Left">
+                <MenuItem Header="File">
+                    <MenuItem Header="New Project" ></MenuItem>
+                    <MenuItem Header="Open Project" >
+                        <MenuItem Header="WinForms"></MenuItem>
+                        <MenuItem Header="WPF" ></MenuItem>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem Header="Exit" ></MenuItem>
+                </MenuItem>
+                <MenuItem Header="Load" Click="LoadConfigurationAsync"/>
+                <MenuItem Header="Reset" Click="ResetConfigurationAsync"/>
+                <MenuItem Header="Save" Click="SaveConfigurationAsync"/>
+            </Menu>
+            <Menu x:Name="ComPortMenu" VerticalAlignment="Top" DockPanel.Dock="Right" HorizontalAlignment="Right">
+                <MenuItem Header="Connect" Click="OpenDrumModuleConnectionAsync"/>
+                <MenuItem Header="Disconnect" Click="CloseDrumModuleConnection" IsEnabled="False"/>
+            </Menu>
+            <TextBox x:Name="ComPortTxb" DockPanel.Dock="Right" Text="COM3" Width="60" 
+                     HorizontalAlignment="Center" VerticalAlignment="Center" 
+                     FontSize="15" TextAlignment="Center"/>
+
+        </DockPanel>
+        
         <Grid DockPanel.Dock="Bottom">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.25*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
+
             <DockPanel x:Name="DrumsPanel" Grid.Column="0" LastChildFill="True" Background="{DynamicResource PrimaryHueMidBrush}">
-                <!--<ListBox DockPanel.Dock="Bottom" x:Name="DrumsList"/>-->
-                <ListBox DockPanel.Dock="Bottom" ItemsSource="{StaticResource modelsList}"/>
+                <!--<ListBox x:Name="DrumsList" DockPanel.Dock="Bottom"/>-->
+                <ListBox x:Name="DrumsList" DockPanel.Dock="Bottom" ItemsSource="{StaticResource modelsList}" SelectedIndex="2"/>
             </DockPanel>
 
             <DockPanel x:Name="DrumSettingsPanel" Grid.Column="1" LastChildFill="False">
-                <!--<ContentControl x:Name="DrumSettings" 
-                                DockPanel.Dock="Top"
-                                Content="{Binding ElementName=DrumsList, Path=SelectedItem}"
-                                ContentTemplateSelector="{StaticResource DrumsTemplateSelector}"/>-->
                 <ContentControl DockPanel.Dock="Top"
-                                Content="{StaticResource example}"
-                                ContentTemplate="{StaticResource SinglePiezoPadTemplate}"/>
+                                Content="{Binding ElementName=DrumsList, Path=SelectedItem}"
+                                ContentTemplateSelector="{StaticResource DrumsTemplateSelector}"/>
+                <!--<ContentControl DockPanel.Dock="Top"
+                                Content="{StaticResource example4}"
+                                ContentTemplateSelector="{StaticResource DrumsTemplateSelector}"/>-->
             </DockPanel>
         </Grid>
     </DockPanel>

@@ -3,7 +3,6 @@ using Arkserg.TeensyDrumModule.DrumModuleLibrary;
 using Arkserg.TeensyDrumModule.DrumModuleLibrary.Commands;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
-using System.Threading;
 using Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels;
 using System.Collections.Generic;
 using Newtonsoft.Json;
@@ -12,8 +11,6 @@ namespace Arkserg.TeensyDrumModule.DrumConsole
 {
     class Program
     {
-        private static int CommandId; //todo: не должно быть здесь
-
         static void Main(string[] args)
         {
             var response2 = new GetAllDrumsCommandResponse(178892)
@@ -132,9 +129,9 @@ namespace Arkserg.TeensyDrumModule.DrumConsole
         static void MegaDrumTest()
         {
             var loggerFactory = LoggerFactory.Create(b => b.AddConsole());
-            var logger = loggerFactory.CreateLogger<MegaDrumHelper>();
+            var logger = loggerFactory.CreateLogger<DrumModuleConnection>();
 
-            using (var megaDrum = new MegaDrumHelper("COM3", 115200, logger))
+            using (var megaDrum = new DrumModuleConnection("COM3", 115200, logger))
             {
                 megaDrum.OpenConnection();
                 bool loopFlag = true;
@@ -173,9 +170,6 @@ namespace Arkserg.TeensyDrumModule.DrumConsole
                         case 7:
                             DisableDrumAsync(megaDrum).Wait();
                             break;
-                        case 8:
-                            DeleteAllDrumsAsync(megaDrum).Wait();
-                            break;
                         case 9:
                             loopFlag = false;
                             continue;
@@ -210,44 +204,34 @@ namespace Arkserg.TeensyDrumModule.DrumConsole
             while (!Console.KeyAvailable) { }
         }
 
-        private static async Task PingAsync(MegaDrumHelper megaDrum)
+        private static async Task PingAsync(DrumModuleConnection megaDrum)
         {
-            var command = new PingCommand(Interlocked.Increment(ref CommandId));
-            var result = await megaDrum.InvokeCommandAsync(command);
-
-            var message = result != null ? "Success" : "Error";
-
-            Console.WriteLine(message);
+            var result = await megaDrum.PingAsync();
+            Console.WriteLine(result ? "Success" : "Error");
         }
 
-        private static async Task GetAllDrumsAsync(MegaDrumHelper megaDrum)
+        private static async Task GetAllDrumsAsync(DrumModuleConnection megaDrum)
         {
-            var command = new GetAllDrumsCommand(Interlocked.Increment(ref CommandId));
-            var response = await megaDrum.InvokeCommandAsync(command);
-
-            if (response == null)
-                Console.WriteLine("Error");
-
-            Console.WriteLine(JsonConvert.SerializeObject(response, Formatting.Indented));
+            var result = await megaDrum.GetAllDrumsAsync();
+            if (result == null) Console.WriteLine("Error");
+            Console.WriteLine(JsonConvert.SerializeObject(result, Formatting.Indented));
         }
 
-        private static async Task SetDrumParametersAsync(MegaDrumHelper megaDrum)
+        private static async Task SetDrumParametersAsync(DrumModuleConnection megaDrum)
         {
-            var command = new SetDrumParametersCommand(Interlocked.Increment(ref CommandId))
+            var drum = new SinglePiezoPad(0)
             {
-                Drum = new SinglePiezoPad(0)
-                {
-                    Name = "Snare",
-                    PadNote = 38,
-                    SensorScantime = 3,
-                    SensorMasktime = 70,
-                    ThresholdMin = 30,
-                    ThresholdMax = 1023,
-                    Enabled = true,
-                    Amplification = 10
-                }
+                Name = "Snare",
+                PadNote = 38,
+                SensorScantime = 3,
+                SensorMasktime = 70,
+                ThresholdMin = 30,
+                ThresholdMax = 1023,
+                Enabled = true,
+                Amplification = 10
             };
-            var response = await megaDrum.InvokeCommandAsync(command);
+
+            var response = await megaDrum.SetDrumParametersAsync(drum);
 
             if (response == null)
                 Console.WriteLine("Error");
@@ -255,56 +239,28 @@ namespace Arkserg.TeensyDrumModule.DrumConsole
             Console.WriteLine(JsonConvert.SerializeObject(response, Formatting.Indented));
         }
 
-        private static async Task SaveSettingsAsync(MegaDrumHelper megaDrum)
+        private static async Task SaveSettingsAsync(DrumModuleConnection megaDrum)
         {
-            var command = new SaveSettingsCommand(Interlocked.Increment(ref CommandId));
-            var result = await megaDrum.InvokeCommandAsync(command);
-
-            var message = result != null ? "Success" : "Error";
-
-            Console.WriteLine(message);
+            var result = await megaDrum.SaveSettingsAsync();
+            Console.WriteLine(result ? "Success" : "Error");
         }
 
-        private static async Task ReloadSettingsAsync(MegaDrumHelper megaDrum)
+        private static async Task ReloadSettingsAsync(DrumModuleConnection megaDrum)
         {
-            var command = new ReloadSettingsCommand(Interlocked.Increment(ref CommandId));
-            var result = await megaDrum.InvokeCommandAsync(command);
-
-            var message = result != null ? "Success" : "Error";
-
-            Console.WriteLine(message);
+            var result = await megaDrum.ReloadSettingsAsync();
+            Console.WriteLine(result ? "Success" : "Error");
         }
 
-        private static async Task EnableDrumAsync(MegaDrumHelper megaDrum)
+        private static async Task EnableDrumAsync(DrumModuleConnection megaDrum)
         {
-            var command = new EnableDrumCommand(Interlocked.Increment(ref CommandId)) { ChannelId = 0 };
-            var result = await megaDrum.InvokeCommandAsync(command);
-
-            var message = result != null ? "Success" : "Error";
-
-            Console.WriteLine(message);
+            var result = await megaDrum.EnableDrumAsync(0);
+            Console.WriteLine(result ? "Success" : "Error");
         }
 
-        private static async Task DisableDrumAsync(MegaDrumHelper megaDrum)
+        private static async Task DisableDrumAsync(DrumModuleConnection megaDrum)
         {
-            var command = new DisableDrumCommand(Interlocked.Increment(ref CommandId)) { ChannelId = 0 };
-            var result = await megaDrum.InvokeCommandAsync(command);
-
-            var message = result != null ? "Success" : "Error";
-
-            Console.WriteLine(message);
-        }
-
-        private static async Task DeleteAllDrumsAsync(MegaDrumHelper megaDrum)
-        {
-            for(int i = 0; i< 12; i++)
-            {
-                var drum = new EmptyDrumPad((byte)i);
-                var command = new SetDrumParametersCommand(Interlocked.Increment(ref CommandId)) { Drum = drum };
-                var result = await megaDrum.InvokeCommandAsync(command);
-                var message = result != null ? $"{i} Success" : $"{i} Error";
-                Console.WriteLine(message);
-            }
+            var result = await megaDrum.DisableDrumAsync(0);
+            Console.WriteLine(result ? "Success" : "Error");
         }
     }    
 }
