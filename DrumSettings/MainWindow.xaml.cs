@@ -44,26 +44,6 @@ namespace Arkserg.TeensyDrumModule.DrumSettings
             }).CreateMapper();
 
             Drums = new ObservableCollection<DrumPadViewModel>();
-
-            //Drums = new ObservableCollection<DrumPadViewModel>()
-            //{
-            //    new SinglePiezoPadViewModel {Channel = 0, Name = "Snare"},
-            //    //new DualZoneCymbalViewModel {Channel = 1, Name = "Crash"},
-            //    new ThreeZoneCymbalViewModel {Channel = 2, Name = "Ride"},
-            //    //new HiHatControllerViewModel {Channel = 3, Name = "HiHat Controller"},
-            //    //new EmptyDrumPadViewModel {Channel = 4},
-            //    //new EmptyDrumPadViewModel {Channel = 5},
-            //    //new EmptyDrumPadViewModel {Channel = 6},
-            //    //new EmptyDrumPadViewModel {Channel = 7},
-            //    //new EmptyDrumPadViewModel {Channel = 8},
-            //    //new EmptyDrumPadViewModel {Channel = 9},
-            //    //new EmptyDrumPadViewModel {Channel = 10},
-            //    //new EmptyDrumPadViewModel {Channel = 11},                
-            //};          
-
-            foreach (var drum in Drums)
-                drum.OnModelChanged += OnDrumModelChangedAsync;            
-
             DrumsList.ItemsSource = Drums;
         }
 
@@ -111,6 +91,11 @@ namespace Arkserg.TeensyDrumModule.DrumSettings
             var result = await _connection.SetDrumParametersAsync(drum);
             if(result == null)
                 throw new Exception("Error"); //todo update viewModel?
+        }      
+
+        private async void OnDrumTypeChangedAsync(DrumPadViewModel model)
+        {
+            //todo: sarkashin
         }
 
         private async Task LoadConfigurationAsync()
@@ -125,6 +110,7 @@ namespace Arkserg.TeensyDrumModule.DrumSettings
             {
                 Drums.Add(drum);
                 drum.OnModelChanged += OnDrumModelChangedAsync;
+                drum.OnDrumTypeChanged += OnDrumTypeChangedAsync;
             }
 
             DrumsList.SelectedIndex = 0;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Reactive.Linq;
 using Arkserg.TeensyDrumModule.DrumModuleLibrary.Enums;
 using ReactiveUI;
@@ -7,7 +8,7 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
 {
     public class DrumPadViewModel : ReactiveObject
     {
-        private DrumType? _type;
+        private DrumType _type;
         private byte _channel;
         private string _name;
         private bool _enabled;
@@ -17,6 +18,7 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
         public DrumPadViewModel()
         {
             Changed.Throttle(TimeSpan.FromMilliseconds(500)).Subscribe(events => HandleModelChanged());
+            PropertyChanged += HandlePropertyChanged;
         }
 
         private void HandleModelChanged()
@@ -27,9 +29,16 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
                 OnModelChanged?.Invoke(this);
         }
 
-        public event Action<DrumPadViewModel> OnModelChanged;
+        private void HandlePropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (_initialized && e.PropertyName == nameof(Type))
+                OnDrumTypeChanged?.Invoke(this);
+        }
 
-        public DrumType? Type
+        public event Action<DrumPadViewModel> OnModelChanged;
+        public event Action<DrumPadViewModel> OnDrumTypeChanged;
+
+        public DrumType Type
         {
             get => _type;
             set => this.RaiseAndSetIfChanged(ref _type, value);            
