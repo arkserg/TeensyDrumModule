@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reactive.Linq;
 using Arkserg.TeensyDrumModule.DrumModuleLibrary.Enums;
@@ -14,6 +15,7 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
         private bool _enabled;
 
         private bool _initialized;
+        private bool _typeChanged = false;
 
         public DrumPadViewModel()
         {
@@ -25,6 +27,8 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
         {
             if (!_initialized)
                 _initialized = true;
+            else if (_typeChanged)
+                _typeChanged = false;
             else
                 OnModelChanged?.Invoke(this);
         }
@@ -32,7 +36,10 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
         private void HandlePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (_initialized && e.PropertyName == nameof(Type))
+            {
+                _typeChanged = true;
                 OnDrumTypeChanged?.Invoke(this);
+            }
         }
 
         public event Action<DrumPadViewModel> OnModelChanged;
@@ -60,6 +67,20 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
         {
             get => _enabled;
             set => this.RaiseAndSetIfChanged(ref _enabled, value);
+        }
+
+        public List<DrumType> AvailableTypes
+        {
+            get
+            {
+                var result = new List<DrumType> { DrumType.EmptyDrumPad, DrumType.SinglePiezoPad };
+
+                if (Channel < 5)
+                    result.Add(DrumType.DualPiezoPad);
+                else
+                    result.AddRange(new List<DrumType>{ DrumType.DualZoneCymbal, DrumType.ThreeZoneCymbal, DrumType.HiHatController});
+                return result;
+            }
         }
 
         public override string ToString()

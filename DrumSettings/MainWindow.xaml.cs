@@ -8,6 +8,7 @@ using Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels;
 using Arkserg.TeensyDrumModule.DrumSettings.Models;
 using AutoMapper;
 using System.Threading.Tasks;
+using Arkserg.TeensyDrumModule.DrumModuleLibrary.Enums;
 
 namespace Arkserg.TeensyDrumModule.DrumSettings
 {
@@ -95,7 +96,39 @@ namespace Arkserg.TeensyDrumModule.DrumSettings
 
         private async void OnDrumTypeChangedAsync(DrumPadViewModel model)
         {
-            //todo: sarkashin
+            var newDrum = CreateNewDrum(model);
+            var result = await _connection.SetDrumParametersAsync(newDrum);
+            if (result == null)
+                throw new Exception("Error"); //todo
+
+            var newModel = MapDrum(result);
+            newModel.OnModelChanged += OnDrumModelChangedAsync;
+            newModel.OnDrumTypeChanged += OnDrumTypeChangedAsync;
+
+            Drums.RemoveAt(model.Channel);
+            Drums.Insert(model.Channel, newModel);
+            DrumsList.SelectedIndex = model.Channel;
+        }
+
+        private DrumPad CreateNewDrum(DrumPadViewModel model)
+        {
+            switch (model.Type)
+            {
+                case DrumType.EmptyDrumPad:
+                    return new EmptyDrumPad(model.Channel);
+                case DrumType.SinglePiezoPad:
+                    return new SinglePiezoPad(model.Channel);
+                case DrumType.DualPiezoPad:
+                    return new DualPiezoPad(model.Channel);
+                case DrumType.DualZoneCymbal:
+                    return new DualZoneCymbal(model.Channel);
+                case DrumType.ThreeZoneCymbal:
+                    return new ThreeZoneCymbal(model.Channel);
+                case DrumType.HiHatController:
+                    return new HiHatController(model.Channel);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(model));
+            }
         }
 
         private async Task LoadConfigurationAsync()
@@ -156,6 +189,7 @@ namespace Arkserg.TeensyDrumModule.DrumSettings
                 _connection.CloseConnection();
                 _connection.Dispose();
                 _connection = null;
+                Drums.Clear();
             }
 
             ((MenuItem)ComPortMenu.Items[0]).IsEnabled = true;

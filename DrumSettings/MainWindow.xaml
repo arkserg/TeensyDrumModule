@@ -21,13 +21,13 @@
                 <ResourceDictionary Source="Drums.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <local:DrumsTemplateSelector x:Key="DrumsTemplateSelector"/>
-            
+
             <x:Array Type="models:DrumPadViewModel" x:Key="modelsList">
                 <models:SinglePiezoPadViewModel Channel="0" Enabled="true" Name="Snare" PadNote="38" ThresholdMin="500" ThresholdMax="1023" SensorScantime="88" SensorMasktime="188"/>
                 <models:DualZoneCymbalViewModel Channel="1" Enabled="true" Name="Crash" PadNote="39" EdgeNote="40" ThresholdMin="500" ThresholdMax="1023" SensorScantime="88" SensorMasktime="188"/>
                 <models:ThreeZoneCymbalViewModel Channel="2" Enabled="true" Name="Ride" PadNote="41" EdgeNote="42" BellNote="43" ThresholdMin="500" ThresholdMax="1023" SensorScantime="88" SensorMasktime="188"/>
                 <models:HiHatControllerViewModel Channel="3" Enabled="true" Name="HiHat controller" CcControl="127" ThresholdMin="500" ThresholdMax="1023"/>
-                <models:EmptyDrumPadViewModel Channel="4"/>                
+                <models:EmptyDrumPadViewModel Channel="4"/>
             </x:Array>
 
             <DataTemplate x:Key="EmptyDrumPadTemplate" DataType="models:EmptyDrumPadViewModel">
@@ -40,8 +40,15 @@
                         <ColumnDefinition Width="0.7*"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Channel"/>
-                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=Channel, Mode=TwoWay}"/>
+                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="0,7,0,0">
+                        <Label Content="Channel:" FontSize="17" FontWeight="Bold"/>
+                        <Label Content="{Binding Path=Channel, Mode=OneTime}" FontSize="17" FontWeight="Bold"/>
+                    </StackPanel>
+                    <ComboBox Grid.Row="0" Grid.Column="1" 
+                              ItemsSource="{Binding Path=AvailableTypes, Mode=OneTime}"
+                              SelectedItem="{Binding Path=Type, Mode=TwoWay}" 
+                              Foreground="{DynamicResource MaterialDesignLightForeground}"
+                              Margin="0,0,0,5" HorizontalAlignment="Right" FontSize="17" FontWeight="Bold"/>
 
                 </Grid>
             </DataTemplate>
@@ -63,8 +70,15 @@
                         <ColumnDefinition Width="0.7*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Label Grid.Row="0" Grid.Column="0" Content="Channel:"/>
-                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=Channel, Mode=TwoWay}" />
+                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="0,7,0,0">
+                        <Label Content="Channel:" FontSize="17" FontWeight="Bold"/>
+                        <Label Content="{Binding Path=Channel, Mode=OneTime}" FontSize="17" FontWeight="Bold"/>
+                    </StackPanel>
+                    <ComboBox Grid.Row="0" Grid.Column="1" 
+                              ItemsSource="{Binding Path=AvailableTypes, Mode=OneTime}"
+                              SelectedItem="{Binding Path=Type, Mode=TwoWay}" 
+                              Foreground="{DynamicResource MaterialDesignLightForeground}"
+                              Margin="0,0,0,5" HorizontalAlignment="Right" FontSize="17" FontWeight="Bold"/>
 
                     <Label Grid.Row="1" Grid.Column="0" Content="Name:"/>
                     <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Name, Mode=TwoWay }"/>
@@ -133,8 +147,15 @@
                         <ColumnDefinition Width="0.7*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Label Grid.Row="0" Grid.Column="0" Content="Channel:"/>
-                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=Channel, Mode=TwoWay}" />
+                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="0,7,0,0">
+                        <Label Content="Channel:" FontSize="17" FontWeight="Bold"/>
+                        <Label Content="{Binding Path=Channel, Mode=OneTime}" FontSize="17" FontWeight="Bold"/>
+                    </StackPanel>
+                    <ComboBox Grid.Row="0" Grid.Column="1" 
+                              ItemsSource="{Binding Path=AvailableTypes, Mode=OneTime}"
+                              SelectedItem="{Binding Path=Type, Mode=TwoWay}" 
+                              Foreground="{DynamicResource MaterialDesignLightForeground}"
+                              Margin="0,0,0,5" HorizontalAlignment="Right" FontSize="17" FontWeight="Bold"/>
 
                     <Label Grid.Row="1" Grid.Column="0" Content="Name:"/>
                     <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Name, Mode=TwoWay }"/>
@@ -208,9 +229,16 @@
                         <ColumnDefinition Width="0.7*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Label Grid.Row="0" Grid.Column="0" Content="Channel:"/>
-                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=Channel, Mode=TwoWay}" />
-
+                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="0,7,0,0">
+                        <Label Content="Channel:" FontSize="17" FontWeight="Bold"/>
+                        <Label Content="{Binding Path=Channel, Mode=OneTime}" FontSize="17" FontWeight="Bold"/>
+                    </StackPanel>
+                    <ComboBox Grid.Row="0" Grid.Column="1" 
+                              ItemsSource="{Binding Path=AvailableTypes, Mode=OneTime}"
+                              SelectedItem="{Binding Path=Type, Mode=TwoWay}" 
+                              Foreground="{DynamicResource MaterialDesignLightForeground}"
+                              Margin="0,0,0,5" HorizontalAlignment="Right" FontSize="17" FontWeight="Bold"/>
+                    
                     <Label Grid.Row="1" Grid.Column="0" Content="Name:"/>
                     <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Name, Mode=TwoWay }"/>
 
@@ -257,7 +285,7 @@
                                           MinValue="0"
                                           MaxValue="1000"
                                           Step="1"/>
-                    
+
                     <Label Grid.Row="10" Grid.Column="0" Content="Enabled:"/>
                     <ToggleButton Grid.Row="10" Grid.Column="1" 
                                   Style="{StaticResource MaterialDesignSwitchToggleButton}"
@@ -281,8 +309,15 @@
                         <ColumnDefinition Width="0.7*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Label Grid.Row="0" Grid.Column="0" Content="Channel:"/>
-                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=Channel, Mode=TwoWay}" />
+                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="0,7,0,0">
+                        <Label Content="Channel:" FontSize="17" FontWeight="Bold"/>
+                        <Label Content="{Binding Path=Channel, Mode=OneTime}" FontSize="17" FontWeight="Bold"/>
+                    </StackPanel>
+                    <ComboBox Grid.Row="0" Grid.Column="1" 
+                              ItemsSource="{Binding Path=AvailableTypes, Mode=OneWay}"
+                              SelectedItem="{Binding Path=Type, Mode=TwoWay}" 
+                              Foreground="{DynamicResource MaterialDesignLightForeground}"
+                              Margin="0,0,0,5" HorizontalAlignment="Right" FontSize="17" FontWeight="Bold"/>
 
                     <Label Grid.Row="1" Grid.Column="0" Content="Name:"/>
                     <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Name, Mode=TwoWay }"/>
@@ -338,7 +373,7 @@
                      FontSize="15" TextAlignment="Center"/>
 
         </DockPanel>
-        
+
         <Grid DockPanel.Dock="Bottom">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.25*"></ColumnDefinition>
@@ -348,7 +383,7 @@
 
             <DockPanel x:Name="DrumsPanel" Grid.Column="0" LastChildFill="True" Background="{DynamicResource PrimaryHueMidBrush}">
                 <!--<ListBox x:Name="DrumsList" DockPanel.Dock="Bottom"/>-->
-                <ListBox x:Name="DrumsList" DockPanel.Dock="Bottom" ItemsSource="{StaticResource modelsList}" SelectedIndex="2"/>
+                <ListBox x:Name="DrumsList" DockPanel.Dock="Bottom" ItemsSource="{StaticResource modelsList}" SelectedIndex="0"/>
             </DockPanel>
 
             <DockPanel x:Name="DrumSettingsPanel" Grid.Column="1" LastChildFill="False">
