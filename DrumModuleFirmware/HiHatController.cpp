@@ -20,7 +20,7 @@ HiHatController::HiHatController(JsonObject& json)
 void HiHatController::loopImplementation()
 {
 	unsigned long currentMillis = millis();
-	int newValue = analogRead(2); //todo
+	int newValue = analogRead(ANALOG_IN1);
 	newValue = 127 - Helper::normalizeSensor(newValue, thresholdMin_, thresholdMax_);
 	if (newValue != previousValue_)
 	{

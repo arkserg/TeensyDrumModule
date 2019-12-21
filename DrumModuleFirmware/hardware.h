@@ -1,12 +1,13 @@
 #ifndef HARDWARE_H
 #define HARDWARE_H
 
-#define ANALOG_PIN A0
-#define S0 0
-#define S1 1
-#define S2 2
-#define S3 3
-#define DRAIN 4
+#define ANALOG_IN0 A20
+#define ANALOG_IN1 A15
+#define S0 27
+#define S1 26
+#define S2 25
+#define S3 24
+#define DRAIN 28
 
 #define POTENTIOMETERS_ADDRESS 0x28
 

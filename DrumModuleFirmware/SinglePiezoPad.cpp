@@ -37,7 +37,7 @@ SinglePiezoPad::~SinglePiezoPad()
 
 void SinglePiezoPad::loopImplementation()
 {
-	int sensorValue = analogRead(0); //todo: sarkashin
+	int sensorValue = analogRead(ANALOG_IN0);
 	int velocity = piezoReader_->loop(sensorValue);
 
 	if (velocity == PiezoReader::AfterShock)

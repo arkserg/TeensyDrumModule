@@ -26,8 +26,8 @@ DualZoneCymbal::DualZoneCymbal(JsonObject& json)
 
 void DualZoneCymbal::loopImplementation()
 {
-	int sensorValue = analogRead(0); //todo:
-	int zoneSensorValue = analogRead(1); //todo:
+	int sensorValue = analogRead(ANALOG_IN0);
+	int zoneSensorValue = analogRead(ANALOG_IN1);
 	int velocity = piezoReader_->loop(sensorValue);
 
 	if (piezoReader_->hitInProgress_)

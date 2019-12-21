@@ -29,6 +29,7 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary
         private readonly SemaphoreSlim _semaphore;
         private CancellationTokenSource _cts;
         private Pipe _pipe;
+        private const int ResponseTimeoutMillis = 10000;
 
         private static int _commandId;
         private static int CommandId => Interlocked.Increment(ref _commandId);
@@ -86,7 +87,7 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary
             await _semaphore.WaitAsync();
             try
             {
-                var response = new CommandResultAwaiter(command.CommandId);
+                var response = new CommandResultAwaiter(command.CommandId, ResponseTimeoutMillis);
                 _responses.Add(command.CommandId, response);
 
                 var str = JsonConvert.SerializeObject(command, _serializerSettings);
