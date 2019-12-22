@@ -10,6 +10,12 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
     public class DualPiezoPad : SinglePiezoPad
     {
         [DataMember]
+        public byte SideClickNote { get; set; }
+
+        [DataMember]
+        public byte RimShotNote { get; set; }
+
+        [DataMember]
         public Int16 SecondZoneThresholdMin { get; set; }
 
         [DataMember]
@@ -22,7 +28,7 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
         public byte SecondZoneSensorMasktime { get; set; }
 
         [DataMember]
-        public byte SecondZoneNote { get; set; }
+        public byte SecondZoneAmplification { get; set; }
 
         protected DualPiezoPad()
         {
@@ -34,6 +40,20 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
 
         public DualPiezoPad(byte channel) : base(DrumType.DualPiezoPad, channel)
         {
+        }
+
+        public override void ResetToDefault()
+        {
+            base.ResetToDefault();
+            PadNote = 38;
+            SideClickNote = 40;
+            RimShotNote = 37;
+
+            SecondZoneThresholdMin = 20;
+            SecondZoneThresholdMax = 750;
+            SecondZoneSensorScantime = 3;
+            SecondZoneSensorMasktime = 70;
+            SecondZoneAmplification = 20;
         }
     }
 }

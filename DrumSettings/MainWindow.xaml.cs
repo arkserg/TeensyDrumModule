@@ -97,6 +97,7 @@ namespace Arkserg.TeensyDrumModule.DrumSettings
         private async void OnDrumTypeChangedAsync(DrumPadViewModel model)
         {
             var newDrum = CreateNewDrum(model);
+            newDrum.ResetToDefault();
             var result = await _connection.SetDrumParametersAsync(newDrum);
             if (result == null)
                 throw new Exception("Error"); //todo

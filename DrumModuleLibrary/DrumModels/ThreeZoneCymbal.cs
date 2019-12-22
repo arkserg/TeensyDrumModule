@@ -18,5 +18,13 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
         public ThreeZoneCymbal(byte channel) : base(DrumType.ThreeZoneCymbal, channel)
         {
         }
+
+        public override void ResetToDefault()
+        {
+            base.ResetToDefault();
+            PadNote = 51;
+            BellNote = 53;
+            EdgeNote = 59;
+        }
     }
 }

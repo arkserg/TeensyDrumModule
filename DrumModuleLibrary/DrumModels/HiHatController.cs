@@ -25,5 +25,13 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
         public HiHatController(byte channel) : base(DrumType.HiHatController, channel)
         {
         }
+
+        public override void ResetToDefault()
+        {
+            CcControl = 4;
+            ThresholdMin = 0;
+            ThresholdMax = 650;
+            base.ResetToDefault();
+        }
     }
 }

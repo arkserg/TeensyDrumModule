@@ -75,7 +75,7 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
             {
                 var result = new List<DrumType> { DrumType.EmptyDrumPad, DrumType.SinglePiezoPad };
 
-                if (Channel < 5)
+                if (Channel < 4)
                     result.Add(DrumType.DualPiezoPad);
                 else
                     result.AddRange(new List<DrumType>{ DrumType.DualZoneCymbal, DrumType.ThreeZoneCymbal, DrumType.HiHatController});

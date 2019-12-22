@@ -38,5 +38,16 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
         public SinglePiezoPad(byte channel) : base(DrumType.SinglePiezoPad, channel)
         {
         }
+
+        public override void ResetToDefault()
+        {
+            base.ResetToDefault();
+            PadNote = 38;
+            ThresholdMin = 20;
+            ThresholdMax = 750;
+            SensorScantime = 3;
+            SensorMasktime = 70;
+            Amplification = 20;
+        }
     }
 }

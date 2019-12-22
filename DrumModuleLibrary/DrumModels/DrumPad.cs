@@ -28,5 +28,10 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
             Channel = channel;
             Enabled = enabled;
         }
+
+        public virtual void ResetToDefault()
+        {
+            Name = $"Drum pad {Channel}";
+        }
     }
 }
