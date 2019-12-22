@@ -9,6 +9,7 @@
 #include "channelselector.h"
 #include "hihatcontroller.h"
 #include "emptydrumpad.h"
+#include "sharedadc.h"
 
 DrumPad* drums[12];
 
@@ -30,6 +31,7 @@ DrumPad* drums[12];
 
 void setup()
 {
+	SharedADC::setup();
 	ChannelSelector::setup();
 	Wire.begin();
 	Serial.begin(115200);

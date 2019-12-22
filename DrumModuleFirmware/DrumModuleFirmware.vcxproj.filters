@@ -51,6 +51,9 @@
     <ClInclude Include="digitalpotentiometer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sharedadc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="channelselector.cpp">
@@ -81,6 +84,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="digitalpotentiometer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sharedadc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

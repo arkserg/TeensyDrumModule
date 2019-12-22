@@ -1,6 +1,7 @@
 ﻿#include "hihatcontroller.h"
 #include "hardware.h"
 #include "helper.h"
+#include "sharedadc.h"
 
 HiHatController::HiHatController(byte channel, String name, bool enabled,
 	byte ccControl,	int thresholdMin, int thresholdMax) 
@@ -20,7 +21,7 @@ HiHatController::HiHatController(JsonObject& json)
 void HiHatController::loopImplementation()
 {
 	unsigned long currentMillis = millis();
-	int newValue = analogRead(ANALOG_IN1);
+	int newValue = SharedADC::adc->analogRead(ANALOG_IN1);
 	newValue = 127 - Helper::normalizeSensor(newValue, thresholdMin_, thresholdMax_);
 	if (newValue != previousValue_)
 	{

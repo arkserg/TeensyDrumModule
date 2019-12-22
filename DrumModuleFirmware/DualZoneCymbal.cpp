@@ -1,6 +1,7 @@
 ﻿#include "dualzonecymbal.h"
 #include "hardware.h"
 #include "helper.h"
+#include "sharedadc.h"
 
 DualZoneCymbal::DualZoneCymbal(byte channel, String name, bool enabled,	byte bowNote, 
 	byte edgeNote, int thresholdMin, int thresholdMax, int sensorScantime, 
@@ -26,14 +27,14 @@ DualZoneCymbal::DualZoneCymbal(JsonObject& json)
 
 void DualZoneCymbal::loopImplementation()
 {
-	int sensorValue = analogRead(ANALOG_IN0);
-	int zoneSensorValue = analogRead(ANALOG_IN1);
-	int velocity = piezoReader_->loop(sensorValue);
+	ADC::Sync_result measurement = SharedADC::adc->analogSynchronizedRead(ANALOG_IN1, ANALOG_IN0);
+
+	int velocity = piezoReader_->loop(measurement.result_adc1);
 
 	if (piezoReader_->hitInProgress_)
 	{
-		if (zoneSensorValue < lastZoneSensorValue_)
-			lastZoneSensorValue_ = zoneSensorValue;
+		if (measurement.result_adc0 < lastZoneSensorValue_)
+			lastZoneSensorValue_ = measurement.result_adc0;
 	}
 	if (velocity == PiezoReader::AfterShock)
 	{

@@ -1,6 +1,7 @@
 ﻿#include "singlepiezopad.h"
 #include "hardware.h"
 #include "helper.h"
+#include "sharedadc.h"
 
 SinglePiezoPad::SinglePiezoPad(byte channel, String name, bool enabled,
 	byte padNote, int thresholdMin, int thresholdMax, int sensorScantime, 
@@ -37,7 +38,7 @@ SinglePiezoPad::~SinglePiezoPad()
 
 void SinglePiezoPad::loopImplementation()
 {
-	int sensorValue = analogRead(ANALOG_IN0);
+	int sensorValue = SharedADC::adc->analogRead(ANALOG_IN0);
 	int velocity = piezoReader_->loop(sensorValue);
 
 	if (velocity == PiezoReader::AfterShock)
