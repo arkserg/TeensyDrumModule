@@ -101,6 +101,7 @@
     <ClInclude Include="channelselector.h" />
     <ClInclude Include="digitalpotentiometer.h" />
     <ClInclude Include="drumpad.h" />
+    <ClInclude Include="dualpiezopad.h" />
     <ClInclude Include="dualzonecymbal.h" />
     <ClInclude Include="emptydrumpad.h" />
     <ClInclude Include="hardware.h" />
@@ -116,6 +117,7 @@
     <ClCompile Include="channelselector.cpp" />
     <ClCompile Include="digitalpotentiometer.cpp" />
     <ClCompile Include="drumpad.cpp" />
+    <ClCompile Include="dualpiezopad.cpp" />
     <ClCompile Include="dualzonecymbal.cpp" />
     <ClCompile Include="emptydrumpad.cpp" />
     <ClCompile Include="helper.cpp" />

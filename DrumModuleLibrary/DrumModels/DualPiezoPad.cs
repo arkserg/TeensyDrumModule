@@ -22,13 +22,19 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
         public Int16 SecondZoneThresholdMax { get; set; }
 
         [DataMember]
-        public byte SecondZoneSensorScantime { get; set; }
+        public byte SecondZoneScanTime { get; set; }
 
         [DataMember]
-        public byte SecondZoneSensorMasktime { get; set; }
+        public byte SecondZoneMaskTime { get; set; }
 
         [DataMember]
         public byte SecondZoneAmplification { get; set; }
+
+        [DataMember]
+        public byte RimShotBoundLeft { get; set; }
+
+        [DataMember]
+        public byte RimShotBoundRight { get; set; }
 
         protected DualPiezoPad()
         {
@@ -51,8 +57,8 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
 
             SecondZoneThresholdMin = 20;
             SecondZoneThresholdMax = 750;
-            SecondZoneSensorScantime = 3;
-            SecondZoneSensorMasktime = 70;
+            SecondZoneScanTime = 3;
+            SecondZoneMaskTime = 70;
             SecondZoneAmplification = 20;
         }
     }
