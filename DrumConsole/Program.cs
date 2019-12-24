@@ -21,84 +21,84 @@ namespace Arkserg.TeensyDrumModule.DrumConsole
                     {
                         Name = "Second crash cymbal",
                         PadNote = 12, BellNote = 14, EdgeNote = 15,
-                        SensorScantime = 1, SensorMasktime = 3,
+                        ScanTime = 1, MaskTime = 3,
                         ThresholdMin = 12, ThresholdMax = 700,
                     },
                     new ThreeZoneCymbal(1)
                     {
                         Name = "Second crash cymbal",
                         PadNote = 12, BellNote = 14, EdgeNote = 15,
-                        SensorScantime = 1, SensorMasktime = 3,
+                        ScanTime = 1, MaskTime = 3,
                         ThresholdMin = 12, ThresholdMax = 700,
                     },
                     new ThreeZoneCymbal(2)
                     {
                         Name = "Second crash cymbal",
                         PadNote = 12, BellNote = 14, EdgeNote = 15,
-                        SensorScantime = 1, SensorMasktime = 3,
+                        ScanTime = 1, MaskTime = 3,
                         ThresholdMin = 12, ThresholdMax = 700,
                     },
                     new ThreeZoneCymbal(3)
                     {
                         Name = "Second crash cymbal",
                         PadNote = 12, BellNote = 14, EdgeNote = 15,
-                        SensorScantime = 1, SensorMasktime = 3,
+                        ScanTime = 1, MaskTime = 3,
                         ThresholdMin = 12, ThresholdMax = 700,
                     },
                     new ThreeZoneCymbal(4)
                     {
                         Name = "Second crash cymbal",
                         PadNote = 12, BellNote = 14, EdgeNote = 15,
-                        SensorScantime = 1, SensorMasktime = 3,
+                        ScanTime = 1, MaskTime = 3,
                         ThresholdMin = 12, ThresholdMax = 700,
                     },
                     new ThreeZoneCymbal(5)
                     {
                         Name = "Second crash cymbal",
                         PadNote = 12, BellNote = 14, EdgeNote = 15,
-                        SensorScantime = 1, SensorMasktime = 3,
+                        ScanTime = 1, MaskTime = 3,
                         ThresholdMin = 12, ThresholdMax = 700,
                     },
                     new ThreeZoneCymbal(6)
                     {
                         Name = "Second crash cymbal",
                         PadNote = 12, BellNote = 14, EdgeNote = 15,
-                        SensorScantime = 1, SensorMasktime = 3,
+                        ScanTime = 1, MaskTime = 3,
                         ThresholdMin = 12, ThresholdMax = 700,
                     },
                     new ThreeZoneCymbal(7)
                     {
                         Name = "Second crash cymbal",
                         PadNote = 12, BellNote = 14, EdgeNote = 15,
-                        SensorScantime = 1, SensorMasktime = 3,
+                        ScanTime = 1, MaskTime = 3,
                         ThresholdMin = 12, ThresholdMax = 700,
                     },
                     new ThreeZoneCymbal(8)
                     {
                         Name = "Second crash cymbal",
                         PadNote = 12, BellNote = 14, EdgeNote = 15,
-                        SensorScantime = 1, SensorMasktime = 3,
+                        ScanTime = 1, MaskTime = 3,
                         ThresholdMin = 12, ThresholdMax = 700,
                     },
                     new ThreeZoneCymbal(9)
                     {
                         Name = "Second crash cymbal",
                         PadNote = 12, BellNote = 14, EdgeNote = 15,
-                        SensorScantime = 1, SensorMasktime = 3,
+                        ScanTime = 1, MaskTime = 3,
                         ThresholdMin = 12, ThresholdMax = 700,
                     },
                     new ThreeZoneCymbal(10)
                     {
                         Name = "Second crash cymbal",
                         PadNote = 12, BellNote = 14, EdgeNote = 15,
-                        SensorScantime = 1, SensorMasktime = 3,
+                        ScanTime = 1, MaskTime = 3,
                         ThresholdMin = 12, ThresholdMax = 700,
                     },
                     new ThreeZoneCymbal(11)
                     {
                         Name = "Second crash cymbal",
                         PadNote = 12, BellNote = 14, EdgeNote = 15,
-                        SensorScantime = 1, SensorMasktime = 3,
+                        ScanTime = 1, MaskTime = 3,
                         ThresholdMin = 12, ThresholdMax = 700,
                     },
                 }
@@ -112,8 +112,8 @@ namespace Arkserg.TeensyDrumModule.DrumConsole
                     PadNote = 12,
                     BellNote = 14,
                     EdgeNote = 15,
-                    SensorScantime = 1,
-                    SensorMasktime = 3,
+                    ScanTime = 1,
+                    MaskTime = 3,
                     ThresholdMin = 12,
                     ThresholdMax = 700,
                 }
@@ -223,8 +223,8 @@ namespace Arkserg.TeensyDrumModule.DrumConsole
             {
                 Name = "Snare",
                 PadNote = 38,
-                SensorScantime = 3,
-                SensorMasktime = 70,
+                ScanTime = 3,
+                MaskTime = 70,
                 ThresholdMin = 30,
                 ThresholdMax = 1023,
                 Enabled = true,

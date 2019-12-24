@@ -45,8 +45,8 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
             PadNote = 38;
             ThresholdMin = 20;
             ThresholdMax = 750;
-            SensorScantime = 3;
-            SensorMasktime = 70;
+            ScanTime = 3;
+            MaskTime = 70;
             Amplification = 20;
         }
     }

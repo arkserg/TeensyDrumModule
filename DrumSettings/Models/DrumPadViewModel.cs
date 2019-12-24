@@ -123,8 +123,8 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
         private byte _padNote;
         private short _thresholdMin;
         private short _thresholdMax;
-        private byte _sensorScantime;
-        private byte _sensorMasktime;
+        private byte _scanTime;
+        private byte _maskTime;
         private byte _amplification;
         
         public byte PadNote
@@ -145,16 +145,16 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
             set => this.RaiseAndSetIfChanged(ref _thresholdMax, value);
         }
 
-        public byte SensorScantime
+        public byte ScanTime
         {
-            get => _sensorScantime;
-            set => this.RaiseAndSetIfChanged(ref _sensorScantime, value);
+            get => _scanTime;
+            set => this.RaiseAndSetIfChanged(ref _scanTime, value);
         }
 
-        public byte SensorMasktime
+        public byte MaskTime
         {
-            get => _sensorMasktime;
-            set => this.RaiseAndSetIfChanged(ref _sensorMasktime, value);
+            get => _maskTime;
+            set => this.RaiseAndSetIfChanged(ref _maskTime, value);
         }
 
         public byte Amplification
@@ -162,6 +162,11 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
             get => _amplification;
             set => this.RaiseAndSetIfChanged(ref _amplification, value);
         }
+    }
+
+    //todo: dualpiezopadviewmodel
+    public class DualPiezoPadViewModel : SinglePiezoPadViewModel
+    {
     }
 
     public class DualZoneCymbalViewModel : SinglePiezoPadViewModel

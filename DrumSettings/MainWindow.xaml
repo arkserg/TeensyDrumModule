@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Arkserg.TeensyDrumModule.DrumSettings"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:models="clr-namespace:Arkserg.TeensyDrumModule.DrumSettings.Models"
         mc:Ignorable="d"
         Title="MainWindow" Height="550" Width="800"
@@ -22,10 +21,10 @@
             </ResourceDictionary.MergedDictionaries>
             <local:DrumsTemplateSelector x:Key="DrumsTemplateSelector"/>
 
-            <x:Array Type="models:DrumPadViewModel" x:Key="modelsList">
-                <models:SinglePiezoPadViewModel Channel="0" Enabled="true" Name="Snare" PadNote="38" ThresholdMin="500" ThresholdMax="1023" SensorScantime="88" SensorMasktime="188"/>
-                <models:DualZoneCymbalViewModel Channel="1" Enabled="true" Name="Crash" PadNote="39" EdgeNote="40" ThresholdMin="500" ThresholdMax="1023" SensorScantime="88" SensorMasktime="188"/>
-                <models:ThreeZoneCymbalViewModel Channel="2" Enabled="true" Name="Ride" PadNote="41" EdgeNote="42" BellNote="43" ThresholdMin="500" ThresholdMax="1023" SensorScantime="88" SensorMasktime="188"/>
+            <x:Array Type="models:DrumPadViewModel" x:Key="ModelsList">
+                <models:SinglePiezoPadViewModel Channel="0" Enabled="true" Name="Snare" PadNote="38" ThresholdMin="500" ThresholdMax="1023" ScanTime="88" MaskTime="188"/>
+                <models:DualZoneCymbalViewModel Channel="1" Enabled="true" Name="Crash" PadNote="39" EdgeNote="40" ThresholdMin="500" ThresholdMax="1023" ScanTime="88" MaskTime="188"/>
+                <models:ThreeZoneCymbalViewModel Channel="2" Enabled="true" Name="Ride" PadNote="41" EdgeNote="42" BellNote="43" ThresholdMin="500" ThresholdMax="1023" ScanTime="88" MaskTime="188"/>
                 <models:HiHatControllerViewModel Channel="3" Enabled="true" Name="HiHat controller" CcControl="127" ThresholdMin="500" ThresholdMax="1023"/>
                 <models:EmptyDrumPadViewModel Channel="4"/>
             </x:Array>
@@ -109,14 +108,14 @@
 
                     <Label Grid.Row="6" Grid.Column="0" Content="Sensor Scan Time:"/>
                     <local:NumericSpinner Grid.Row="6" Grid.Column="1" Padding="5" 
-                                          Value="{Binding Path=SensorScantime, Mode=TwoWay}"
+                                          Value="{Binding Path=ScanTime, Mode=TwoWay}"
                                           MinValue="0"
                                           MaxValue="10"
                                           Step="1"/>
 
                     <Label Grid.Row="7" Grid.Column="0" Content="Sensor Mask Time:"/>
                     <local:NumericSpinner Grid.Row="7" Grid.Column="1" Padding="5" 
-                                          Value="{Binding Path=SensorMasktime, Mode=TwoWay}"
+                                          Value="{Binding Path=MaskTime, Mode=TwoWay}"
                                           MinValue="0"
                                           MaxValue="1000"
                                           Step="1"/>
@@ -189,14 +188,14 @@
 
                     <Label Grid.Row="7" Grid.Column="0" Content="Sensor Scan Time:"/>
                     <local:NumericSpinner Grid.Row="7" Grid.Column="1" Padding="5" 
-                                          Value="{Binding Path=SensorScantime, Mode=TwoWay}"
+                                          Value="{Binding Path=ScanTime, Mode=TwoWay}"
                                           MinValue="0"
                                           MaxValue="10"
                                           Step="1"/>
 
                     <Label Grid.Row="8" Grid.Column="0" Content="Sensor Mask Time:"/>
                     <local:NumericSpinner Grid.Row="8" Grid.Column="1" Padding="5" 
-                                          Value="{Binding Path=SensorMasktime, Mode=TwoWay}"
+                                          Value="{Binding Path=MaskTime, Mode=TwoWay}"
                                           MinValue="0"
                                           MaxValue="1000"
                                           Step="1"/>
@@ -274,14 +273,14 @@
 
                     <Label Grid.Row="8" Grid.Column="0" Content="Sensor Scan Time:"/>
                     <local:NumericSpinner Grid.Row="8" Grid.Column="1" Padding="5" 
-                                          Value="{Binding Path=SensorScantime, Mode=TwoWay}"
+                                          Value="{Binding Path=ScanTime, Mode=TwoWay}"
                                           MinValue="0"
                                           MaxValue="10"
                                           Step="1"/>
 
                     <Label Grid.Row="9" Grid.Column="0" Content="Sensor Mask Time:"/>
                     <local:NumericSpinner Grid.Row="9" Grid.Column="1" Padding="5" 
-                                          Value="{Binding Path=SensorMasktime, Mode=TwoWay}"
+                                          Value="{Binding Path=MaskTime, Mode=TwoWay}"
                                           MinValue="0"
                                           MaxValue="1000"
                                           Step="1"/>
@@ -383,7 +382,7 @@
 
             <DockPanel x:Name="DrumsPanel" Grid.Column="0" LastChildFill="True" Background="{DynamicResource PrimaryHueMidBrush}">
                 <!--<ListBox x:Name="DrumsList" DockPanel.Dock="Bottom"/>-->
-                <ListBox x:Name="DrumsList" DockPanel.Dock="Bottom" ItemsSource="{StaticResource modelsList}" SelectedIndex="0"/>
+                <ListBox x:Name="DrumsList" DockPanel.Dock="Bottom" ItemsSource="{StaticResource ModelsList}" SelectedIndex="0"/>
             </DockPanel>
 
             <DockPanel x:Name="DrumSettingsPanel" Grid.Column="1" LastChildFill="False">
