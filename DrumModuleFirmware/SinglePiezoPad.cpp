@@ -65,7 +65,7 @@ void SinglePiezoPad::serializeParameters(JsonObject& result)
 	result["PadNote"] = padNote_;
 	result["ThresholdMin"] = piezoReader_->thresholdMin_;
 	result["ThresholdMax"] = piezoReader_->thresholdMax_;
-	result["SensorScantime"] = piezoReader_->sensorScantime_;
-	result["SensorMasktime"] = piezoReader_->sensorMasktime_;
+	result["ScanTime"] = piezoReader_->sensorScantime_;
+	result["MaskTime"] = piezoReader_->sensorMasktime_;
 	result["Amplification"] = piezoReader_->amplification_;
 }

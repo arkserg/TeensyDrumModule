@@ -19,10 +19,10 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
         public Int16 ThresholdMax { get; set; }
 
         [DataMember]
-        public byte SensorScantime { get; set; }
+        public byte ScanTime { get; set; }
 
         [DataMember]
-        public byte SensorMasktime { get; set; }
+        public byte MaskTime { get; set; }
 
         [DataMember]
         public byte Amplification { get; set; }
