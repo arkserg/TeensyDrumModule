@@ -25,6 +25,10 @@ public:
 	void serializeParameters(JsonObject& result);
 
 	byte edgeNote_;
+	int chokeValueThreshold_;
+	byte chokeTimeThreshold_;
+	bool chokeEnabled_;
+	byte chokeNote_;
 
 protected:
 	DualZoneCymbal(byte type, byte channel, String name, bool enabled,
@@ -33,8 +37,13 @@ protected:
 
 	void sendNote(byte pitch, byte velocity);
 	void loopImplementation();
+	void processChoke(int sensorValue);
 
-	int lastZoneSensorValue_;
+	int minZoneSensorValue_;
+	bool chokeInProgress_;
+	bool chokeNoteSent_;
+	unsigned long chokeStartTime_;
+
 };
 
 #endif

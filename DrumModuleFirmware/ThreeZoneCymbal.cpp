@@ -19,9 +19,9 @@ ThreeZoneCymbal::ThreeZoneCymbal(JsonObject& json)
 
 void ThreeZoneCymbal::sendNote(byte pitch, byte velocity)
 {
-	if (lastZoneSensorValue_ > 1000)
+	if (minZoneSensorValue_ > 1000)
 		Helper::sendNoteOnOff(padNote_, velocity);
-	else if (lastZoneSensorValue_ > 100)
+	else if (minZoneSensorValue_ > 100)
 		Helper::sendNoteOnOff(edgeNote_, velocity);
 	else
 		Helper::sendNoteOnOff(bellNote_, velocity);

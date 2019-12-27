@@ -220,6 +220,8 @@ namespace Arkserg.TeensyDrumModule.DrumSettings
                         return element.FindResource("ThreeZoneCymbalTemplate") as DataTemplate;
                     case DualZoneCymbalViewModel _:
                         return element.FindResource("DualZoneCymbalTemplate") as DataTemplate;
+                    case DualPiezoPadViewModel _:
+                        return element.FindResource("DualPiezoPadTemplate") as DataTemplate;
                     case SinglePiezoPadViewModel _:
                         return element.FindResource("SinglePiezoPadTemplate") as DataTemplate;
                     default:

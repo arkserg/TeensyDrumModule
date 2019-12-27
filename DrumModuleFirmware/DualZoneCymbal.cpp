@@ -23,6 +23,10 @@ DualZoneCymbal::DualZoneCymbal(JsonObject& json)
 	: SinglePiezoPad(json)
 {
 	edgeNote_ = json["EdgeNote"];
+	chokeValueThreshold_ = json["ChokeValueThreshold"];
+	chokeTimeThreshold_ = json["ChokeTimeThreshold"];
+	chokeEnabled_ = json["ChokeEnabled"];
+	chokeNote_ = json["ChokeNote"];
 }
 
 void DualZoneCymbal::loopImplementation()
@@ -33,8 +37,8 @@ void DualZoneCymbal::loopImplementation()
 
 	if (piezoReader_->hitInProgress_)
 	{
-		if (measurement.result_adc0 < lastZoneSensorValue_)
-			lastZoneSensorValue_ = measurement.result_adc0;
+		if (measurement.result_adc0 < minZoneSensorValue_)
+			minZoneSensorValue_ = measurement.result_adc0;
 	}
 	if (velocity == PiezoReader::AfterShock)
 	{
@@ -43,14 +47,39 @@ void DualZoneCymbal::loopImplementation()
 	if (velocity != 0)
 	{
 		sendNote(padNote_, velocity);
-		lastZoneSensorValue_ = 1023;
+		minZoneSensorValue_ = 1023;
 		ChannelSelector::drainCycle();
+	}
+
+	if(chokeEnabled_)
+		processChoke(measurement.result_adc0);
+}
+
+void DualZoneCymbal::processChoke(int sensorValue)
+{
+	if (!chokeInProgress_ && sensorValue <= chokeValueThreshold_)
+	{
+		chokeStartTime_ = millis();
+		chokeInProgress_ = true;
+	}
+	else if (chokeInProgress_ && !chokeNoteSent_)
+	{
+		if ((millis() - chokeStartTime_) >= chokeTimeTreshold_)
+		{
+			chokeNoteSent_ = true;
+			Helper::sendNoteOnOff(chokeNote_, 1);
+		}
+	}
+	else if (chokeInProgress_ && sensorValue > chokeValueThreshold_)
+	{
+		chokeInProgress_ = false;
+		chokeNoteSent_ = false;
 	}
 }
 
 void DualZoneCymbal::sendNote(byte pitch, byte velocity)
 {
-	if (lastZoneSensorValue_ > 1000)
+	if (minZoneSensorValue_ > 1000)
 		Helper::sendNoteOnOff(padNote_, velocity);
 	else
 		Helper::sendNoteOnOff(edgeNote_, velocity);
@@ -60,4 +89,8 @@ void DualZoneCymbal::serializeParameters(JsonObject& result)
 {
 	SinglePiezoPad::serializeParameters(result);
 	result["EdgeNote"] = edgeNote_;
+	result["ChokeValueThreshold"] = chokeValueThreshold_;
+	result["ChokeTimeTreshold"] = chokeTimeThreshold_;
+	result["ChokeEnabled"] = chokeEnabled_;
+	result["ChokeNote"] = chokeNote_;
 }
