@@ -21,7 +21,7 @@ HiHatController::HiHatController(JsonObject& json)
 void HiHatController::loopImplementation()
 {
 	unsigned long currentMillis = millis();
-	int newValue = SharedADC::adc->analogRead(ANALOG_IN1);
+	int newValue = SharedADC::adc->analogRead(ANALOG_IN0);
 	newValue = 127 - Helper::normalizeSensor(newValue, thresholdMin_, thresholdMax_);
 	if (newValue != previousValue_)
 	{

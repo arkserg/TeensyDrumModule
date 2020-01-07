@@ -69,9 +69,9 @@ uint8_t DigitalPotentiometer::getMemoryAddress(byte channel, byte subChannel)
 	if (channel < 4)
 	{
 		if (subChannel == 0)
-			return 1 << 4; //todo
-		else
 			return 0 << 4; //todo
+		else
+			return 1 << 4; //todo
 	}
 	else
 	{

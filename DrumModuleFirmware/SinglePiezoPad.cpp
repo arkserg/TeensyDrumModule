@@ -38,8 +38,9 @@ SinglePiezoPad::~SinglePiezoPad()
 
 void SinglePiezoPad::loopImplementation()
 {
-	int sensorValue = SharedADC::adc->analogRead(ANALOG_IN0);
-	int velocity = piezoReader_->loop(sensorValue);
+	ADC::Sync_result measurement = SharedADC::adc->analogSynchronizedRead(ANALOG_IN0, ANALOG_IN1);
+	int value = channel_ < 4 ? measurement.result_adc0 : measurement.result_adc1;
+	int velocity = piezoReader_->loop(value);
 
 	if (velocity == PiezoReader::AfterShock)
 	{

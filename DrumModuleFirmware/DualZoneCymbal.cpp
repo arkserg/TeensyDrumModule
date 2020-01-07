@@ -27,7 +27,7 @@ DualZoneCymbal::DualZoneCymbal(JsonObject& json)
 
 void DualZoneCymbal::loopImplementation()
 {
-	ADC::Sync_result measurement = SharedADC::adc->analogSynchronizedRead(ANALOG_IN1, ANALOG_IN0);
+	ADC::Sync_result measurement = SharedADC::adc->analogSynchronizedRead(ANALOG_IN0, ANALOG_IN1);
 
 	int velocity = piezoReader_->loop(measurement.result_adc1);
 
