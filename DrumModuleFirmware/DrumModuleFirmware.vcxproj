@@ -111,6 +111,7 @@
     <ClInclude Include="sharedadc.h" />
     <ClInclude Include="singlepiezopad.h" />
     <ClInclude Include="threezonecymbal.h" />
+    <ClInclude Include="xtalkhelper.h" />
     <ClInclude Include="__vm\.DrumModuleFirmware.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
@@ -126,6 +127,7 @@
     <ClCompile Include="sharedadc.cpp" />
     <ClCompile Include="singlepiezopad.cpp" />
     <ClCompile Include="threezonecymbal.cpp" />
+    <ClCompile Include="xtalkhelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="drummodulefirmware.ino" />

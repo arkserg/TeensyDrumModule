@@ -1,6 +1,7 @@
 #include "piezoreader.h"
 #include "hardware.h"
 #include "helper.h"
+#include "xtalkhelper.h"
 
 PiezoReader::PiezoReader(byte channel, byte subChannel,	int thresholdMin, 
 	int thresholdMax, int sensorScantime, int sensorMasktime, byte amplification, byte scale, byte lift) :
@@ -9,8 +10,7 @@ PiezoReader::PiezoReader(byte channel, byte subChannel,	int thresholdMin,
 	potentiometer_(channel, subChannel)
 {
 	lightHitMasktime_ = sensorMasktime * 4;
-	float max = 127;
-	k_ = (max - lift) / max;
+	k_ = (127 - lift) / 127.0f;
 }
 
 void PiezoReader::setup()
@@ -58,8 +58,15 @@ int PiezoReader::ProcessHit(int sensorValue, unsigned long currentMillis)
 			previousHitValue_ = currentValue_;
 			previousHitMillis_ = currentMillis;
 
-			result = Helper::normalizeSensor(currentValue_, thresholdMin_, thresholdMax_, scale_, lift_, k_);
-			nextHitAllowed_ = false;
+			if (XTalkHelper::checkNotCrossTalk(currentMillis, currentValue_))
+			{
+				result = Helper::normalizeSensor(currentValue_, thresholdMin_, thresholdMax_, scale_, lift_, k_);
+				nextHitAllowed_ = false;
+			}
+			else
+			{
+				result = CrossTalk;
+			}
 		}
 		else
 		{

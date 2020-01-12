@@ -44,7 +44,7 @@ void SinglePiezoPad::loopImplementation()
 	int value = channel_ < 4 ? measurement.result_adc0 : measurement.result_adc1;
 	int velocity = piezoReader_->loop(value);
 
-	if (velocity == PiezoReader::AfterShock)
+	if (velocity == PiezoReader::AfterShock || velocity == PiezoReader::CrossTalk)
 	{
 		ChannelSelector::drainCycle();
 	}

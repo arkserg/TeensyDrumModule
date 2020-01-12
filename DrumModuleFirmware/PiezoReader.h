@@ -17,6 +17,7 @@ public:
 		int sensorScantime, int sensorMasktime, byte amplification, byte scale, byte lift);
 
 	static const int AfterShock = -1;
+	static const int CrossTalk = -2;
 	int loop(int sensorValue);
 	void setup();
 

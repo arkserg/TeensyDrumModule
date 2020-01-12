@@ -40,11 +40,11 @@ void DualZoneCymbal::loopImplementation()
 		if (measurement.result_adc0 < minZoneSensorValue_)
 			minZoneSensorValue_ = measurement.result_adc0;
 	}
-	if (velocity == PiezoReader::AfterShock)
+	if (velocity == PiezoReader::AfterShock || velocity == PiezoReader::CrossTalk)
 	{
 		ChannelSelector::drainCycle();
 	}
-	if (velocity != 0)
+	else if (velocity != 0)
 	{
 		sendNote(padNote_, velocity);
 		minZoneSensorValue_ = 1023;
