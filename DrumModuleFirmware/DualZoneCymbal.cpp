@@ -64,7 +64,7 @@ void DualZoneCymbal::processChoke(int sensorValue)
 	}
 	else if (chokeInProgress_ && !chokeNoteSent_)
 	{
-		if ((millis() - chokeStartTime_) >= chokeTimeTreshold_)
+		if ((millis() - chokeStartTime_) >= chokeTimeThreshold_)
 		{
 			chokeNoteSent_ = true;
 			Helper::sendNoteOnOff(chokeNote_, 1);

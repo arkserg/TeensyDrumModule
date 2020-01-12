@@ -25,8 +25,8 @@ SinglePiezoPad::SinglePiezoPad(JsonObject& json)
 	padNote_ = json["PadNote"];
 	int thresholdMin = json["ThresholdMin"];
 	int thresholdMax = json["ThresholdMax"];
-	int sensorScantime = json["SensorScantime"];
-	int sensorMasktime = json["SensorMasktime"];
+	int sensorScantime = json["ScanTime"];
+	int sensorMasktime = json["MaskTime"];
 	byte amplification = json["Amplification"];
 	piezoReader_ = new PiezoReader(channel_, 0, thresholdMin, thresholdMax, sensorScantime, sensorMasktime, amplification);
 }

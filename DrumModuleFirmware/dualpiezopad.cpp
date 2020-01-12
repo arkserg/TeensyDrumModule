@@ -85,9 +85,9 @@ void DualPiezoPad::loopImplementation()
 void DualPiezoPad::processRimShot()
 {
 	byte rimshotValue = getRimShotValue();
-	if (getRimShotValue < rimShotBoundLeft_)
+	if (rimshotValue < rimShotBoundLeft_)
 		Helper::sendNoteOnOff(padNote_, rimVelocity_);
-	else if (getRimShotValue > rimShotBoundRight_)
+	else if (rimshotValue > rimShotBoundRight_)
 		Helper::sendNoteOnOff(sideClickNote_, rimVelocity_);
 	else
 		Helper::sendNoteOnOff(rimShotNote_, rimVelocity_);
