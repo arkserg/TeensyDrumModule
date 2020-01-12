@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Reactive.Linq;
 using Arkserg.TeensyDrumModule.DrumModuleLibrary.Enums;
 using ReactiveUI;
+using System.Linq;
 
 namespace Arkserg.TeensyDrumModule.DrumSettings.Models
 {
@@ -83,6 +84,8 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
             }
         }
 
+        public List<ScaleType> ScaleTypes => Enum.GetValues(typeof(ScaleType)).Cast<ScaleType>().ToList();
+
         public override string ToString()
         {
             return $"{_channel} {_name}";
@@ -126,6 +129,8 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
         private byte _scanTime;
         private byte _maskTime;
         private byte _amplification;
+        private ScaleType _scale;
+        private byte _lift;
         
         public byte PadNote
         {
@@ -161,6 +166,18 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
         {
             get => _amplification;
             set => this.RaiseAndSetIfChanged(ref _amplification, value);
+        }
+
+        public ScaleType Scale
+        {
+            get => _scale;
+            set => this.RaiseAndSetIfChanged(ref _scale, value);
+        }
+
+        public byte Lift
+        {
+            get => _lift;
+            set => this.RaiseAndSetIfChanged(ref _lift, value);
         }
     }
 

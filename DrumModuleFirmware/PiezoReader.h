@@ -14,7 +14,7 @@ class PiezoReader {
 
 public:
 	PiezoReader(byte channel, byte subChannel, int thresholdMin, int thresholdMax, 
-		int sensorScantime, int sensorMasktime, byte amplification);
+		int sensorScantime, int sensorMasktime, byte amplification, byte scale, byte lift);
 
 	static const int AfterShock = -1;
 	int loop(int sensorValue);
@@ -26,6 +26,8 @@ public:
 	int sensorMasktime_;
 	byte amplification_;
 	boolean hitInProgress_ = false;
+	byte scale_;
+	byte lift_;
 
 private:
 	int ProcessHit(int sensorValue, unsigned long currentMillis);
@@ -37,6 +39,7 @@ private:
 	int previousHitValue_;
 	int lightHitMasktime_;
 	DigitalPotentiometer potentiometer_;
+	float k_;
 };
 
 #endif

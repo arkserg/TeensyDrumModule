@@ -18,10 +18,10 @@ namespace Arkserg.TeensyDrumModule.DrumSettings
         {
             InitializeComponent();
 
-            LblValue.SetBinding(ContentProperty, new Binding("Value")
+            txbValue.SetBinding(TextBox.TextProperty, new Binding("Value")
             {
                 ElementName = "RootNumericSpinner",
-                Mode = BindingMode.OneWay,
+                Mode = BindingMode.TwoWay,
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             });
 

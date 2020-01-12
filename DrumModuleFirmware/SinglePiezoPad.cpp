@@ -5,17 +5,17 @@
 
 SinglePiezoPad::SinglePiezoPad(byte channel, String name, bool enabled,
 	byte padNote, int thresholdMin, int thresholdMax, int sensorScantime, 
-	int sensorMasktime,	byte amplification) :
+	int sensorMasktime,	byte amplification, byte scale, byte lift) :
 	DrumPad(TYPE_SinglePiezoPad, channel, name, enabled), padNote_(padNote),
-	piezoReader_(new PiezoReader(channel, 0, thresholdMin, thresholdMax, sensorScantime, sensorMasktime, amplification))
+	piezoReader_(new PiezoReader(channel, 0, thresholdMin, thresholdMax, sensorScantime, sensorMasktime, amplification, scale, lift))
 {
 }
 
 SinglePiezoPad::SinglePiezoPad(byte type, byte channel, String name, bool enabled,
 	byte padNote, int thresholdMin, int thresholdMax, int sensorScantime, 
-	int sensorMasktime,	byte amplification) :
+	int sensorMasktime,	byte amplification, byte scale, byte lift) :
 	DrumPad(type, channel, name, enabled), padNote_(padNote),
-	piezoReader_(new PiezoReader(channel, 0, thresholdMin, thresholdMax, sensorScantime, sensorMasktime, amplification))
+	piezoReader_(new PiezoReader(channel, 0, thresholdMin, thresholdMax, sensorScantime, sensorMasktime, amplification, scale, lift))
 {
 }
 
@@ -28,7 +28,9 @@ SinglePiezoPad::SinglePiezoPad(JsonObject& json)
 	int sensorScantime = json["ScanTime"];
 	int sensorMasktime = json["MaskTime"];
 	byte amplification = json["Amplification"];
-	piezoReader_ = new PiezoReader(channel_, 0, thresholdMin, thresholdMax, sensorScantime, sensorMasktime, amplification);
+	byte scale = json["Scale"];
+	byte lift = json["Lift"];
+	piezoReader_ = new PiezoReader(channel_, 0, thresholdMin, thresholdMax, sensorScantime, sensorMasktime, amplification, scale, lift);
 }
 
 SinglePiezoPad::~SinglePiezoPad()
@@ -68,4 +70,6 @@ void SinglePiezoPad::serializeParameters(JsonObject& result)
 	result["ScanTime"] = piezoReader_->sensorScantime_;
 	result["MaskTime"] = piezoReader_->sensorMasktime_;
 	result["Amplification"] = piezoReader_->amplification_;
+	result["Scale"] = piezoReader_->scale_;
+	result["Lift"] = piezoReader_->lift_;
 }

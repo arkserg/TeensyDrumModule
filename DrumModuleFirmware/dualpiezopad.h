@@ -18,7 +18,7 @@ class DualPiezoPad : public SinglePiezoPad {
 public:
 	DualPiezoPad(byte channel, String name, bool enabled, byte padNote, 
 		byte sideClickNote, byte rimShotNote, byte rimShotBoundLeft, byte rimShotBoundRight,
-		int thresholdMin, int thresholdMax, int scanTime, int maskTime, byte amplification,
+		int thresholdMin, int thresholdMax, int scanTime, int maskTime, byte amplification, byte scale, byte lift,
 		int secondZoneThresholdMin, int secondZoneThresholdMax, int secondZoneScantime, 
 		int secondZoneMasktime, byte secondZoneAmplification);
 	DualPiezoPad(JsonObject& json);

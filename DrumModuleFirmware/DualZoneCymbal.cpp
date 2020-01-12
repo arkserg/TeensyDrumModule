@@ -5,17 +5,17 @@
 
 DualZoneCymbal::DualZoneCymbal(byte channel, String name, bool enabled,	byte bowNote, 
 	byte edgeNote, int thresholdMin, int thresholdMax, int sensorScantime, 
-	int sensorMasktime,	byte amplification) :
+	int sensorMasktime,	byte amplification, byte scale, byte lift) :
 	SinglePiezoPad(TYPE_DualZoneCymbal, channel, name, enabled, bowNote, thresholdMin,
-		thresholdMax, sensorScantime, sensorMasktime, amplification), edgeNote_(edgeNote)
+		thresholdMax, sensorScantime, sensorMasktime, amplification, scale, lift), edgeNote_(edgeNote)
 {
 }
 
 DualZoneCymbal::DualZoneCymbal(byte type, byte channel, String name, bool enabled,
 	byte bowNote, byte edgeNote, int thresholdMin, int thresholdMax, int sensorScantime, 
-	int sensorMasktime, byte amplification) :
+	int sensorMasktime, byte amplification, byte scale, byte lift) :
 	SinglePiezoPad(type, channel, name, enabled, bowNote, thresholdMin,
-		thresholdMax, sensorScantime, sensorMasktime, amplification), edgeNote_(edgeNote)
+		thresholdMax, sensorScantime, sensorMasktime, amplification, scale, lift), edgeNote_(edgeNote)
 {
 }
 

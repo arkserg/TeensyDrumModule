@@ -4,15 +4,15 @@
 
 DualPiezoPad::DualPiezoPad(byte channel, String name, bool enabled, byte padNote,
 	byte sideClickNote, byte rimShotNote, byte rimShotBoundLeft, byte rimShotBoundRight,
-	int thresholdMin, int thresholdMax, int scanTime, int maskTime, byte amplification,
+	int thresholdMin, int thresholdMax, int scanTime, int maskTime, byte amplification, byte scale, byte lift,
 	int secondZoneThresholdMin, int secondZoneThresholdMax, int secondZoneScantime,
 	int secondZoneMasktime, byte secondZoneAmplification) :
 	SinglePiezoPad(TYPE_DualPiezoPad, channel, name, enabled, padNote, thresholdMin, 
-		thresholdMax, scanTime, maskTime, amplification),
+		thresholdMax, scanTime, maskTime, amplification, scale, lift),
 	sideClickNote_(sideClickNote),	rimShotNote_(rimShotNote),
 	rimShotBoundLeft_(rimShotBoundLeft), rimShotBoundRight_(rimShotBoundRight),
-	secondZonePiezoReader_(new PiezoReader(channel, 1, 
-		secondZoneThresholdMin, secondZoneThresholdMax, secondZoneScantime, secondZoneMasktime, secondZoneAmplification))
+	secondZonePiezoReader_(new PiezoReader(channel, 1, secondZoneThresholdMin, secondZoneThresholdMax, 
+		secondZoneScantime, secondZoneMasktime, secondZoneAmplification, SCALE_Linear, 0))
 {
 }
 
@@ -29,7 +29,7 @@ DualPiezoPad::DualPiezoPad(JsonObject& json)
 	int sensorScantime = json["SecondZoneScanTime"];
 	int sensorMasktime = json["SecondZoneMaskTime"];
 	byte amplification = json["SecondZoneAmplification"];
-	secondZonePiezoReader_ = new PiezoReader(channel_, 1, thresholdMin, thresholdMax, sensorScantime, sensorMasktime, amplification);
+	secondZonePiezoReader_ = new PiezoReader(channel_, 1, thresholdMin, thresholdMax, sensorScantime, sensorMasktime, amplification, SCALE_Linear, 0);
 }
 
 DualPiezoPad::~DualPiezoPad()

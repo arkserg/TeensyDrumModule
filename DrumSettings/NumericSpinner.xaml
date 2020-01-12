@@ -15,10 +15,14 @@
                     </Canvas>
                 </Viewbox>
         </Button>
-        <Label x:Name="LblValue" DockPanel.Dock="Left" Width="50" Height="38"
+        <TextBox x:Name="txbValue" DockPanel.Dock="Left" Width="50" Height="38"
                 VerticalContentAlignment="Center"
                 VerticalAlignment="Center"
                 HorizontalContentAlignment="Center"/>
+        <!--<Label x:Name="LblValue" DockPanel.Dock="Left" Width="50" Height="38"
+                VerticalContentAlignment="Center"
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Center"/>-->
         <Button DockPanel.Dock="Left" Click="CmdUpClick"
                 Padding="0" Width="36">
                 <Viewbox Width="32" Height="32" VerticalAlignment="Center" HorizontalAlignment="Center">

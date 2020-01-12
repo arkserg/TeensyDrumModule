@@ -27,6 +27,12 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
         [DataMember]
         public byte Amplification { get; set; }
 
+        [DataMember]
+        public ScaleType Scale { get; set; }
+
+        [DataMember]
+        public byte Lift { get; set; }
+
         protected SinglePiezoPad()
         {
         }
@@ -48,6 +54,8 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
             ScanTime = 3;
             MaskTime = 70;
             Amplification = 20;
+            Scale = ScaleType.Linear;
+            Lift = 40;
         }
     }
 }

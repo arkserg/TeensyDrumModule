@@ -10,6 +10,7 @@
 namespace Helper
 {
     int normalizeSensor(int sensorValue, int thresholdMin, int thresholdMax);
+    int normalizeSensor(int sensorValue, int thresholdMin, int thresholdMax, byte scale, byte lift, float k);
 	void sendNoteOn(byte channel, byte pitch, byte velocity);
 	void sendNoteOff(byte channel, byte pitch, byte velocity);
 	void sendNoteOnOff(byte pitch, byte velocity);

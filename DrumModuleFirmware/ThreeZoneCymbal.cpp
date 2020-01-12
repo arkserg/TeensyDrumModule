@@ -4,9 +4,9 @@
 
 ThreeZoneCymbal::ThreeZoneCymbal(byte channel, String name, bool enabled,
 	byte bowNote, byte edgeNote, byte bellNote, int thresholdMin, int thresholdMax, 
-	int sensorScantime, int sensorMasktime, byte amplification) :	
+	int sensorScantime, int sensorMasktime, byte amplification, byte scale, byte lift) :
 	DualZoneCymbal(TYPE_ThreeZoneCymbal, channel,name, enabled, bowNote, edgeNote, 
-		thresholdMin, thresholdMax, sensorScantime, sensorMasktime, amplification), 
+		thresholdMin, thresholdMax, sensorScantime, sensorMasktime, amplification, scale, lift), 
 	bellNote_(bellNote)
 {
 }

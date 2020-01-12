@@ -5,6 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Arkserg.TeensyDrumModule.DrumSettings"
         xmlns:models="clr-namespace:Arkserg.TeensyDrumModule.DrumSettings.Models"
+        xmlns:enums="clr-namespace:Arkserg.TeensyDrumModule.DrumModuleLibrary.Enums"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="MainWindow" Height="620" Width="800"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -27,7 +29,7 @@
                 <models:ThreeZoneCymbalViewModel Channel="2" Enabled="true" Name="Ride" PadNote="41" EdgeNote="42" BellNote="43" ThresholdMin="500" ThresholdMax="1023" ScanTime="88" MaskTime="188"/>
                 <models:HiHatControllerViewModel Channel="3" Enabled="true" Name="HiHat controller" CcControl="127" ThresholdMin="500" ThresholdMax="1023"/>
                 <models:EmptyDrumPadViewModel Channel="4"/>
-            </x:Array>
+            </x:Array>            
 
             <DataTemplate x:Key="EmptyDrumPadTemplate" DataType="models:EmptyDrumPadViewModel">
                 <Grid>
@@ -54,6 +56,8 @@
             <DataTemplate x:Key="SinglePiezoPadTemplate" DataType="models:SinglePiezoPadViewModel">
                 <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -120,8 +124,22 @@
                                           MaxValue="1000"
                                           Step="1"/>
 
-                    <Label Grid.Row="8" Grid.Column="0" Content="Enabled:"/>
-                    <ToggleButton Grid.Row="8" Grid.Column="1" 
+                    <Label Grid.Row="8" Grid.Column="0" Content="Scale type:"/>
+                    <ComboBox Grid.Row="8" Grid.Column="1" 
+                              ItemsSource="{Binding Path=ScaleTypes, Mode=OneTime}"
+                              SelectedItem="{Binding Path=Scale, Mode=TwoWay}" 
+                              Foreground="{DynamicResource MaterialDesignLightForeground}"
+                              Width="128" HorizontalAlignment="Left"/>
+
+                    <Label Grid.Row="9" Grid.Column="0" Content="Lift:"/>
+                    <local:NumericSpinner Grid.Row="9" Grid.Column="1" Padding="5" 
+                                          Value="{Binding Path=Lift, Mode=TwoWay}"
+                                          MinValue="0"
+                                          MaxValue="127"
+                                          Step="1"/>
+
+                    <Label Grid.Row="10" Grid.Column="0" Content="Enabled:"/>
+                    <ToggleButton Grid.Row="10" Grid.Column="1" 
                                   Style="{StaticResource MaterialDesignSwitchToggleButton}"
                                   IsChecked="{Binding Path=Enabled, Mode=TwoWay}" 
                                   HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5,0,5"/>
@@ -485,7 +503,7 @@
 
             <DockPanel x:Name="DrumsPanel" Grid.Column="0" LastChildFill="True" Background="{DynamicResource PrimaryHueMidBrush}">
                 <!--<ListBox x:Name="DrumsList" DockPanel.Dock="Bottom"/>-->
-                <ListBox x:Name="DrumsList" DockPanel.Dock="Bottom" ItemsSource="{StaticResource ModelsList}" SelectedIndex="1"/>
+                <ListBox x:Name="DrumsList" DockPanel.Dock="Bottom" ItemsSource="{StaticResource ModelsList}" SelectedIndex="0"/>
             </DockPanel>
 
             <DockPanel x:Name="DrumSettingsPanel" Grid.Column="1" LastChildFill="False">

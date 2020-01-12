@@ -1,11 +1,30 @@
 #include "helper.h"
 #include "hardware.h"
+#include <cmath>
 
 namespace Helper
 {
-    int normalizeSensor(int sensorValue, int thresholdMin, int thresholdMax)
+	int normalizeSensor(int sensorValue, int thresholdMin, int thresholdMax)
+	{
+		sensorValue = map(sensorValue, thresholdMin, thresholdMax, 1, 127);
+		if (sensorValue > 127) sensorValue = 127;
+		return sensorValue;
+	}
+
+    int normalizeSensor(int sensorValue, int thresholdMin, int thresholdMax, byte scale, byte lift, float k)
     {
         sensorValue = map(sensorValue, thresholdMin, thresholdMax, 1, 127);
+
+		if (scale == SCALE_Log)
+		{
+			sensorValue = ((std::log(0.0787 * sensorValue) / std::log(2)) + 6.68) * 12.7;
+		}
+
+		if (lift != 0)
+		{
+			sensorValue = k * sensorValue + lift;
+		}
+
         if (sensorValue > 127) sensorValue = 127;
         return sensorValue;
     }

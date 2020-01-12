@@ -29,4 +29,7 @@
 #define COMMAND_EnableDrum			6
 #define COMMAND_DisableDrum			7
 
+#define SCALE_Linear	0
+#define SCALE_Log		1
+
 #endif

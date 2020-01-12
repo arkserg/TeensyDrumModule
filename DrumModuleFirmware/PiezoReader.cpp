@@ -3,11 +3,14 @@
 #include "helper.h"
 
 PiezoReader::PiezoReader(byte channel, byte subChannel,	int thresholdMin, 
-	int thresholdMax, int sensorScantime, int sensorMasktime, byte amplification) :
+	int thresholdMax, int sensorScantime, int sensorMasktime, byte amplification, byte scale, byte lift) :
 	thresholdMin_(thresholdMin), thresholdMax_(thresholdMax), sensorScantime_(sensorScantime),
-	sensorMasktime_(sensorMasktime), amplification_(amplification), potentiometer_(channel, subChannel)
+	sensorMasktime_(sensorMasktime), amplification_(amplification), scale_(scale), lift_(lift),
+	potentiometer_(channel, subChannel)
 {
 	lightHitMasktime_ = sensorMasktime * 4;
+	float max = 127;
+	k_ = (max - lift) / max;
 }
 
 void PiezoReader::setup()
@@ -50,12 +53,12 @@ int PiezoReader::ProcessHit(int sensorValue, unsigned long currentMillis)
 
 	if ((currentMillis - lastIncreaseMillis_) > sensorScantime_)
 	{
-		int velocity = Helper::normalizeSensor(currentValue_, thresholdMin_, thresholdMax_);
-		if (velocity > (previousHitValue_ >> 2) || (currentMillis - previousHitMillis_) > lightHitMasktime_)
+		if (currentValue_ > (previousHitValue_ >> 2) || (currentMillis - previousHitMillis_) > lightHitMasktime_)
 		{
-			result = velocity;
-			previousHitValue_ = velocity;
+			previousHitValue_ = currentValue_;
 			previousHitMillis_ = currentMillis;
+
+			result = Helper::normalizeSensor(currentValue_, thresholdMin_, thresholdMax_, scale_, lift_, k_);
 			nextHitAllowed_ = false;
 		}
 		else

@@ -19,7 +19,7 @@ class DualZoneCymbal : public SinglePiezoPad {
 public:
 	DualZoneCymbal(byte channel, String name, bool enabled,
 		byte bowNote, byte edgeNote,  int thresholdMin, int thresholdMax,
-		int sensorScantime, int sensorMasktime, byte amplification);
+		int sensorScantime, int sensorMasktime, byte amplification, byte scale, byte lift);
 	DualZoneCymbal(JsonObject& json);
 
 	void serializeParameters(JsonObject& result);
@@ -33,7 +33,7 @@ public:
 protected:
 	DualZoneCymbal(byte type, byte channel, String name, bool enabled,
 		byte bowNote, byte edgeNote, int thresholdMin, int thresholdMax,
-		int sensorScantime, int sensorMasktime, byte amplification);
+		int sensorScantime, int sensorMasktime, byte amplification, byte scale, byte lift);
 
 	void sendNote(byte pitch, byte velocity);
 	void loopImplementation();
