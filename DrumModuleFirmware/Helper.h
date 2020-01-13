@@ -14,6 +14,7 @@ namespace Helper
 	void sendNoteOn(byte channel, byte pitch, byte velocity);
 	void sendNoteOff(byte channel, byte pitch, byte velocity);
 	void sendNoteOnOff(byte pitch, byte velocity);
+	void sendAfterTouch(byte pitch, byte velocity);
 	void sendControlChange(byte channel, byte control, byte value);
 	void sendControlChange(byte control, byte value);
 }

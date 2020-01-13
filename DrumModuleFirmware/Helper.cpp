@@ -49,6 +49,12 @@ namespace Helper
 		usbMIDI.send_now();
 	}
 
+	void sendAfterTouch(byte pitch, byte velocity)
+	{
+		usbMIDI.sendAfterTouchPoly(pitch, velocity, MIDICHANNEL);
+		usbMIDI.send_now();
+	}
+
 	void sendControlChange(byte channel, byte control, byte value)
 	{
 		usbMIDI.sendControlChange(control, value, channel);

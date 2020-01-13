@@ -20,9 +20,6 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
         [DataMember]
         public bool ChokeEnabled { get; set; }
 
-        [DataMember]
-        public byte ChokeNote { get; set; }
-
         protected DualZoneCymbal()
         {
         }
@@ -43,7 +40,6 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
             ChokeValueThreshold = 100; //todo
             ChokeTimeThreshold = 3; //todo
             ChokeEnabled = true;
-            ChokeNote = 99; //todo
         }
     }
 }

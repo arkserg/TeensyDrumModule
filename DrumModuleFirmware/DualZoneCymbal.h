@@ -28,7 +28,6 @@ public:
 	int chokeValueThreshold_;
 	byte chokeTimeThreshold_;
 	bool chokeEnabled_;
-	byte chokeNote_;
 
 protected:
 	DualZoneCymbal(byte type, byte channel, String name, bool enabled,

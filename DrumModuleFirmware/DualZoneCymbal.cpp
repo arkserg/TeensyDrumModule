@@ -26,7 +26,6 @@ DualZoneCymbal::DualZoneCymbal(JsonObject& json)
 	chokeValueThreshold_ = json["ChokeValueThreshold"];
 	chokeTimeThreshold_ = json["ChokeTimeThreshold"];
 	chokeEnabled_ = json["ChokeEnabled"];
-	chokeNote_ = json["ChokeNote"];
 }
 
 void DualZoneCymbal::loopImplementation()
@@ -67,7 +66,7 @@ void DualZoneCymbal::processChoke(int sensorValue)
 		if ((millis() - chokeStartTime_) >= chokeTimeThreshold_)
 		{
 			chokeNoteSent_ = true;
-			Helper::sendNoteOnOff(chokeNote_, 1);
+			Helper::sendAfterTouch(edgeNote_, 127); //todo: может быть нужно выбирать правильную ноту
 		}
 	}
 	else if (chokeInProgress_ && sensorValue > chokeValueThreshold_)

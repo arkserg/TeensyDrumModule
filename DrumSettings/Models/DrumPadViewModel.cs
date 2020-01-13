@@ -254,7 +254,6 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
         private bool _chokeEnabled;
         private int _chokeValueThreshold;
         private byte _chokeTimeThreshold;
-        private byte _chokeNote;
 
         public byte EdgeNote
         {
@@ -278,12 +277,6 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
         {
             get => _chokeTimeThreshold;
             set => this.RaiseAndSetIfChanged(ref _chokeTimeThreshold, value);
-        }
-
-        public byte ChokeNote
-        {
-            get => _chokeNote;
-            set => this.RaiseAndSetIfChanged(ref _chokeNote, value);
         }
     }
 
