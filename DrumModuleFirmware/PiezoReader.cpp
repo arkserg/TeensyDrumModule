@@ -4,13 +4,12 @@
 #include "xtalkhelper.h"
 
 PiezoReader::PiezoReader(byte channel, byte subChannel,	int thresholdMin, 
-	int thresholdMax, int sensorScantime, int sensorMasktime, byte amplification, byte scale, byte lift) :
-	thresholdMin_(thresholdMin), thresholdMax_(thresholdMax), sensorScantime_(sensorScantime),
-	sensorMasktime_(sensorMasktime), amplification_(amplification), scale_(scale), lift_(lift),
+	int thresholdMax, int scan, int hold, int decay, byte amplification, byte scaleType, byte lift) :
+	thresholdMin_(thresholdMin), thresholdMax_(thresholdMax), scan_(scan), hold_(hold),
+	decay_(decay), amplification_(amplification), scaleType_(scaleType), lift_(lift),
 	potentiometer_(channel, subChannel)
 {
-	lightHitMasktime_ = sensorMasktime * 4;
-	k_ = (127 - lift) / 127.0f;
+	scaleFactor_ = (127 - lift) / 127.0f;
 }
 
 void PiezoReader::setup()
@@ -22,20 +21,35 @@ int PiezoReader::loop(int sensorValue)
 {
 	unsigned long currentMillis = millis();
 
-	if (!nextHitAllowed_ && (currentMillis - previousHitMillis_) > sensorMasktime_)
+	switch (state_)
 	{
-		nextHitAllowed_ = true;
-	}
-
-	if (nextHitAllowed_ && !hitInProgress_ && sensorValue > thresholdMin_)
-	{
-		hitInProgress_ = true;
-		hitStartMillis_ = currentMillis;
-	}
-	
-	if (hitInProgress_)
-	{
-		return ProcessHit(sensorValue, currentMillis);
+	case Wait:
+		if (sensorValue > thresholdMin_)
+		{
+			state_ = Scan;
+			holdStartMillis_ = currentMillis + scan_;
+			maxValue_ = sensorValue;
+		}
+		break;
+	case Scan:
+		if (sensorValue > maxValue_)
+		{
+			maxValue_ = sensorValue;
+		}
+		if (holdStartMillis_ >= currentMillis)
+		{
+			state_ = Hold;
+			decayStartMillis_ = holdStartMillis_ + hold_;
+			return ProcessHit(sensorValue, currentMillis);
+		}
+	case Hold:
+		if (decayStartMillis_ >= currentMillis)
+		{
+			CalculateDecayParameters();
+			state_ = Wait;
+			waitStartMillis_ = decayStartMillis_ + decay_;
+		}
+		break;
 	}
 
 	return 0; //todo
@@ -43,37 +57,34 @@ int PiezoReader::loop(int sensorValue)
 
 int PiezoReader::ProcessHit(int sensorValue, unsigned long currentMillis)
 {
-	int result = 0;
-
-	if (sensorValue > currentValue_)
+	if (IsAfterShock(sensorValue, currentMillis))
 	{
-		lastIncreaseMillis_ = currentMillis;
-		currentValue_ = sensorValue;
+		state_ = Wait;
+		return AfterShock;
 	}
 
-	if ((currentMillis - hitStartMillis_) >= sensorScantime_)
+	previousHitValue_ = maxValue_;
+	previousHitMillis_ = currentMillis;
+	
+	if (XTalkHelper::checkNotCrossTalk(currentMillis, maxValue_))
 	{
-		if (currentValue_ > (previousHitValue_ >> 2) || (currentMillis - previousHitMillis_) > lightHitMasktime_)
-		{
-			previousHitValue_ = currentValue_;
-			previousHitMillis_ = currentMillis;
-			nextHitAllowed_ = false;
-
-			if (XTalkHelper::checkNotCrossTalk(currentMillis, currentValue_))
-			{
-				result = Helper::normalizeSensor(currentValue_, thresholdMin_, thresholdMax_, scale_, lift_, k_);
-			}
-			else
-			{
-				result = CrossTalk;
-			}
-		}
-		else
-		{
-			result = AfterShock;
-		}
-		currentValue_ = 0;
-		hitInProgress_ = false;
+		return Helper::normalizeSensor(maxValue_, thresholdMin_, thresholdMax_, scaleType_, lift_, scaleFactor_);
 	}
-	return result;
+	else
+	{
+		return CrossTalk;
+	}	
+}
+
+void PiezoReader::CalculateDecayParameters()
+{
+	decayB_ = maxValue_;
+	decayK_ = (thresholdMin_ - maxValue_) / decay_;
+}
+
+bool PiezoReader::IsAfterShock(unsigned long currentMillis)
+{
+	if (currentMillis >= waitStartMillis_) return false;
+	int threshold = decayK_ * (currentMillis - decayStartMillis_) + decayB_;
+	return maxValue_ < threshold;
 }
