@@ -22,22 +22,22 @@ int PiezoReader::loop(int sensorValue)
 {
 	unsigned long currentMillis = millis();
 
-	if (nextHitAllowed_)
-	{
-		if (!hitInProgress_ && sensorValue > thresholdMin_)
-		{
-			hitInProgress_ = true;
-		}
-
-		if (hitInProgress_)
-		{
-			return ProcessHit(sensorValue, currentMillis);
-		}
-	}
-	else if ((currentMillis - previousHitMillis_) > sensorMasktime_)
+	if (!nextHitAllowed_ && (currentMillis - previousHitMillis_) > sensorMasktime_)
 	{
 		nextHitAllowed_ = true;
 	}
+
+	if (nextHitAllowed_ && !hitInProgress_ && sensorValue > thresholdMin_)
+	{
+		hitInProgress_ = true;
+		hitStartMillis_ = currentMillis;
+	}
+	
+	if (hitInProgress_)
+	{
+		return ProcessHit(sensorValue, currentMillis);
+	}
+
 	return 0; //todo
 }
 
@@ -51,17 +51,17 @@ int PiezoReader::ProcessHit(int sensorValue, unsigned long currentMillis)
 		currentValue_ = sensorValue;
 	}
 
-	if ((currentMillis - lastIncreaseMillis_) > sensorScantime_)
+	if ((currentMillis - hitStartMillis_) >= sensorScantime_)
 	{
 		if (currentValue_ > (previousHitValue_ >> 2) || (currentMillis - previousHitMillis_) > lightHitMasktime_)
 		{
 			previousHitValue_ = currentValue_;
 			previousHitMillis_ = currentMillis;
+			nextHitAllowed_ = false;
 
 			if (XTalkHelper::checkNotCrossTalk(currentMillis, currentValue_))
 			{
 				result = Helper::normalizeSensor(currentValue_, thresholdMin_, thresholdMax_, scale_, lift_, k_);
-				nextHitAllowed_ = false;
 			}
 			else
 			{

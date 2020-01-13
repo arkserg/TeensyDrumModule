@@ -35,6 +35,7 @@ private:
 
 	boolean nextHitAllowed_ = true;
 	unsigned long previousHitMillis_;
+	unsigned long hitStartMillis_;
 	unsigned long lastIncreaseMillis_;
 	int currentValue_;
 	int previousHitValue_;
