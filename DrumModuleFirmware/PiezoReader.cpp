@@ -79,7 +79,10 @@ byte PiezoReader::ProcessHit(int sensorValue, unsigned long currentMillis)
 	
 	if (XTalkHelper::checkNotCrossTalk(currentMillis, maxValue_))
 	{
-		return Helper::normalizeSensor(maxValue_, thresholdMin_, thresholdMax_, scaleType_, lift_, scaleFactor_);
+		byte velocity = Helper::normalizeSensor(maxValue_, thresholdMin_, thresholdMax_, scaleType_, lift_, scaleFactor_);
+		//todo
+		Serial.println(velocity);
+		return velocity;
 	}
 	else
 	{
