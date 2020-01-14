@@ -4,9 +4,9 @@
 #include "xtalkhelper.h"
 
 PiezoReader::PiezoReader(byte channel, byte subChannel,	int thresholdMin, 
-	int thresholdMax, int scan, int hold, int decay, byte amplification, byte scaleType, byte lift) :
+	int thresholdMax, int scan, int hold, int decay, byte gain, byte scaleType, byte lift) :
 	thresholdMin_(thresholdMin), thresholdMax_(thresholdMax), scan_(scan), hold_(hold),
-	decay_(decay), amplification_(amplification), scaleType_(scaleType), lift_(lift),
+	decay_(decay), gain_(gain), scaleType_(scaleType), lift_(lift),
 	potentiometer_(channel, subChannel)
 {
 	scaleFactor_ = (127 - lift) / 127.0f;
@@ -14,7 +14,7 @@ PiezoReader::PiezoReader(byte channel, byte subChannel,	int thresholdMin,
 
 void PiezoReader::setup()
 {
-	potentiometer_.writeToPotentiometer(amplification_);
+	potentiometer_.writeToPotentiometer(gain_);
 }
 
 int PiezoReader::loop(int sensorValue)

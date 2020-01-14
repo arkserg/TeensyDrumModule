@@ -3,19 +3,20 @@
 #include "helper.h"
 #include "sharedadc.h"
 
-HiHatController::HiHatController(byte channel, String name, bool enabled,
-	byte ccControl,	int thresholdMin, int thresholdMax) 
-	: DrumPad(TYPE_HiHatController, channel, name, enabled),
-	ccControl_(ccControl), thresholdMin_(thresholdMin), thresholdMax_(thresholdMax)
-{
-}
-
 HiHatController::HiHatController(JsonObject& json)
 	: DrumPad(json)
 {
 	ccControl_ = json["CcControl"];
 	thresholdMin_ = json["ThresholdMin"];
 	thresholdMax_ = json["ThresholdMax"];
+}
+
+void HiHatController::serializeParameters(JsonObject& result)
+{
+	DrumPad::serializeParameters(result);
+	result["CcControl"] = ccControl_;
+	result["ThresholdMin"] = thresholdMin_;
+	result["ThresholdMax"] = thresholdMax_;
 }
 
 void HiHatController::loopImplementation()
@@ -35,12 +36,4 @@ void HiHatController::loopImplementation()
 			}
 		}
 	}
-}
-
-void HiHatController::serializeParameters(JsonObject& result)
-{
-	DrumPad::serializeParameters(result);
-	result["CcControl"] = ccControl_;
-	result["ThresholdMin"] = thresholdMin_;
-	result["ThresholdMax"] = thresholdMax_;
 }

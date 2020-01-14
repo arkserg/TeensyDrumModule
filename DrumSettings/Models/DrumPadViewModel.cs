@@ -126,9 +126,10 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
         private byte _padNote;
         private short _thresholdMin;
         private short _thresholdMax;
-        private byte _scanTime;
-        private byte _maskTime;
-        private byte _amplification;
+        private byte _scan;
+        private byte _hold;
+        private byte _decay;
+        private byte _gain;
         private ScaleType _scale;
         private byte _lift;
         
@@ -150,22 +151,28 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
             set => this.RaiseAndSetIfChanged(ref _thresholdMax, value);
         }
 
-        public byte ScanTime
+        public byte Scan
         {
-            get => _scanTime;
-            set => this.RaiseAndSetIfChanged(ref _scanTime, value);
+            get => _scan;
+            set => this.RaiseAndSetIfChanged(ref _scan, value);
         }
 
-        public byte MaskTime
+        public byte Hold
         {
-            get => _maskTime;
-            set => this.RaiseAndSetIfChanged(ref _maskTime, value);
+            get => _hold;
+            set => this.RaiseAndSetIfChanged(ref _hold, value);
         }
 
-        public byte Amplification
+        public byte Decay
         {
-            get => _amplification;
-            set => this.RaiseAndSetIfChanged(ref _amplification, value);
+            get => _decay;
+            set => this.RaiseAndSetIfChanged(ref _decay, value);
+        }
+
+        public byte Gain
+        {
+            get => _gain;
+            set => this.RaiseAndSetIfChanged(ref _gain, value);
         }
 
         public ScaleType Scale
@@ -252,7 +259,6 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
     {
         private byte _edgeNote;
         private bool _chokeEnabled;
-        private int _chokeValueThreshold;
         private byte _chokeTimeThreshold;
 
         public byte EdgeNote
@@ -265,12 +271,6 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
         {
             get => _chokeEnabled;
             set => this.RaiseAndSetIfChanged(ref _chokeEnabled, value);
-        }
-
-        public int ChokeValueThreshold
-        {
-            get => _chokeValueThreshold;
-            set => this.RaiseAndSetIfChanged(ref _chokeValueThreshold, value);
         }
 
         public byte ChokeTimeThreshold

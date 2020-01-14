@@ -2,20 +2,6 @@
 #include "hardware.h"
 #include "helper.h"
 
-DualPiezoPad::DualPiezoPad(byte channel, String name, bool enabled, byte padNote,
-	byte sideClickNote, byte rimShotNote, byte rimShotBoundLeft, byte rimShotBoundRight,
-	int thresholdMin, int thresholdMax, int scanTime, int maskTime, byte amplification, byte scale, byte lift,
-	int secondZoneThresholdMin, int secondZoneThresholdMax, int secondZoneScantime,
-	int secondZoneMasktime, byte secondZoneAmplification) :
-	SinglePiezoPad(TYPE_DualPiezoPad, channel, name, enabled, padNote, thresholdMin, 
-		thresholdMax, scanTime, maskTime, amplification, scale, lift),
-	sideClickNote_(sideClickNote),	rimShotNote_(rimShotNote),
-	rimShotBoundLeft_(rimShotBoundLeft), rimShotBoundRight_(rimShotBoundRight),
-	secondZonePiezoReader_(new PiezoReader(channel, 1, secondZoneThresholdMin, secondZoneThresholdMax, 
-		secondZoneScantime, secondZoneMasktime, secondZoneAmplification, SCALE_Linear, 0))
-{
-}
-
 DualPiezoPad::DualPiezoPad(JsonObject& json)
 	: SinglePiezoPad(json)
 {
@@ -30,6 +16,21 @@ DualPiezoPad::DualPiezoPad(JsonObject& json)
 	int sensorMasktime = json["SecondZoneMaskTime"];
 	byte amplification = json["SecondZoneAmplification"];
 	secondZonePiezoReader_ = new PiezoReader(channel_, 1, thresholdMin, thresholdMax, sensorScantime, sensorMasktime, amplification, SCALE_Linear, 0);
+}
+
+void DualPiezoPad::serializeParameters(JsonObject& result)
+{
+	SinglePiezoPad::serializeParameters(result);
+	result["SecondZoneThresholdMin"] = secondZonePiezoReader_->thresholdMin_;
+	result["SecondZoneThresholdMax"] = secondZonePiezoReader_->thresholdMax_;
+	result["SecondZoneScanTime"] = secondZonePiezoReader_->sensorScantime_;
+	result["SecondZoneMaskTime"] = secondZonePiezoReader_->sensorMasktime_;
+	result["SecondZoneAmplification"] = secondZonePiezoReader_->sensorMasktime_;
+
+	result["SideClickNote"] = sideClickNote_;
+	result["RimShotNote"] = rimShotNote_;
+	result["RimShotBoundLeft"] = rimShotBoundLeft_;
+	result["RimShotBoundRight"] = rimShotBoundRight_;
 }
 
 DualPiezoPad::~DualPiezoPad()
@@ -112,19 +113,4 @@ void DualPiezoPad::setup()
 {
 	SinglePiezoPad::setup();
 	secondZonePiezoReader_->setup();
-}
-
-void DualPiezoPad::serializeParameters(JsonObject& result)
-{
-	SinglePiezoPad::serializeParameters(result);
-	result["SecondZoneThresholdMin"] = secondZonePiezoReader_->thresholdMin_;
-	result["SecondZoneThresholdMax"] = secondZonePiezoReader_->thresholdMax_;
-	result["SecondZoneScanTime"] = secondZonePiezoReader_->sensorScantime_;
-	result["SecondZoneMaskTime"] = secondZonePiezoReader_->sensorMasktime_;
-	result["SecondZoneAmplification"] = secondZonePiezoReader_->sensorMasktime_;
-
-	result["SideClickNote"] = sideClickNote_;
-	result["RimShotNote"] = rimShotNote_;
-	result["RimShotBoundLeft"] = rimShotBoundLeft_;
-	result["RimShotBoundRight"] = rimShotBoundRight_;
 }

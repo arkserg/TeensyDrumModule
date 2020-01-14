@@ -35,7 +35,7 @@ void setup()
 	ChannelSelector::setup();
 	Wire.begin();
 	Serial.begin(115200);
-	loadSettingsFromEeprom();
+	//loadSettingsFromEeprom(); //todo: вернуть
 
 	for (int i = 0; i < 12; i++) {
 		DrumPad* pad = drums[i];

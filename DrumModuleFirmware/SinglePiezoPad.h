@@ -16,9 +16,6 @@
 class SinglePiezoPad : public DrumPad {	
 
 public:
-	SinglePiezoPad(byte channel, String name, bool enabled, byte padNote,
-		int thresholdMin, int thresholdMax, int sensorScantime, int sensorMasktime, 
-		byte amplification, byte scale, byte lift);
 	SinglePiezoPad(JsonObject& json);
 	~SinglePiezoPad();
 
@@ -28,12 +25,8 @@ public:
 	byte padNote_;
 
 protected:
-	SinglePiezoPad(byte type, byte channel, String name, bool enabled, byte padNote,
-		int thresholdMin, int thresholdMax, int sensorScantime, int sensorMasktime,
-		byte amplification, byte scale, byte lift);
-
 	void loopImplementation();
-	PiezoReader *piezoReader_;
+	PiezoReader *piezoReader_; //todo: точно нужен указатель?
 };
 
 #endif

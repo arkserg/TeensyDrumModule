@@ -19,13 +19,16 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
         public Int16 ThresholdMax { get; set; }
 
         [DataMember]
-        public byte ScanTime { get; set; }
+        public byte Scan { get; set; }
 
         [DataMember]
-        public byte MaskTime { get; set; }
+        public byte Hold { get; set; }
 
         [DataMember]
-        public byte Amplification { get; set; }
+        public byte Decay { get; set; }
+
+        [DataMember]
+        public byte Gain { get; set; }
 
         [DataMember]
         public ScaleType Scale { get; set; }
@@ -51,9 +54,10 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
             PadNote = 38;
             ThresholdMin = 20;
             ThresholdMax = 750;
-            ScanTime = 3;
-            MaskTime = 70;
-            Amplification = 20;
+            Scan = 3;
+            Hold = 70;
+            Decay = 200;
+            Gain = 20;
             Scale = ScaleType.Linear;
             Lift = 40;
         }

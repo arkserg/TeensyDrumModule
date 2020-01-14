@@ -18,9 +18,6 @@
 
 class ThreeZoneCymbal : public DualZoneCymbal {
 public:
-	ThreeZoneCymbal(byte channel, String name, bool enabled, byte bowNote, 
-		byte bellNote, byte edgeNote, int thresholdMin, int thresholdMax, 
-		int sensorScantime, int sensorMasktime, byte amplification, byte scale, byte lift);
 	ThreeZoneCymbal(JsonObject& json);
 	
 	void serializeParameters(JsonObject& result);

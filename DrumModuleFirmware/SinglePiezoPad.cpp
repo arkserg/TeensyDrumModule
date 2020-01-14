@@ -3,34 +3,33 @@
 #include "helper.h"
 #include "sharedadc.h"
 
-SinglePiezoPad::SinglePiezoPad(byte channel, String name, bool enabled,
-	byte padNote, int thresholdMin, int thresholdMax, int sensorScantime, 
-	int sensorMasktime,	byte amplification, byte scale, byte lift) :
-	DrumPad(TYPE_SinglePiezoPad, channel, name, enabled), padNote_(padNote),
-	piezoReader_(new PiezoReader(channel, 0, thresholdMin, thresholdMax, sensorScantime, sensorMasktime, amplification, scale, lift))
-{
-}
-
-SinglePiezoPad::SinglePiezoPad(byte type, byte channel, String name, bool enabled,
-	byte padNote, int thresholdMin, int thresholdMax, int sensorScantime, 
-	int sensorMasktime,	byte amplification, byte scale, byte lift) :
-	DrumPad(type, channel, name, enabled), padNote_(padNote),
-	piezoReader_(new PiezoReader(channel, 0, thresholdMin, thresholdMax, sensorScantime, sensorMasktime, amplification, scale, lift))
-{
-}
-
 SinglePiezoPad::SinglePiezoPad(JsonObject& json)
 	: DrumPad(json)
 {
 	padNote_ = json["PadNote"];
 	int thresholdMin = json["ThresholdMin"];
 	int thresholdMax = json["ThresholdMax"];
-	int sensorScantime = json["ScanTime"];
-	int sensorMasktime = json["MaskTime"];
-	byte amplification = json["Amplification"];
+	int scan = json["Scan"];
+	int hold = json["Hold"];
+	int decay = json["Decay"];
+	byte gain = json["Gain"];
 	byte scale = json["Scale"];
 	byte lift = json["Lift"];
-	piezoReader_ = new PiezoReader(channel_, 0, thresholdMin, thresholdMax, sensorScantime, sensorMasktime, amplification, scale, lift);
+	piezoReader_ = new PiezoReader(channel_, 0, thresholdMin, thresholdMax, scan, hold, decay, gain, scale, lift);
+}
+
+void SinglePiezoPad::serializeParameters(JsonObject& result)
+{
+	DrumPad::serializeParameters(result);
+	result["PadNote"] = padNote_;
+	result["ThresholdMin"] = piezoReader_->thresholdMin_;
+	result["ThresholdMax"] = piezoReader_->thresholdMax_;
+	result["Scan"] = piezoReader_->scan_;
+	result["Hold"] = piezoReader_->hold_;
+	result["Decay"] = piezoReader_->decay_;
+	result["Gain"] = piezoReader_->gain_;
+	result["Scale"] = piezoReader_->scale_;
+	result["Lift"] = piezoReader_->lift_;
 }
 
 SinglePiezoPad::~SinglePiezoPad()
@@ -59,17 +58,4 @@ void SinglePiezoPad::setup()
 {
 	DrumPad::setup();
 	piezoReader_->setup();
-}
-
-void SinglePiezoPad::serializeParameters(JsonObject& result)
-{
-	DrumPad::serializeParameters(result);
-	result["PadNote"] = padNote_;
-	result["ThresholdMin"] = piezoReader_->thresholdMin_;
-	result["ThresholdMax"] = piezoReader_->thresholdMax_;
-	result["ScanTime"] = piezoReader_->sensorScantime_;
-	result["MaskTime"] = piezoReader_->sensorMasktime_;
-	result["Amplification"] = piezoReader_->amplification_;
-	result["Scale"] = piezoReader_->scale_;
-	result["Lift"] = piezoReader_->lift_;
 }

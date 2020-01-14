@@ -14,7 +14,7 @@ class PiezoReader {
 
 public:
 	PiezoReader(byte channel, byte subChannel, int thresholdMin, int thresholdMax, 
-		int scan, int hold, int decay, byte amplification, byte scaleType, byte lift);
+		int scan, int hold, int decay, byte gain, byte scaleType, byte lift);
 
 	static const int AfterShock = -1;
 	static const int CrossTalk = -2;
@@ -31,7 +31,7 @@ public:
 	int scan_;
 	int hold_;
 	int decay_;
-	byte amplification_;
+	byte gain_;
 	byte scaleType_;
 	byte lift_;
 

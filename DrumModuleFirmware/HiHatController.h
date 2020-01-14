@@ -19,8 +19,6 @@ class HiHatController : public DrumPad {
 	int previousValue_;
 	long previousChangeMillis_;
 public:
-	HiHatController(byte channel, String name, bool enabled,
-		byte ccControl, int thresholdMin, int thresholdMax);
 	HiHatController(JsonObject& json);
 
 	void serializeParameters(JsonObject& result);

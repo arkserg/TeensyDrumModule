@@ -14,7 +14,6 @@
 class EmptyDrumPad : public DrumPad {
 
 public:
-	EmptyDrumPad(byte channel);
 	EmptyDrumPad(JsonObject& json);
 
 protected:

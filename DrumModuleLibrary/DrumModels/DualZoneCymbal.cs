@@ -12,9 +12,6 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
         public byte EdgeNote { get; set; }
 
         [DataMember]
-        public int ChokeValueThreshold { get; set; }
-
-        [DataMember]
         public byte ChokeTimeThreshold { get; set; }
 
         [DataMember]
@@ -37,7 +34,6 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
             base.ResetToDefault();
             PadNote = 51;
             EdgeNote = 53;
-            ChokeValueThreshold = 100; //todo
             ChokeTimeThreshold = 3; //todo
             ChokeEnabled = true;
         }

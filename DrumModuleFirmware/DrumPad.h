@@ -1,5 +1,3 @@
-// DrumPad.h
-
 #ifndef _DRUMPAD_h
 #define _DRUMPAD_h
 
@@ -26,7 +24,6 @@ public:
 	virtual void serializeParameters(JsonObject& result);
 
 protected:
-	DrumPad(byte type, byte channel, String name, bool enabled);
 	DrumPad(JsonObject& json);
 
 	virtual void loopImplementation() = 0;

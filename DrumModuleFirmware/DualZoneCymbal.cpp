@@ -3,28 +3,20 @@
 #include "helper.h"
 #include "sharedadc.h"
 
-DualZoneCymbal::DualZoneCymbal(byte channel, String name, bool enabled,	byte bowNote, 
-	byte edgeNote, int thresholdMin, int thresholdMax, int sensorScantime, 
-	int sensorMasktime,	byte amplification, byte scale, byte lift) :
-	SinglePiezoPad(TYPE_DualZoneCymbal, channel, name, enabled, bowNote, thresholdMin,
-		thresholdMax, sensorScantime, sensorMasktime, amplification, scale, lift), edgeNote_(edgeNote)
-{
-}
-
-DualZoneCymbal::DualZoneCymbal(byte type, byte channel, String name, bool enabled,
-	byte bowNote, byte edgeNote, int thresholdMin, int thresholdMax, int sensorScantime, 
-	int sensorMasktime, byte amplification, byte scale, byte lift) :
-	SinglePiezoPad(type, channel, name, enabled, bowNote, thresholdMin,
-		thresholdMax, sensorScantime, sensorMasktime, amplification, scale, lift), edgeNote_(edgeNote)
-{
-}
-
 DualZoneCymbal::DualZoneCymbal(JsonObject& json)
 	: SinglePiezoPad(json)
 {
 	edgeNote_ = json["EdgeNote"];
 	chokeTimeThreshold_ = json["ChokeTimeThreshold"];
 	chokeEnabled_ = json["ChokeEnabled"];
+}
+
+void DualZoneCymbal::serializeParameters(JsonObject& result)
+{
+	SinglePiezoPad::serializeParameters(result);
+	result["EdgeNote"] = edgeNote_;
+	result["ChokeTimeThreshold"] = chokeTimeThreshold_;
+	result["ChokeEnabled"] = chokeEnabled_;
 }
 
 void DualZoneCymbal::loopImplementation()
@@ -85,12 +77,4 @@ void DualZoneCymbal::sendNote(byte pitch, byte velocity)
 		Helper::sendNoteOnOff(padNote_, velocity);
 	else
 		Helper::sendNoteOnOff(edgeNote_, velocity);
-}
-
-void DualZoneCymbal::serializeParameters(JsonObject& result)
-{
-	SinglePiezoPad::serializeParameters(result);
-	result["EdgeNote"] = edgeNote_;
-	result["ChokeTimeThreshold"] = chokeTimeThreshold_;
-	result["ChokeEnabled"] = chokeEnabled_;
 }
