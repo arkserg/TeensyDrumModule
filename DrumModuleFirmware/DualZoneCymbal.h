@@ -25,7 +25,6 @@ public:
 	void serializeParameters(JsonObject& result);
 
 	byte edgeNote_;
-	int chokeValueThreshold_;
 	byte chokeTimeThreshold_;
 	bool chokeEnabled_;
 
@@ -34,6 +33,7 @@ protected:
 		byte bowNote, byte edgeNote, int thresholdMin, int thresholdMax,
 		int sensorScantime, int sensorMasktime, byte amplification, byte scale, byte lift);
 
+	virtual bool isChokeArea(int sensorValue);
 	virtual void sendNote(byte pitch, byte velocity);
 	void loopImplementation();
 	void processChoke(int sensorValue);

@@ -17,6 +17,11 @@ ThreeZoneCymbal::ThreeZoneCymbal(JsonObject& json)
 	bellNote_ = json["BellNote"];
 }
 
+bool ThreeZoneCymbal::isChokeArea(int sensorValue)
+{
+	return sensorValue >= 100 && sensorValue <= 1000;
+}
+
 void ThreeZoneCymbal::sendNote(byte pitch, byte velocity)
 {
 	if (minZoneSensorValue_ > 1000)

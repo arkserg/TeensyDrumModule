@@ -23,7 +23,6 @@ DualZoneCymbal::DualZoneCymbal(JsonObject& json)
 	: SinglePiezoPad(json)
 {
 	edgeNote_ = json["EdgeNote"];
-	chokeValueThreshold_ = json["ChokeValueThreshold"];
 	chokeTimeThreshold_ = json["ChokeTimeThreshold"];
 	chokeEnabled_ = json["ChokeEnabled"];
 }
@@ -56,13 +55,12 @@ void DualZoneCymbal::loopImplementation()
 
 void DualZoneCymbal::processChoke(int sensorValue)
 {
-	if (chokeInProgress_ && sensorValue > chokeValueThreshold_)
+	if (chokeInProgress_ && !isChokeArea(sensorValue))
 	{
 		chokeInProgress_ = false;
 		chokeNoteSent_ = false;
 	}
-
-	if (!chokeInProgress_ && sensorValue <= chokeValueThreshold_)
+	else if (!chokeInProgress_ && isChokeArea(sensorValue))
 	{
 		chokeStartTime_ = millis();
 		chokeInProgress_ = true;
@@ -74,6 +72,11 @@ void DualZoneCymbal::processChoke(int sensorValue)
 		chokeNoteSent_ = true;
 		Helper::sendAfterTouch(edgeNote_); //todo: нужно выбирать правильную ноту
 	}
+}
+
+bool DualZoneCymbal::isChokeArea(int sensorValue)
+{
+	return sensorValue <= 1000;
 }
 
 void DualZoneCymbal::sendNote(byte pitch, byte velocity)
@@ -88,7 +91,6 @@ void DualZoneCymbal::serializeParameters(JsonObject& result)
 {
 	SinglePiezoPad::serializeParameters(result);
 	result["EdgeNote"] = edgeNote_;
-	result["ChokeValueThreshold"] = chokeValueThreshold_;
 	result["ChokeTimeThreshold"] = chokeTimeThreshold_;
 	result["ChokeEnabled"] = chokeEnabled_;
 }

@@ -29,6 +29,7 @@ public:
 
 protected:
 	void sendNote(byte pitch, byte velocity);
+	bool isChokeArea(int sensorValue);
 };
 
 #endif
