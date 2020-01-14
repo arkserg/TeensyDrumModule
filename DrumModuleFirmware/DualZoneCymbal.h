@@ -34,7 +34,7 @@ protected:
 		byte bowNote, byte edgeNote, int thresholdMin, int thresholdMax,
 		int sensorScantime, int sensorMasktime, byte amplification, byte scale, byte lift);
 
-	void sendNote(byte pitch, byte velocity);
+	virtual void sendNote(byte pitch, byte velocity);
 	void loopImplementation();
 	void processChoke(int sensorValue);
 
