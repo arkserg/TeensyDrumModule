@@ -24,9 +24,9 @@
             <local:DrumsTemplateSelector x:Key="DrumsTemplateSelector"/>
 
             <x:Array Type="models:DrumPadViewModel" x:Key="ModelsList">
-                <models:SinglePiezoPadViewModel Channel="0" Enabled="true" Name="Snare" PadNote="38" ThresholdMin="500" ThresholdMax="1023" ScanTime="88" MaskTime="188"/>
-                <models:DualZoneCymbalViewModel Channel="1" Enabled="true" Name="Crash" PadNote="39" EdgeNote="40" ThresholdMin="500" ThresholdMax="1023" ScanTime="88" MaskTime="188"/>
-                <models:ThreeZoneCymbalViewModel Channel="2" Enabled="true" Name="Ride" PadNote="41" EdgeNote="42" BellNote="43" ThresholdMin="500" ThresholdMax="1023" ScanTime="88" MaskTime="188"/>
+                <models:SinglePiezoPadViewModel Channel="0" Enabled="true" Name="Snare" PadNote="38" ThresholdMin="500" ThresholdMax="1023" Scan="88" Hold="188"/>
+                <models:DualZoneCymbalViewModel Channel="1" Enabled="true" Name="Crash" PadNote="39" EdgeNote="40" ThresholdMin="500" ThresholdMax="1023" Scan="88" Hold="188"/>
+                <models:ThreeZoneCymbalViewModel Channel="2" Enabled="true" Name="Ride" PadNote="41" EdgeNote="42" BellNote="43" ThresholdMin="500" ThresholdMax="1023" Scan="88" Hold="188"/>
                 <models:HiHatControllerViewModel Channel="3" Enabled="true" Name="HiHat controller" CcControl="127" ThresholdMin="500" ThresholdMax="1023"/>
                 <models:EmptyDrumPadViewModel Channel="4"/>
             </x:Array>            
@@ -67,6 +67,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.3*"/>
@@ -89,9 +90,9 @@
                     <Label Grid.Row="2" Grid.Column="0" Content="Note:"/>
                     <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=PadNote, Mode=TwoWay}"/>
 
-                    <Label Grid.Row="3" Grid.Column="0" Content="Amplification:"/>
+                    <Label Grid.Row="3" Grid.Column="0" Content="Gain:"/>
                     <local:NumericSpinner Grid.Row="3" Grid.Column="1" Padding="5" 
-                                          Value="{Binding Path=Amplification, Mode=TwoWay}"
+                                          Value="{Binding Path=Gain, Mode=TwoWay}"
                                           MinValue="0"
                                           MaxValue="1023"
                                           Step="1"/>
@@ -110,117 +111,48 @@
                                           MaxValue="1023"
                                           Step="1"/>
 
-                    <Label Grid.Row="6" Grid.Column="0" Content="Sensor Scan Time:"/>
+                    <Label Grid.Row="6" Grid.Column="0" Content="Scan Time:"/>
                     <local:NumericSpinner Grid.Row="6" Grid.Column="1" Padding="5" 
-                                          Value="{Binding Path=ScanTime, Mode=TwoWay}"
+                                          Value="{Binding Path=Scan, Mode=TwoWay}"
                                           MinValue="0"
                                           MaxValue="10"
                                           Step="1"/>
 
-                    <Label Grid.Row="7" Grid.Column="0" Content="Sensor Mask Time:"/>
+                    <Label Grid.Row="7" Grid.Column="0" Content="Hold Time:"/>
                     <local:NumericSpinner Grid.Row="7" Grid.Column="1" Padding="5" 
-                                          Value="{Binding Path=MaskTime, Mode=TwoWay}"
+                                          Value="{Binding Path=Hold, Mode=TwoWay}"
                                           MinValue="0"
                                           MaxValue="1000"
                                           Step="1"/>
 
-                    <Label Grid.Row="8" Grid.Column="0" Content="Scale type:"/>
-                    <ComboBox Grid.Row="8" Grid.Column="1" 
+                    <Label Grid.Row="8" Grid.Column="0" Content="Decay Time:"/>
+                    <local:NumericSpinner Grid.Row="8" Grid.Column="1" Padding="5" 
+                                          Value="{Binding Path=Decay, Mode=TwoWay}"
+                                          MinValue="0"
+                                          MaxValue="255"
+                                          Step="1"/>
+
+                    <Label Grid.Row="9" Grid.Column="0" Content="Scale type:"/>
+                    <ComboBox Grid.Row="9" Grid.Column="1" 
                               ItemsSource="{Binding Path=ScaleTypes, Mode=OneTime}"
                               SelectedItem="{Binding Path=Scale, Mode=TwoWay}" 
                               Foreground="{DynamicResource MaterialDesignLightForeground}"
                               Width="128" HorizontalAlignment="Left"/>
 
-                    <Label Grid.Row="9" Grid.Column="0" Content="Lift:"/>
-                    <local:NumericSpinner Grid.Row="9" Grid.Column="1" Padding="5" 
+                    <Label Grid.Row="10" Grid.Column="0" Content="Lift:"/>
+                    <local:NumericSpinner Grid.Row="10" Grid.Column="1" Padding="5" 
                                           Value="{Binding Path=Lift, Mode=TwoWay}"
                                           MinValue="0"
                                           MaxValue="127"
                                           Step="1"/>
 
-                    <Label Grid.Row="10" Grid.Column="0" Content="Enabled:"/>
-                    <ToggleButton Grid.Row="10" Grid.Column="1" 
+                    <Label Grid.Row="11" Grid.Column="0" Content="Enabled:"/>
+                    <ToggleButton Grid.Row="11" Grid.Column="1" 
                                   Style="{StaticResource MaterialDesignSwitchToggleButton}"
                                   IsChecked="{Binding Path=Enabled, Mode=TwoWay}" 
                                   HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5,0,5"/>
                 </Grid>
-            </DataTemplate>
-            <DataTemplate x:Key="DualPiezoPadTemplate" DataType="models:DualPiezoPadViewModel">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="0.3*"/>
-                        <ColumnDefinition Width="0.7*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="0,7,0,0">
-                        <Label Content="Channel:" FontSize="17" FontWeight="Bold"/>
-                        <Label Content="{Binding Path=Channel, Mode=OneTime}" FontSize="17" FontWeight="Bold"/>
-                    </StackPanel>
-                    <ComboBox Grid.Row="0" Grid.Column="1" 
-                              ItemsSource="{Binding Path=AvailableTypes, Mode=OneTime}"
-                              SelectedItem="{Binding Path=Type, Mode=TwoWay}" 
-                              Foreground="{DynamicResource MaterialDesignLightForeground}"
-                              Margin="0,0,0,5" HorizontalAlignment="Right" FontSize="17" FontWeight="Bold"/>
-
-                    <Label Grid.Row="1" Grid.Column="0" Content="Name:"/>
-                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Name, Mode=TwoWay }"/>
-
-                    <Label Grid.Row="2" Grid.Column="0" Content="Note:"/>
-                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=PadNote, Mode=TwoWay}"/>
-
-                    <Label Grid.Row="3" Grid.Column="0" Content="Amplification:"/>
-                    <local:NumericSpinner Grid.Row="3" Grid.Column="1" Padding="5" 
-                                          Value="{Binding Path=Amplification, Mode=TwoWay}"
-                                          MinValue="0"
-                                          MaxValue="1023"
-                                          Step="1"/>
-
-                    <Label Grid.Row="4" Grid.Column="0" Content="Min Threshold:"/>
-                    <local:NumericSpinner Grid.Row="4" Grid.Column="1" Padding="5" 
-                                          Value="{Binding Path=ThresholdMin, Mode=TwoWay}"
-                                          MinValue="0"
-                                          MaxValue="1023"
-                                          Step="1"/>
-
-                    <Label Grid.Row="5" Grid.Column="0" Content="Max Threshold:"/>
-                    <local:NumericSpinner Grid.Row="5" Grid.Column="1" Padding="5" 
-                                          Value="{Binding Path=ThresholdMax, Mode=TwoWay}"
-                                          MinValue="0"
-                                          MaxValue="1023"
-                                          Step="1"/>
-
-                    <Label Grid.Row="6" Grid.Column="0" Content="Sensor Scan Time:"/>
-                    <local:NumericSpinner Grid.Row="6" Grid.Column="1" Padding="5" 
-                                          Value="{Binding Path=ScanTime, Mode=TwoWay}"
-                                          MinValue="0"
-                                          MaxValue="10"
-                                          Step="1"/>
-
-                    <Label Grid.Row="7" Grid.Column="0" Content="Sensor Mask Time:"/>
-                    <local:NumericSpinner Grid.Row="7" Grid.Column="1" Padding="5" 
-                                          Value="{Binding Path=MaskTime, Mode=TwoWay}"
-                                          MinValue="0"
-                                          MaxValue="1000"
-                                          Step="1"/>
-
-                    <Label Grid.Row="8" Grid.Column="0" Content="Enabled:"/>
-                    <ToggleButton Grid.Row="8" Grid.Column="1" 
-                                  Style="{StaticResource MaterialDesignSwitchToggleButton}"
-                                  IsChecked="{Binding Path=Enabled, Mode=TwoWay}" 
-                                  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5,0,5"/>
-                </Grid>
-            </DataTemplate>
+            </DataTemplate>            
             <DataTemplate x:Key="DualZoneCymbalTemplate" DataType="models:DualZoneCymbalViewModel">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -262,9 +194,9 @@
                     <Label Grid.Row="3" Grid.Column="0" Content="Edge Note:"/>
                     <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Path=EdgeNote, Mode=TwoWay}"/>
 
-                    <Label Grid.Row="4" Grid.Column="0" Content="Amplification:"/>
+                    <Label Grid.Row="4" Grid.Column="0" Content="Gain:"/>
                     <local:NumericSpinner Grid.Row="4" Grid.Column="1" Padding="5" 
-                                          Value="{Binding Path=Amplification, Mode=TwoWay}"
+                                          Value="{Binding Path=Gain, Mode=TwoWay}"
                                           MinValue="0"
                                           MaxValue="1023"
                                           Step="1"/>
@@ -283,25 +215,25 @@
                                           MaxValue="1023"
                                           Step="1"/>
 
-                    <Label Grid.Row="7" Grid.Column="0" Content="Sensor Scan Time:"/>
+                    <Label Grid.Row="7" Grid.Column="0" Content="Scan Time:"/>
                     <local:NumericSpinner Grid.Row="7" Grid.Column="1" Padding="5" 
-                                          Value="{Binding Path=ScanTime, Mode=TwoWay}"
+                                          Value="{Binding Path=Scan, Mode=TwoWay}"
                                           MinValue="0"
                                           MaxValue="10"
                                           Step="1"/>
 
-                    <Label Grid.Row="8" Grid.Column="0" Content="Sensor Mask Time:"/>
+                    <Label Grid.Row="8" Grid.Column="0" Content="Hold Time:"/>
                     <local:NumericSpinner Grid.Row="8" Grid.Column="1" Padding="5" 
-                                          Value="{Binding Path=MaskTime, Mode=TwoWay}"
+                                          Value="{Binding Path=Hold, Mode=TwoWay}"
                                           MinValue="0"
                                           MaxValue="1000"
                                           Step="1"/>
 
-                    <Label Grid.Row="9" Grid.Column="0" Content="Choke value max threshold:"/>
+                    <Label Grid.Row="9" Grid.Column="0" Content="Decay Time:"/>
                     <local:NumericSpinner Grid.Row="9" Grid.Column="1" Padding="5" 
-                                          Value="{Binding Path=ChokeValueThreshold, Mode=TwoWay}"
+                                          Value="{Binding Path=Decay, Mode=TwoWay}"
                                           MinValue="0"
-                                          MaxValue="1023"
+                                          MaxValue="255"
                                           Step="1"/>
 
                     <Label Grid.Row="10" Grid.Column="0" Content="Choke min time threshold:"/>
@@ -328,6 +260,7 @@
             <DataTemplate x:Key="ThreeZoneCymbalTemplate" DataType="models:ThreeZoneCymbalViewModel">
                 <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -367,9 +300,9 @@
                     <Label Grid.Row="4" Grid.Column="0" Content="Edge Note:"/>
                     <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Path=EdgeNote, Mode=TwoWay}"/>
 
-                    <Label Grid.Row="5" Grid.Column="0" Content="Amplification:"/>
+                    <Label Grid.Row="5" Grid.Column="0" Content="Gain:"/>
                     <local:NumericSpinner Grid.Row="5" Grid.Column="1" Padding="5" 
-                                          Value="{Binding Path=Amplification, Mode=TwoWay}"
+                                          Value="{Binding Path=Gain, Mode=TwoWay}"
                                           MinValue="0"
                                           MaxValue="1023"
                                           Step="1"/>
@@ -388,22 +321,29 @@
                                           MaxValue="1023"
                                           Step="1"/>
 
-                    <Label Grid.Row="8" Grid.Column="0" Content="Sensor Scan Time:"/>
+                    <Label Grid.Row="8" Grid.Column="0" Content="Scan Time:"/>
                     <local:NumericSpinner Grid.Row="8" Grid.Column="1" Padding="5" 
-                                          Value="{Binding Path=ScanTime, Mode=TwoWay}"
+                                          Value="{Binding Path=Scan, Mode=TwoWay}"
                                           MinValue="0"
                                           MaxValue="10"
                                           Step="1"/>
 
-                    <Label Grid.Row="9" Grid.Column="0" Content="Sensor Mask Time:"/>
+                    <Label Grid.Row="9" Grid.Column="0" Content="Hold Time:"/>
                     <local:NumericSpinner Grid.Row="9" Grid.Column="1" Padding="5" 
-                                          Value="{Binding Path=MaskTime, Mode=TwoWay}"
+                                          Value="{Binding Path=Hold, Mode=TwoWay}"
                                           MinValue="0"
                                           MaxValue="1000"
                                           Step="1"/>
 
-                    <Label Grid.Row="10" Grid.Column="0" Content="Enabled:"/>
-                    <ToggleButton Grid.Row="10" Grid.Column="1" 
+                    <Label Grid.Row="10" Grid.Column="0" Content="Decay Time:"/>
+                    <local:NumericSpinner Grid.Row="10" Grid.Column="1" Padding="5" 
+                                          Value="{Binding Path=Decay, Mode=TwoWay}"
+                                          MinValue="0"
+                                          MaxValue="255"
+                                          Step="1"/>
+
+                    <Label Grid.Row="11" Grid.Column="0" Content="Enabled:"/>
+                    <ToggleButton Grid.Row="11" Grid.Column="1" 
                                   Style="{StaticResource MaterialDesignSwitchToggleButton}"
                                   IsChecked="{Binding Path=Enabled, Mode=TwoWay}" 
                                   HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5,0,5"/>

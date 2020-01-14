@@ -23,18 +23,14 @@ void DualZoneCymbal::loopImplementation()
 {
 	ADC::Sync_result measurement = SharedADC::adc->analogSynchronizedRead(ANALOG_IN0, ANALOG_IN1);
 
-	int velocity = piezoReader_->loop(measurement.result_adc1);
+	byte velocity = piezoReader_->loop(measurement.result_adc1);
 
-	if (piezoReader_->hitInProgress_)
+	if (piezoReader_->state_ == piezoReader_->Scan)
 	{
 		if (measurement.result_adc0 < minZoneSensorValue_)
 			minZoneSensorValue_ = measurement.result_adc0;
 	}
-	if (velocity == PiezoReader::AfterShock || velocity == PiezoReader::CrossTalk)
-	{
-		ChannelSelector::drainCycle();
-	}
-	else if (velocity != 0)
+	if (velocity > 0)
 	{
 		sendNote(padNote_, velocity);
 		minZoneSensorValue_ = 1023;

@@ -10,6 +10,16 @@ PiezoReader::PiezoReader(byte channel, byte subChannel,	int thresholdMin,
 	potentiometer_(channel, subChannel)
 {
 	scaleFactor_ = (127 - lift) / 127.0f;
+
+	state_ = Wait;
+	maxValue_ = 0;
+	previousHitValue_ = 0;
+	previousHitMillis_ = 0;
+	holdStartMillis_ = 0;
+	decayStartMillis_ = 0;
+	waitStartMillis_ = 0;
+
+
 }
 
 void PiezoReader::setup()
@@ -17,7 +27,7 @@ void PiezoReader::setup()
 	potentiometer_.writeToPotentiometer(gain_);
 }
 
-int PiezoReader::loop(int sensorValue)
+byte PiezoReader::loop(int sensorValue)
 {
 	unsigned long currentMillis = millis();
 
@@ -40,6 +50,7 @@ int PiezoReader::loop(int sensorValue)
 		{
 			state_ = Hold;
 			decayStartMillis_ = holdStartMillis_ + hold_;
+			ChannelSelector::drainCycle();
 			return ProcessHit(sensorValue, currentMillis);
 		}
 	case Hold:
@@ -55,9 +66,9 @@ int PiezoReader::loop(int sensorValue)
 	return 0; //todo
 }
 
-int PiezoReader::ProcessHit(int sensorValue, unsigned long currentMillis)
+byte PiezoReader::ProcessHit(int sensorValue, unsigned long currentMillis)
 {
-	if (IsAfterShock(sensorValue, currentMillis))
+	if (IsAfterShock(sensorValue))
 	{
 		state_ = Wait;
 		return AfterShock;

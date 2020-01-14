@@ -4,14 +4,17 @@
 
 namespace Helper
 {
-	int normalizeSensor(int sensorValue, int thresholdMin, int thresholdMax)
+	byte normalizeSensor(int sensorValue, int thresholdMin, int thresholdMax)
 	{
 		sensorValue = map(sensorValue, thresholdMin, thresholdMax, 1, 127);
-		if (sensorValue > 127) sensorValue = 127;
+		return sensorValue > 127 ? 127 : sensorValue;
+
+		if (sensorValue < 0) return 0;
+		if (sensorValue > 127) return 127;
 		return sensorValue;
 	}
 
-    int normalizeSensor(int sensorValue, int thresholdMin, int thresholdMax, byte scale, byte lift, float k)
+    byte normalizeSensor(int sensorValue, int thresholdMin, int thresholdMax, byte scale, byte lift, float k)
     {
         sensorValue = map(sensorValue, thresholdMin, thresholdMax, 1, 127);
 
@@ -25,7 +28,8 @@ namespace Helper
 			sensorValue = k * sensorValue + lift;
 		}
 
-        if (sensorValue > 127) sensorValue = 127;
+		if (sensorValue < 0) return 0;
+		if (sensorValue > 127) return 127;
         return sensorValue;
     }
 

@@ -51,9 +51,6 @@
     <ClInclude Include="digitalpotentiometer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dualpiezopad.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="sharedadc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -90,9 +87,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="digitalpotentiometer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="dualpiezopad.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="sharedadc.cpp">

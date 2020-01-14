@@ -28,7 +28,7 @@ void SinglePiezoPad::serializeParameters(JsonObject& result)
 	result["Hold"] = piezoReader_->hold_;
 	result["Decay"] = piezoReader_->decay_;
 	result["Gain"] = piezoReader_->gain_;
-	result["Scale"] = piezoReader_->scale_;
+	result["Scale"] = piezoReader_->scaleType_;
 	result["Lift"] = piezoReader_->lift_;
 }
 
@@ -41,16 +41,11 @@ void SinglePiezoPad::loopImplementation()
 {
 	ADC::Sync_result measurement = SharedADC::adc->analogSynchronizedRead(ANALOG_IN0, ANALOG_IN1);
 	int value = channel_ < 4 ? measurement.result_adc0 : measurement.result_adc1;
-	int velocity = piezoReader_->loop(value);
+	byte velocity = piezoReader_->loop(value);
 
-	if (velocity == PiezoReader::AfterShock || velocity == PiezoReader::CrossTalk)
-	{
-		ChannelSelector::drainCycle();
-	}
-	else if (velocity != 0)
+	if (velocity > 0)
 	{
 		Helper::sendNoteOnOff(padNote_, velocity);
-		ChannelSelector::drainCycle();
 	}
 }
 

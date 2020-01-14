@@ -16,14 +16,14 @@ public:
 	PiezoReader(byte channel, byte subChannel, int thresholdMin, int thresholdMax, 
 		int scan, int hold, int decay, byte gain, byte scaleType, byte lift);
 
-	static const int AfterShock = -1;
-	static const int CrossTalk = -2;
+	static const byte AfterShock = -1;
+	static const byte CrossTalk = -2;
 
-	static const int Wait = 0;
-	static const int Scan = 1;
-	static const int Hold = 2;
+	static const byte Wait = 0;
+	static const byte Scan = 1;
+	static const byte Hold = 2;
 
-	int loop(int sensorValue);
+	byte loop(int sensorValue);
 	void setup();
 
 	int thresholdMin_;
@@ -38,20 +38,22 @@ public:
 	byte state_;
 
 private:
-	int ProcessHit(int sensorValue, unsigned long currentMillis);
+	byte ProcessHit(int sensorValue, unsigned long currentMillis);
 	void CalculateDecayParameters();
 	bool IsAfterShock(unsigned long currentMillis);
 
+	DigitalPotentiometer potentiometer_;
+
+	int previousHitValue_;
 	unsigned long previousHitMillis_;
 
 	unsigned long holdStartMillis_;
 	unsigned long decayStartMillis_;
 	unsigned long waitStartMillis_;
 
-	int maxValue_;
-	int previousHitValue_;
-	DigitalPotentiometer potentiometer_;
 	float scaleFactor_;
+
+	int maxValue_;
 
 	float decayK_;
 	float decayB_;
