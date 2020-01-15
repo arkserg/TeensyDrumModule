@@ -51,7 +51,9 @@ byte PiezoReader::loop(int sensorValue)
 			state_ = Hold;
 			decayStartMillis_ = holdStartMillis_ + hold_;
 			ChannelSelector::drainCycle();
-			return ProcessHit(sensorValue, currentMillis);
+			byte result = ProcessHit(sensorValue, currentMillis);
+			maxValue_ = 0;
+			return result;
 		}
 	case Hold:
 		if (decayStartMillis_ >= currentMillis)
