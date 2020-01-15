@@ -47,16 +47,16 @@ private:
 	int previousHitValue_;
 	unsigned long previousHitMillis_;
 
-	unsigned long holdStartMillis_;
-	unsigned long decayStartMillis_;
-	unsigned long waitStartMillis_;
+	unsigned long scanEndMillis_;
+	unsigned long holdEndMillis_;
+	unsigned long decayEndMillis_;
 
 	float scaleFactor_;
 
 	int maxValue_;
 
 	float decayK_;
-	float decayB_;
+	int decayB_;
 };
 
 #endif
