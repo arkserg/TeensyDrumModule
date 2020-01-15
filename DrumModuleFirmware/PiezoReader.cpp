@@ -18,6 +18,10 @@ PiezoReader::PiezoReader(byte channel, byte subChannel,	int thresholdMin,
 	scanEndMillis_ = 0;
 	holdEndMillis_ = 0;
 	decayEndMillis_ = 0;
+
+	monitor_ = false;
+	enableMonitor_ = false;
+	disableMonitor_ = false;
 }
 
 void PiezoReader::setup()
@@ -25,18 +29,61 @@ void PiezoReader::setup()
 	potentiometer_.writeToPotentiometer(gain_);
 }
 
+void PiezoReader::enableRealTimeMonitoring()
+{
+	enableMonitor_ = true;
+}
+
+void PiezoReader::disableRealTimeMonitoring()
+{
+	disableMonitor_ = true;
+}
+
 int PiezoReader::loop(int sensorValue)
 {
 	unsigned long currentMillis = millis();
+	unsigned long currentMicros = monitor_ ? micros() : 0;
+
+	if (monitor_)
+	{
+		measureIndex_++;
+		monitorTimeStamps_[measureIndex_] = currentMicros;
+		monitorData_[measureIndex_] = sensorValue;
+
+		if (measureIndex_ == 99)
+		{
+			//todo: flush buffer
+			measureIndex_ = 0;
+		}
+	}
+
+	if (state_ == Decay && decayEndMillis_ <= currentMillis)
+	{
+		state_ = Wait;
+		decayEndMicros_ = currentMicros;
+		//todo: send data
+	}
 
 	switch (state_)
 	{
+	case Decay:
 	case Wait:
 		if (sensorValue > thresholdMin_)
 		{
 			state_ = Scan;
 			scanEndMillis_ = currentMillis + scan_;
 			maxValue_ = sensorValue;
+
+			//monitor
+			if (enableMonitor_)
+			{
+				monitor_ = true;
+				enableMonitor_ = false;
+			}
+			scanStartMicros_ = currentMicros;
+			measureIndex_ = 0;
+			monitorTimeStamps_[measureIndex_] = currentMicros;
+			monitorData_[measureIndex_] = sensorValue;
 		}
 		break;
 	case Scan:
@@ -48,12 +95,21 @@ int PiezoReader::loop(int sensorValue)
 		{
 			state_ = Hold;
 			holdEndMillis_ = scanEndMillis_ + hold_;
+
+			//monitor
+			holdStartMicros_ = currentMicros;
 		}
 	case Hold:
 		if (holdEndMillis_ <= currentMillis)
 		{
-			state_ = Wait; //на самом деле Decay, но в этот период мы также принимаем сигнал
-			return ProcessHit(sensorValue, currentMillis);
+			state_ = Decay;
+
+			ChannelSelector::drainCycle();
+			if (IsAfterShock(sensorValue))
+			{
+				return AfterShock;
+			}
+			return ProcessHit(sensorValue, currentMillis, currentMicros);
 		}
 		break;
 	}
@@ -61,23 +117,21 @@ int PiezoReader::loop(int sensorValue)
 	return 0; //todo
 }
 
-int PiezoReader::ProcessHit(int sensorValue, unsigned long currentMillis)
+int PiezoReader::ProcessHit(int sensorValue, unsigned long currentMillis, unsigned long currentMicros)
 {
-	ChannelSelector::drainCycle();
-
-	if (IsAfterShock(sensorValue))
-	{
-		state_ = Wait;
-		return AfterShock;
-	}
-
 	CalculateDecayParameters();
 	previousHitValue_ = maxValue_;
 	previousHitMillis_ = currentMillis;
 	decayEndMillis_ = holdEndMillis_ + decay_;
 
+	//monitor
+	decayStartMicros_ = currentMicros;
+
 	if (XTalkHelper::checkNotCrossTalk(currentMillis, maxValue_))
 	{
+		hitMicros_ = currentMicros;
+		hitValue_ = sensorValue;
+
 		return Helper::normalizeSensor(maxValue_, thresholdMin_, thresholdMax_, scaleType_, lift_, scaleFactor_);
 	}
 	else

@@ -1,4 +1,4 @@
-#ifndef _PIEZOREADER_h
+﻿#ifndef _PIEZOREADER_h
 #define _PIEZOREADER_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
@@ -22,9 +22,12 @@ public:
 	static const byte Wait = 0;
 	static const byte Scan = 1;
 	static const byte Hold = 2;
+	static const byte Decay = 3;
 
 	int loop(int sensorValue);
 	void setup();
+	void enableRealTimeMonitoring();
+	void disableRealTimeMonitoring();
 
 	int thresholdMin_;
 	int thresholdMax_;
@@ -38,7 +41,7 @@ public:
 	byte state_;
 
 private:
-	int ProcessHit(int sensorValue, unsigned long currentMillis);
+	int ProcessHit(int sensorValue, unsigned long currentMillis, unsigned long currentMicros);
 	void CalculateDecayParameters();
 	bool IsAfterShock(unsigned long currentMillis);
 
@@ -57,6 +60,20 @@ private:
 
 	float decayK_;
 	int decayB_;
+
+	//todo: в хэлпер
+	bool monitor_;
+	bool enableMonitor_;
+	bool disableMonitor_;
+	unsigned long scanStartMicros_;
+	unsigned long holdStartMicros_;
+	unsigned long decayStartMicros_;
+	unsigned long decayEndMicros_;
+	unsigned long hitMicros_;
+	unsigned long hitValue_;
+	unsigned long monitorTimeStamps_[100];
+	int monitorData_[100];
+	long measureIndex_;
 };
 
 #endif
