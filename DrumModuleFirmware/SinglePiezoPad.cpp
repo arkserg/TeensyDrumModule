@@ -41,12 +41,14 @@ void SinglePiezoPad::loopImplementation()
 {
 	ADC::Sync_result measurement = SharedADC::adc->analogSynchronizedRead(ANALOG_IN0, ANALOG_IN1);
 	int value = channel_ < 4 ? measurement.result_adc0 : measurement.result_adc1;
-	byte velocity = piezoReader_->loop(value);
+	int velocity = piezoReader_->loop(value);
 
 	if (velocity > 0)
 	{
 		Helper::sendNoteOnOff(padNote_, velocity);
-		//todo
+
+		//todo: debug
+		Serial.print("Note sent. Velocity: ");
 		Serial.println(velocity);
 	}
 }

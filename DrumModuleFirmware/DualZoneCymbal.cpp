@@ -23,7 +23,7 @@ void DualZoneCymbal::loopImplementation()
 {
 	ADC::Sync_result measurement = SharedADC::adc->analogSynchronizedRead(ANALOG_IN0, ANALOG_IN1);
 
-	byte velocity = piezoReader_->loop(measurement.result_adc1);
+	int velocity = piezoReader_->loop(measurement.result_adc1);
 
 	if (piezoReader_->state_ == piezoReader_->Scan)
 	{

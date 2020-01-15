@@ -34,7 +34,7 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
             base.ResetToDefault();
             PadNote = 51;
             EdgeNote = 53;
-            ChokeTimeThreshold = 3; //todo
+            ChokeTimeThreshold = 3;
             ChokeEnabled = true;
         }
     }

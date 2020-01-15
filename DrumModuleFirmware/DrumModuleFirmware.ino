@@ -168,7 +168,7 @@ void getAllDrums(int commandId)
 
 	getDrumsJsonArray(drumsArray);
 
-	serializeJsonPretty(response, Serial); //todo:
+	serializeJson(response, Serial);
 }
 
 void setDrumParameters(DynamicJsonDocument& request, int commandId)

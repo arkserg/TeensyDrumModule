@@ -1,4 +1,4 @@
-#include "piezoreader.h"
+﻿#include "piezoreader.h"
 #include "hardware.h"
 #include "helper.h"
 #include "xtalkhelper.h"
@@ -24,10 +24,13 @@ PiezoReader::PiezoReader(byte channel, byte subChannel,	int thresholdMin,
 
 void PiezoReader::setup()
 {
+	//todo: debug
+	Serial.print("Gain: ");
+	Serial.println(gain_);
 	potentiometer_.writeToPotentiometer(gain_);
 }
 
-byte PiezoReader::loop(int sensorValue)
+int PiezoReader::loop(int sensorValue)
 {
 	unsigned long currentMillis = millis();
 
@@ -36,8 +39,24 @@ byte PiezoReader::loop(int sensorValue)
 	case Wait:
 		if (sensorValue > thresholdMin_)
 		{
+			//todo: debug
+			Serial.println("Wait End");
+			Serial.println("Scan Start");
+
 			state_ = Scan;
 			holdStartMillis_ = currentMillis + scan_;
+
+			//todo: debug
+			Serial.print("scan: ");
+			Serial.println(scan_);
+
+			Serial.print("current millis: ");
+			Serial.println(currentMillis);
+
+			Serial.print("holdStartMillis_: ");
+			Serial.println(holdStartMillis_);
+
+
 			maxValue_ = sensorValue;
 		}
 		break;
@@ -46,21 +65,30 @@ byte PiezoReader::loop(int sensorValue)
 		{
 			maxValue_ = sensorValue;
 		}
-		if (holdStartMillis_ >= currentMillis)
+		if (holdStartMillis_ <= currentMillis)
 		{
+			//todo: debug
+			Serial.println("Scan End");
+			Serial.println("Hold Start");
+
 			state_ = Hold;
 			decayStartMillis_ = holdStartMillis_ + hold_;
-			ChannelSelector::drainCycle();
-			byte result = ProcessHit(sensorValue, currentMillis);
-			maxValue_ = 0;
-			return result;
 		}
 	case Hold:
-		if (decayStartMillis_ >= currentMillis)
+		if (decayStartMillis_ <= currentMillis)
 		{
+			//todo: debug
+			Serial.println("Hold End");
+			Serial.println("Wait Start");
+
+			ChannelSelector::drainCycle();
+			int result = ProcessHit(sensorValue, currentMillis);
+
 			CalculateDecayParameters();
-			state_ = Wait;
+			state_ = Wait; //на самом деле Decay, но в этот период мы также принимаем сигнал
 			waitStartMillis_ = decayStartMillis_ + decay_;
+
+			return result;
 		}
 		break;
 	}
@@ -68,39 +96,68 @@ byte PiezoReader::loop(int sensorValue)
 	return 0; //todo
 }
 
-byte PiezoReader::ProcessHit(int sensorValue, unsigned long currentMillis)
+int PiezoReader::ProcessHit(int sensorValue, unsigned long currentMillis)
 {
+	//todo: debug
+	Serial.println("ProcessHit Start");
+
+
 	if (IsAfterShock(sensorValue))
 	{
 		state_ = Wait;
+
+		//todo: debug
+		Serial.println("ProcessHit End: AfterShock");
+
 		return AfterShock;
 	}
 
 	previousHitValue_ = maxValue_;
 	previousHitMillis_ = currentMillis;
-	
+
 	if (XTalkHelper::checkNotCrossTalk(currentMillis, maxValue_))
 	{
 		byte velocity = Helper::normalizeSensor(maxValue_, thresholdMin_, thresholdMax_, scaleType_, lift_, scaleFactor_);
-		//todo
+		//todo: debug
+		Serial.print("ProcessHit End: ");
 		Serial.println(velocity);
+
 		return velocity;
 	}
 	else
 	{
+		//todo: debug
+		Serial.println("ProcessHit End: CrossTalk");
 		return CrossTalk;
-	}	
+	}
 }
 
 void PiezoReader::CalculateDecayParameters()
 {
+	//todo: debug
+	Serial.println("CalculateDecayParameters Start");
+
+
 	decayB_ = maxValue_;
 	decayK_ = (thresholdMin_ - maxValue_) / decay_;
+
+
+	//todo: debug
+	Serial.println("CalculateDecayParameters End");
 }
 
 bool PiezoReader::IsAfterShock(unsigned long currentMillis)
 {
-	if (currentMillis >= waitStartMillis_) return false;
+	//todo: debug
+	Serial.println("IsAfterShock Start");
+
+
+	if (waitStartMillis_ <= currentMillis) return false;
 	int threshold = decayK_ * (currentMillis - decayStartMillis_) + decayB_;
+
+	//todo: debug
+	Serial.print("IsAfterShock End: ");
+	Serial.println(maxValue_ < threshold);
+
 	return maxValue_ < threshold;
 }

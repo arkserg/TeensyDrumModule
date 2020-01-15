@@ -36,10 +36,13 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary
 
         public DrumModuleConnection(string portName, int baudRate, ILogger<DrumModuleConnection> log = null)
         {
-            _port = new SerialPort(portName, baudRate);
-            _port.Parity = Parity.None;
-            _port.DataBits = 8;
-            _port.StopBits = StopBits.Two;
+            _port = new SerialPort(portName, baudRate)
+            {
+                Parity = Parity.None,
+                DataBits = 8,
+                StopBits = StopBits.Two
+            };
+
             _port.DataReceived += Port_DataReceived;
             _port.DtrEnable = true;
             _port.RtsEnable = true;
@@ -71,7 +74,7 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary
             _cts = new CancellationTokenSource();
             _port.Open();
             _pipe = new Pipe();
-            var task = ReadPipeAsync(_cts.Token);
+            var _ = ReadPipeAsync(_cts.Token);
         }
 
         public void CloseConnection()
@@ -114,7 +117,7 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary
         private void Port_DataReceived(object sender,
             SerialDataReceivedEventArgs e)
         {
-            var task = FillPipeAsync(_cts.Token);
+            var _ = FillPipeAsync(_cts.Token);
         }
 
         private async Task FillPipeAsync(CancellationToken cancellation)
@@ -249,6 +252,7 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary
                 _cts?.Dispose();
             }
             _cts?.Dispose();
+            _semaphore?.Dispose();
         }
     }   
 }
