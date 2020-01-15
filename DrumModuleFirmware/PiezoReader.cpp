@@ -22,9 +22,6 @@ PiezoReader::PiezoReader(byte channel, byte subChannel,	int thresholdMin,
 
 void PiezoReader::setup()
 {
-	//todo: debug
-	Serial.print("Gain: ");
-	Serial.println(gain_);
 	potentiometer_.writeToPotentiometer(gain_);
 }
 
@@ -37,24 +34,8 @@ int PiezoReader::loop(int sensorValue)
 	case Wait:
 		if (sensorValue > thresholdMin_)
 		{
-			//todo: debug
-			Serial.println("Wait End");
-			Serial.println("Scan Start");
-
 			state_ = Scan;
 			scanEndMillis_ = currentMillis + scan_;
-
-			//todo: debug
-			Serial.print("scan: ");
-			Serial.println(scan_);
-
-			Serial.print("current millis: ");
-			Serial.println(currentMillis);
-
-			Serial.print("scanEndMillis_: ");
-			Serial.println(scanEndMillis_);
-
-
 			maxValue_ = sensorValue;
 		}
 		break;
@@ -65,26 +46,14 @@ int PiezoReader::loop(int sensorValue)
 		}
 		if (scanEndMillis_ <= currentMillis)
 		{
-			//todo: debug
-			Serial.println("Scan End");
-			Serial.println("Hold Start");
-
 			state_ = Hold;
 			holdEndMillis_ = scanEndMillis_ + hold_;
 		}
 	case Hold:
 		if (holdEndMillis_ <= currentMillis)
 		{
-			//todo: debug
-			Serial.println("Hold End");
-			Serial.println("Wait Start");
-
-			ChannelSelector::drainCycle();
-			int result = ProcessHit(sensorValue, currentMillis);
-
 			state_ = Wait; //на самом деле Decay, но в этот период мы также принимаем сигнал
-
-			return result;
+			return ProcessHit(sensorValue, currentMillis);
 		}
 		break;
 	}
@@ -94,17 +63,11 @@ int PiezoReader::loop(int sensorValue)
 
 int PiezoReader::ProcessHit(int sensorValue, unsigned long currentMillis)
 {
-	//todo: debug
-	Serial.println("ProcessHit Start");
-
+	ChannelSelector::drainCycle();
 
 	if (IsAfterShock(sensorValue))
 	{
 		state_ = Wait;
-
-		//todo: debug
-		Serial.println("ProcessHit End: AfterShock");
-
 		return AfterShock;
 	}
 
@@ -115,47 +78,23 @@ int PiezoReader::ProcessHit(int sensorValue, unsigned long currentMillis)
 
 	if (XTalkHelper::checkNotCrossTalk(currentMillis, maxValue_))
 	{
-		byte velocity = Helper::normalizeSensor(maxValue_, thresholdMin_, thresholdMax_, scaleType_, lift_, scaleFactor_);
-		//todo: debug
-		Serial.print("ProcessHit End: ");
-		Serial.println(velocity);
-
-		return velocity;
+		return Helper::normalizeSensor(maxValue_, thresholdMin_, thresholdMax_, scaleType_, lift_, scaleFactor_);
 	}
 	else
 	{
-		//todo: debug
-		Serial.println("ProcessHit End: CrossTalk");
 		return CrossTalk;
 	}
 }
 
 void PiezoReader::CalculateDecayParameters()
 {
-	//todo: debug
-	Serial.println("CalculateDecayParameters Start");
-
-
 	decayB_ = maxValue_;
 	decayK_ = (thresholdMin_ - maxValue_) / decay_;
-
-
-	//todo: debug
-	Serial.println("CalculateDecayParameters End");
 }
 
 bool PiezoReader::IsAfterShock(unsigned long currentMillis)
 {
-	//todo: debug
-	Serial.println("IsAfterShock Start");
-
-
 	if (decayEndMillis_ <= currentMillis) return false;
 	int threshold = decayK_ * (currentMillis - holdEndMillis_) + decayB_;
-
-	//todo: debug
-	Serial.print("IsAfterShock End: ");
-	Serial.println(maxValue_ < threshold);
-
 	return maxValue_ < threshold;
 }

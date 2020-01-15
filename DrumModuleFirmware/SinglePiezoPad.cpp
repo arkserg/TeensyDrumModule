@@ -46,10 +46,6 @@ void SinglePiezoPad::loopImplementation()
 	if (velocity > 0)
 	{
 		Helper::sendNoteOnOff(padNote_, velocity);
-
-		//todo: debug
-		Serial.print("Note sent. Velocity: ");
-		Serial.println(velocity);
 	}
 }
 
