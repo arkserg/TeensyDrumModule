@@ -34,7 +34,6 @@ void DualZoneCymbal::loopImplementation()
 	{
 		sendNote(padNote_, velocity);
 		minZoneSensorValue_ = 1023;
-		ChannelSelector::drainCycle();
 	}
 
 	if(chokeEnabled_)

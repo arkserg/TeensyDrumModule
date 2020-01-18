@@ -19,10 +19,10 @@ public:
 	static const int AfterShock = -1;
 	static const int CrossTalk = -2;
 
-	static const byte Wait = 0;
-	static const byte Scan = 1;
-	static const byte Hold = 2;
-	static const byte Decay = 3;
+	static const int Wait = 0;
+	static const int Scan = 1;
+	static const int Hold = 2;
+	static const int Decay = 3;
 
 	int loop(int sensorValue);
 	void setup();
@@ -38,7 +38,7 @@ public:
 	byte scaleType_;
 	byte lift_;
 
-	byte state_;
+	int state_;
 
 private:
 	int ProcessHit(int sensorValue, unsigned long currentMillis, unsigned long currentMicros);

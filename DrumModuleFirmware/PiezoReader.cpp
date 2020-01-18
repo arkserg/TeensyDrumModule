@@ -93,23 +93,22 @@ int PiezoReader::loop(int sensorValue)
 		}
 		if (scanEndMillis_ <= currentMillis)
 		{
+			ChannelSelector::drainCycle();
+
 			state_ = Hold;
 			holdEndMillis_ = scanEndMillis_ + hold_;
 
 			//monitor
 			holdStartMicros_ = currentMicros;
+
+			return ProcessHit(sensorValue, currentMillis, currentMicros);
 		}
+		break;
 	case Hold:
 		if (holdEndMillis_ <= currentMillis)
 		{
-			state_ = Decay;
-
 			ChannelSelector::drainCycle();
-			if (IsAfterShock(sensorValue))
-			{
-				return AfterShock;
-			}
-			return ProcessHit(sensorValue, currentMillis, currentMicros);
+			state_ = Decay;
 		}
 		break;
 	}
@@ -119,10 +118,16 @@ int PiezoReader::loop(int sensorValue)
 
 int PiezoReader::ProcessHit(int sensorValue, unsigned long currentMillis, unsigned long currentMicros)
 {
+	if (IsAfterShock(sensorValue))
+	{
+		state_ = Decay;
+		return AfterShock;
+	}
+
 	CalculateDecayParameters();
+	decayEndMillis_ = holdEndMillis_ + decay_;
 	previousHitValue_ = maxValue_;
 	previousHitMillis_ = currentMillis;
-	decayEndMillis_ = holdEndMillis_ + decay_;
 
 	//monitor
 	decayStartMicros_ = currentMicros;
