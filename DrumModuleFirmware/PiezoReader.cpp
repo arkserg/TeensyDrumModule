@@ -118,30 +118,32 @@ int PiezoReader::loop(int sensorValue)
 
 int PiezoReader::ProcessHit(int sensorValue, unsigned long currentMillis, unsigned long currentMicros)
 {
-	if (IsAfterShock(sensorValue))
+	if (maxValue_ > (previousHitValue_ >> 2) || decayEndMillis_ <= currentMillis)
 	{
-		state_ = Decay;
-		return AfterShock;
-	}
+		previousHitValue_ = maxValue_;
+		previousHitMillis_ = currentMillis;
+		decayEndMillis_ = holdEndMillis_ + decay_;
 
-	CalculateDecayParameters();
-	decayEndMillis_ = holdEndMillis_ + decay_;
-	previousHitValue_ = maxValue_;
-	previousHitMillis_ = currentMillis;
+		//monitor
+		decayStartMicros_ = currentMicros;
 
-	//monitor
-	decayStartMicros_ = currentMicros;
+		if (XTalkHelper::checkNotCrossTalk(currentMillis, maxValue_))
+		{
+			//monitor
+			hitMicros_ = currentMicros;
+			hitValue_ = sensorValue;
 
-	if (XTalkHelper::checkNotCrossTalk(currentMillis, maxValue_))
-	{
-		hitMicros_ = currentMicros;
-		hitValue_ = sensorValue;
-
-		return Helper::normalizeSensor(maxValue_, thresholdMin_, thresholdMax_, scaleType_, lift_, scaleFactor_);
+			return Helper::normalizeSensor(maxValue_, thresholdMin_, thresholdMax_, scaleType_, lift_, scaleFactor_);
+		}
+		else
+		{
+			return CrossTalk;
+		}
 	}
 	else
 	{
-		return CrossTalk;
+		state_ = Decay;
+		return AfterShock;
 	}
 }
 

@@ -129,7 +129,7 @@
                     <local:NumericSpinner Grid.Row="8" Grid.Column="1" Padding="5" 
                                           Value="{Binding Path=Decay, Mode=TwoWay}"
                                           MinValue="0"
-                                          MaxValue="255"
+                                          MaxValue="1000"
                                           Step="1"/>
 
                     <Label Grid.Row="9" Grid.Column="0" Content="Scale type:"/>
@@ -233,7 +233,7 @@
                     <local:NumericSpinner Grid.Row="9" Grid.Column="1" Padding="5" 
                                           Value="{Binding Path=Decay, Mode=TwoWay}"
                                           MinValue="0"
-                                          MaxValue="255"
+                                          MaxValue="1000"
                                           Step="1"/>
 
                     <Label Grid.Row="10" Grid.Column="0" Content="Choke min time threshold:"/>
@@ -339,7 +339,7 @@
                     <local:NumericSpinner Grid.Row="10" Grid.Column="1" Padding="5" 
                                           Value="{Binding Path=Decay, Mode=TwoWay}"
                                           MinValue="0"
-                                          MaxValue="255"
+                                          MaxValue="1000"
                                           Step="1"/>
 
                     <Label Grid.Row="11" Grid.Column="0" Content="Enabled:"/>

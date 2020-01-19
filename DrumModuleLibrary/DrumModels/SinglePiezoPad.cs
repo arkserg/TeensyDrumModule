@@ -19,13 +19,13 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
         public Int16 ThresholdMax { get; set; }
 
         [DataMember]
-        public byte Scan { get; set; }
+        public Int16 Scan { get; set; }
 
         [DataMember]
-        public byte Hold { get; set; }
+        public Int16 Hold { get; set; }
 
         [DataMember]
-        public byte Decay { get; set; }
+        public Int16 Decay { get; set; }
 
         [DataMember]
         public byte Gain { get; set; }

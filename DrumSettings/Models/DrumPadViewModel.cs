@@ -126,9 +126,9 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
         private byte _padNote;
         private short _thresholdMin;
         private short _thresholdMax;
-        private byte _scan;
-        private byte _hold;
-        private byte _decay;
+        private Int16 _scan;
+        private Int16 _hold;
+        private Int16 _decay;
         private byte _gain;
         private ScaleType _scale;
         private byte _lift;
@@ -151,19 +151,19 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
             set => this.RaiseAndSetIfChanged(ref _thresholdMax, value);
         }
 
-        public byte Scan
+        public Int16 Scan
         {
             get => _scan;
             set => this.RaiseAndSetIfChanged(ref _scan, value);
         }
 
-        public byte Hold
+        public Int16 Hold
         {
             get => _hold;
             set => this.RaiseAndSetIfChanged(ref _hold, value);
         }
 
-        public byte Decay
+        public Int16 Decay
         {
             get => _decay;
             set => this.RaiseAndSetIfChanged(ref _decay, value);
