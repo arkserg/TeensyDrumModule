@@ -26,8 +26,6 @@ public:
 
 	int loop(int sensorValue);
 	void setup();
-	void enableRealTimeMonitoring();
-	void disableRealTimeMonitoring();
 
 	int thresholdMin_;
 	int thresholdMax_;
@@ -41,7 +39,7 @@ public:
 	int state_;
 
 private:
-	int ProcessHit(int sensorValue, unsigned long currentMillis, unsigned long currentMicros);
+	int ProcessHit(int sensorValue, unsigned long currentMillis);
 	void CalculateDecayParameters();
 	bool IsAfterShock(unsigned long currentMillis);
 
@@ -60,20 +58,6 @@ private:
 
 	float decayK_;
 	int decayB_;
-
-	//todo: в хэлпер
-	bool monitor_;
-	bool enableMonitor_;
-	bool disableMonitor_;
-	unsigned long scanStartMicros_;
-	unsigned long holdStartMicros_;
-	unsigned long decayStartMicros_;
-	unsigned long decayEndMicros_;
-	unsigned long hitMicros_;
-	unsigned long hitValue_;
-	unsigned long monitorTimeStamps_[100];
-	int monitorData_[100];
-	long measureIndex_;
 };
 
 #endif
