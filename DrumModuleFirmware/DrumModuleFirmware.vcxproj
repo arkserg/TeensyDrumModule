@@ -102,6 +102,7 @@
     <ClInclude Include="digitalpotentiometer.h" />
     <ClInclude Include="drumpad.h" />
     <ClInclude Include="dualzonecymbal.h" />
+    <ClInclude Include="dualzonehihat.h" />
     <ClInclude Include="emptydrumpad.h" />
     <ClInclude Include="hardware.h" />
     <ClInclude Include="helper.h" />
@@ -118,6 +119,7 @@
     <ClCompile Include="digitalpotentiometer.cpp" />
     <ClCompile Include="drumpad.cpp" />
     <ClCompile Include="dualzonecymbal.cpp" />
+    <ClCompile Include="dualzonehihat.cpp" />
     <ClCompile Include="emptydrumpad.cpp" />
     <ClCompile Include="helper.cpp" />
     <ClCompile Include="hihatcontroller.cpp" />

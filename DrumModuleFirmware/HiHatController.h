@@ -16,7 +16,6 @@
 #include <arduinojson.h>
 
 class HiHatController : public DrumPad {
-	int previousValue_;
 	long previousChangeMillis_;
 public:
 	HiHatController(JsonObject& json);
@@ -24,8 +23,12 @@ public:
 	void serializeParameters(JsonObject& result);
 
 	byte ccControl_;
+	byte pedalNote_;
+	byte splashNote_;
 	int thresholdMin_;
 	int thresholdMax_;
+
+	static int currentValue_;
 
 protected:
 	void loopImplementation();

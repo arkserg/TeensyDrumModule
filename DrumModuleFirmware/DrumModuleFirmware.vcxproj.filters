@@ -57,6 +57,9 @@
     <ClInclude Include="xtalkhelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="dualzonehihat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="channelselector.cpp">
@@ -93,6 +96,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="xtalkhelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dualzonehihat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

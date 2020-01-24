@@ -323,6 +323,8 @@ DrumPad* createDrumPad(JsonObject& json)
 		return new DualZoneCymbal(json);
 	case TYPE_ThreeZoneCymbal:
 		return new ThreeZoneCymbal(json);
+	case TYPE_DualZoneHiHat:
+		return new DualZoneHiHat(json);
 	case TYPE_HiHatController:
 		return new HiHatController(json);
 	default:

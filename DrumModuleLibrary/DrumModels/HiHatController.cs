@@ -13,6 +13,12 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
         public byte CcControl { get; set; }
 
         [DataMember]
+        public byte PedalNote { get; set; }
+
+        [DataMember]
+        public byte SplashNote { get; set; }
+
+        [DataMember]
         public Int16 ThresholdMin { get; set; }
 
         [DataMember]
@@ -29,6 +35,8 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
         public override void ResetToDefault()
         {
             CcControl = 4;
+            PedalNote = 5; //todo
+            SplashNote = 6; //todo
             ThresholdMin = 0;
             ThresholdMax = 650;
             base.ResetToDefault();

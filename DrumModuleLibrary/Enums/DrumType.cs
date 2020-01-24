@@ -9,5 +9,6 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.Enums
         DualZoneCymbal  = 3,
         ThreeZoneCymbal = 4,
         HiHatController = 5,
+        DualZoneHiHat   = 6,
     }
 }

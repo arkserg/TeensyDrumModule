@@ -20,6 +20,7 @@
 #define TYPE_DualZoneCymbal		3
 #define TYPE_ThreeZoneCymbal	4
 #define TYPE_HiHatController	5
+#define TYPE_DualZoneHiHat		6
 
 #define COMMAND_Ping				1
 #define COMMAND_GetAllDrums			2

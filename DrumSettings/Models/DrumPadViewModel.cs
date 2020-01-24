@@ -99,6 +99,8 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
     public class HiHatControllerViewModel : DrumPadViewModel
     {
         private byte _ccControl;
+        private byte _pedalNote;
+        private byte _splashNote;
         private short _thresholdMin;
         private short _thresholdMax;
         
@@ -106,6 +108,16 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
         {
             get => _ccControl;
             set => this.RaiseAndSetIfChanged(ref _ccControl, value);
+        }
+        public byte PedalNote
+        {
+            get => _pedalNote;
+            set => this.RaiseAndSetIfChanged(ref _pedalNote, value);
+        }
+        public byte SplashNote
+        {
+            get => _splashNote;
+            set => this.RaiseAndSetIfChanged(ref _splashNote, value);
         }
 
         public Int16 ThresholdMin
@@ -302,6 +314,24 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
         {
             get => _bellNote;
             set => this.RaiseAndSetIfChanged(ref _bellNote, value);
+        }
+    }
+
+    public class DualZoneHiHatViewModel : DualZoneCymbalViewModel
+    {
+        private byte _closedBowNote;
+        private byte _closedEdgeNote;
+
+        public byte ClosedBowNote
+        {
+            get => _closedBowNote;
+            set => this.RaiseAndSetIfChanged(ref _closedBowNote, value);
+        }
+
+        public byte ClosedEdgeNote
+        {
+            get => _closedEdgeNote;
+            set => this.RaiseAndSetIfChanged(ref _closedEdgeNote, value);
         }
     }
 }
