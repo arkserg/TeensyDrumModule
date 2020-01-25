@@ -4,9 +4,11 @@
 #include "xtalkhelper.h"
 
 PiezoReader::PiezoReader(byte channel, byte subChannel,	int thresholdMin, 
-	int thresholdMax, int scan, int hold, int decay, byte gain, byte scaleType, byte lift) :
+	int thresholdMax, int scan, int hold, int decay, byte gain, byte scaleType, byte lift,
+	bool xTalkCancellation, int xTalkFactor) :
 	thresholdMin_(thresholdMin), thresholdMax_(thresholdMax), scan_(scan), hold_(hold),
-	decay_(decay), gain_(gain), scaleType_(scaleType), lift_(lift),
+	decay_(decay), gain_(gain), scaleType_(scaleType), lift_(lift), 
+	xTalkCancellation_(xTalkCancellation), xTalkFactor_(xTalkFactor),
 	potentiometer_(channel, subChannel)
 {
 	scaleFactor_ = (127 - lift) / 127.0f;
@@ -80,7 +82,7 @@ int PiezoReader::ProcessHit(int sensorValue, unsigned long currentMillis)
 		previousHitMillis_ = currentMillis;
 		decayEndMillis_ = holdEndMillis_ + decay_;
 		
-		if (XTalkHelper::checkNotCrossTalk(currentMillis, maxValue_))
+		if (!xTalkCancellation_ || !XTalkHelper::isCrossTalk(currentMillis, maxValue_, xTalkFactor_))
 		{
 			return Helper::normalizeSensor(maxValue_, thresholdMin_, thresholdMax_, scaleType_, lift_, scaleFactor_);
 		}

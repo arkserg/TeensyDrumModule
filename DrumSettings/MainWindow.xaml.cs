@@ -170,7 +170,22 @@ namespace Arkserg.TeensyDrumModule.DrumSettings
                 throw new Exception("Error"); //todo
         }
 
+        private async void RestartModuleAsync(object sender, RoutedEventArgs e)
+        {
+            var result = await _connection.RestartModuleAsync();
+            if (!result)
+                throw new Exception("Error"); //todo
+            CloseDrumModuleConnection();
+            await Task.Delay(3);
+            await OpenDrumModuleConnectionAsync();
+        }
+
         private async void OpenDrumModuleConnectionAsync(object sender, RoutedEventArgs e)
+        {
+            await OpenDrumModuleConnectionAsync();
+        }
+
+        private async Task OpenDrumModuleConnectionAsync()
         {
             if (_connection == null || !_connection.IsOpen)
             {
@@ -184,6 +199,11 @@ namespace Arkserg.TeensyDrumModule.DrumSettings
         }
 
         private void CloseDrumModuleConnection(object sender, RoutedEventArgs e)
+        {
+            CloseDrumModuleConnection();
+        }
+
+        private void CloseDrumModuleConnection()
         {
             if(_connection.IsOpen)
             {

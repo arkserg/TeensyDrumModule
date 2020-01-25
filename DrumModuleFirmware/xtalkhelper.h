@@ -12,13 +12,12 @@
 class XTalkHelper {
 public:
 	static void setup();
-	static bool checkNotCrossTalk(unsigned long hitMillis, int hitValue);
+	static bool isCrossTalk(unsigned long hitMillis, int hitValue, int xTalkFactor);
 	static unsigned long lastHitMillis_;
 	static int lastHitValue_;
 
 private:
-	static const byte timeWindow_ = 3;
-	static const byte factor_ = 3;
+	static const byte timeWindow_ = 30;
 };
 
 #endif

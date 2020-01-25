@@ -36,6 +36,12 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
         [DataMember]
         public byte Lift { get; set; }
 
+        [DataMember]
+        public bool XTalkCancellation { get; set; }
+
+        [DataMember]
+        public Int16 XTalkFactor { get; set; }
+
         protected SinglePiezoPad()
         {
         }
@@ -60,6 +66,8 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
             Gain = 20;
             Scale = ScaleType.Linear;
             Lift = 40;
+            XTalkCancellation = false;
+            XTalkFactor = 30;
         }
     }
 }

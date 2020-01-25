@@ -7,12 +7,15 @@ void XTalkHelper::setup()
 {
 }
 
-bool XTalkHelper::checkNotCrossTalk(unsigned long hitMillis, int hitValue)
+bool XTalkHelper::isCrossTalk(unsigned long hitMillis, int hitValue, int xTalkFactor)
 {
-	if ((hitMillis - lastHitMillis_) > timeWindow_) return true;
-	if (lastHitValue_ / hitValue < factor_) return true;
+	if ((hitMillis - lastHitMillis_) > timeWindow_
+		|| ((100 * hitValue) / lastHitValue_) >= xTalkFactor)
+	{
+		lastHitMillis_ = hitMillis;
+		lastHitValue_ = hitValue;
+		return false;
+	}
 
-	lastHitMillis_ = hitMillis;
-	lastHitValue_ = hitValue;
-	return false;
+	return true;
 }

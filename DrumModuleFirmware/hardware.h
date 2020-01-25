@@ -28,8 +28,13 @@
 #define COMMAND_ReloadSettings		5
 #define COMMAND_EnableDrum			6
 #define COMMAND_DisableDrum			7
+#define COMMAND_Restart				8
 
 #define SCALE_Linear	0
 #define SCALE_Log		1
+
+#define RESTART_ADDR 0xE000ED0C
+#define READ_RESTART() (*(volatile uint32_t *)RESTART_ADDR)
+#define WRITE_RESTART(val) ((*(volatile uint32_t *)RESTART_ADDR) = (val))
 
 #endif

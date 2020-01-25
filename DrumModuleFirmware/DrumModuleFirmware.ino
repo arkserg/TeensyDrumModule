@@ -146,6 +146,9 @@ void handleCommand()
 	case COMMAND_DisableDrum:
 		disableDrum(response, commandId);
 		break;
+	case COMMAND_Restart:
+		restart(commandId);
+		break;
 	default:
 		break;
 	}
@@ -235,6 +238,12 @@ void disableDrum(DynamicJsonDocument& request, int commandId)
 		drum->enabled_ = false;
 	}
 	sendSimpleCommandResponse(COMMAND_DisableDrum, commandId);
+}
+
+void restart(int commandId)
+{
+	sendSimpleCommandResponse(COMMAND_Restart, commandId);
+	WRITE_RESTART(0x5FA0004);
 }
 
 void sendSimpleCommandResponse(byte commandType, int commandId)

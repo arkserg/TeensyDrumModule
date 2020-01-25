@@ -5,10 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Arkserg.TeensyDrumModule.DrumSettings"
         xmlns:models="clr-namespace:Arkserg.TeensyDrumModule.DrumSettings.Models"
-        xmlns:enums="clr-namespace:Arkserg.TeensyDrumModule.DrumModuleLibrary.Enums"
-        xmlns:System="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="MainWindow" Height="620" Width="800"
+        Title="MainWindow" Height="800" Width="800"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="17"
@@ -56,6 +54,8 @@
             <DataTemplate x:Key="SinglePiezoPadTemplate" DataType="models:SinglePiezoPadViewModel">
                 <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -146,8 +146,21 @@
                                           MaxValue="127"
                                           Step="1"/>
 
-                    <Label Grid.Row="11" Grid.Column="0" Content="Enabled:"/>
+                    <Label Grid.Row="11" Grid.Column="0" Content="XTalk Cancellation:"/>
                     <ToggleButton Grid.Row="11" Grid.Column="1" 
+                                  Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                                  IsChecked="{Binding Path=XTalkCancellation, Mode=TwoWay}" 
+                                  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5,0,5"/>
+
+                    <Label Grid.Row="12" Grid.Column="0" Content="XTalk Factor:"/>
+                    <local:NumericSpinner Grid.Row="12" Grid.Column="1" Padding="5" 
+                                          Value="{Binding Path=XTalkFactor, Mode=TwoWay}"
+                                          MinValue="0"
+                                          MaxValue="100"
+                                          Step="1"/>
+
+                    <Label Grid.Row="13" Grid.Column="0" Content="Enabled:"/>
+                    <ToggleButton Grid.Row="13" Grid.Column="1" 
                                   Style="{StaticResource MaterialDesignSwitchToggleButton}"
                                   IsChecked="{Binding Path=Enabled, Mode=TwoWay}" 
                                   HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5,0,5"/>
@@ -156,6 +169,10 @@
             <DataTemplate x:Key="DualZoneCymbalTemplate" DataType="models:DualZoneCymbalViewModel">
                 <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -236,21 +253,48 @@
                                           MaxValue="1000"
                                           Step="1"/>
 
-                    <Label Grid.Row="10" Grid.Column="0" Content="Choke min time threshold:"/>
-                    <local:NumericSpinner Grid.Row="10" Grid.Column="1" Padding="5" 
+                    <Label Grid.Row="10" Grid.Column="0" Content="Scale type:"/>
+                    <ComboBox Grid.Row="10" Grid.Column="1" 
+                              ItemsSource="{Binding Path=ScaleTypes, Mode=OneTime}"
+                              SelectedItem="{Binding Path=Scale, Mode=TwoWay}" 
+                              Foreground="{DynamicResource MaterialDesignLightForeground}"
+                              Width="128" HorizontalAlignment="Left"/>
+
+                    <Label Grid.Row="11" Grid.Column="0" Content="Lift:"/>
+                    <local:NumericSpinner Grid.Row="11" Grid.Column="1" Padding="5" 
+                                          Value="{Binding Path=Lift, Mode=TwoWay}"
+                                          MinValue="0"
+                                          MaxValue="127"
+                                          Step="1"/>
+
+                    <Label Grid.Row="12" Grid.Column="0" Content="Choke enabled:"/>
+                    <ToggleButton Grid.Row="12" Grid.Column="1" 
+                                  Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                                  IsChecked="{Binding Path=ChokeEnabled, Mode=TwoWay}" 
+                                  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5,0,5"/>
+
+                    <Label Grid.Row="13" Grid.Column="0" Content="Choke min time threshold:"/>
+                    <local:NumericSpinner Grid.Row="13" Grid.Column="1" Padding="5" 
                                           Value="{Binding Path=ChokeTimeThreshold, Mode=TwoWay}"
                                           MinValue="0"
                                           MaxValue="255"
                                           Step="1"/>
 
-                    <Label Grid.Row="11" Grid.Column="0" Content="Choke enabled:"/>
-                    <ToggleButton Grid.Row="11" Grid.Column="1" 
+                    <Label Grid.Row="14" Grid.Column="0" Content="XTalk Cancellation:"/>
+                    <ToggleButton Grid.Row="14" Grid.Column="1" 
                                   Style="{StaticResource MaterialDesignSwitchToggleButton}"
-                                  IsChecked="{Binding Path=ChokeEnabled, Mode=TwoWay}" 
+                                  IsChecked="{Binding Path=XTalkCancellation, Mode=TwoWay}" 
                                   HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5,0,5"/>
 
-                    <Label Grid.Row="12" Grid.Column="0" Content="Enabled:"/>
-                    <ToggleButton Grid.Row="12" Grid.Column="1" 
+                    <Label Grid.Row="15" Grid.Column="0" Content="XTalk Factor:"/>
+                    <local:NumericSpinner Grid.Row="15" Grid.Column="1" Padding="5" 
+                                          Value="{Binding Path=XTalkFactor, Mode=TwoWay}"
+                                          MinValue="0"
+                                          MaxValue="100"
+                                          Step="1"/>
+
+                    <Label Grid.Row="16" Grid.Column="0" Content="Enabled:"/>
+                    <ToggleButton Grid.Row="16" Grid.Column="1" 
                                   Style="{StaticResource MaterialDesignSwitchToggleButton}"
                                   IsChecked="{Binding Path=Enabled, Mode=TwoWay}" 
                                   HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5,0,5"/>
@@ -260,6 +304,12 @@
             <DataTemplate x:Key="ThreeZoneCymbalTemplate" DataType="models:ThreeZoneCymbalViewModel">
                 <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -342,8 +392,48 @@
                                           MaxValue="1000"
                                           Step="1"/>
 
-                    <Label Grid.Row="11" Grid.Column="0" Content="Enabled:"/>
-                    <ToggleButton Grid.Row="11" Grid.Column="1" 
+                    <Label Grid.Row="11" Grid.Column="0" Content="Scale type:"/>
+                    <ComboBox Grid.Row="11" Grid.Column="1" 
+                              ItemsSource="{Binding Path=ScaleTypes, Mode=OneTime}"
+                              SelectedItem="{Binding Path=Scale, Mode=TwoWay}" 
+                              Foreground="{DynamicResource MaterialDesignLightForeground}"
+                              Width="128" HorizontalAlignment="Left"/>
+
+                    <Label Grid.Row="12" Grid.Column="0" Content="Lift:"/>
+                    <local:NumericSpinner Grid.Row="12" Grid.Column="1" Padding="5" 
+                                          Value="{Binding Path=Lift, Mode=TwoWay}"
+                                          MinValue="0"
+                                          MaxValue="127"
+                                          Step="1"/>
+
+                    <Label Grid.Row="13" Grid.Column="0" Content="Choke enabled:"/>
+                    <ToggleButton Grid.Row="13" Grid.Column="1" 
+                                  Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                                  IsChecked="{Binding Path=ChokeEnabled, Mode=TwoWay}" 
+                                  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5,0,5"/>
+
+                    <Label Grid.Row="14" Grid.Column="0" Content="Choke min time threshold:"/>
+                    <local:NumericSpinner Grid.Row="14" Grid.Column="1" Padding="5" 
+                                          Value="{Binding Path=ChokeTimeThreshold, Mode=TwoWay}"
+                                          MinValue="0"
+                                          MaxValue="255"
+                                          Step="1"/>
+
+                    <Label Grid.Row="15" Grid.Column="0" Content="XTalk Cancellation:"/>
+                    <ToggleButton Grid.Row="15" Grid.Column="1" 
+                                  Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                                  IsChecked="{Binding Path=XTalkCancellation, Mode=TwoWay}" 
+                                  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5,0,5"/>
+
+                    <Label Grid.Row="16" Grid.Column="0" Content="XTalk Factor:"/>
+                    <local:NumericSpinner Grid.Row="16" Grid.Column="1" Padding="5" 
+                                          Value="{Binding Path=XTalkFactor, Mode=TwoWay}"
+                                          MinValue="0"
+                                          MaxValue="100"
+                                          Step="1"/>
+
+                    <Label Grid.Row="17" Grid.Column="0" Content="Enabled:"/>
+                    <ToggleButton Grid.Row="17" Grid.Column="1" 
                                   Style="{StaticResource MaterialDesignSwitchToggleButton}"
                                   IsChecked="{Binding Path=Enabled, Mode=TwoWay}" 
                                   HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5,0,5"/>
@@ -408,17 +498,13 @@
         <DockPanel DockPanel.Dock="Top" LastChildFill="False">
             <Menu VerticalAlignment="Top" DockPanel.Dock="Left">
                 <MenuItem Header="File">
-                    <MenuItem Header="New Project" ></MenuItem>
-                    <MenuItem Header="Open Project" >
-                        <MenuItem Header="WinForms"></MenuItem>
-                        <MenuItem Header="WPF" ></MenuItem>
-                    </MenuItem>
                     <Separator />
-                    <MenuItem Header="Exit" ></MenuItem>
+                    <MenuItem Header="Exit" ></MenuItem> //todo: exit command
                 </MenuItem>
                 <MenuItem Header="Load" Click="LoadConfigurationAsync"/>
                 <MenuItem Header="Reset" Click="ResetConfigurationAsync"/>
                 <MenuItem Header="Save" Click="SaveConfigurationAsync"/>
+                <MenuItem Header="Restart" Click="RestartModuleAsync"/>
             </Menu>
             <Menu x:Name="ComPortMenu" VerticalAlignment="Top" DockPanel.Dock="Right" HorizontalAlignment="Right">
                 <MenuItem Header="Connect" Click="OpenDrumModuleConnectionAsync"/>
@@ -439,7 +525,7 @@
 
             <DockPanel x:Name="DrumsPanel" Grid.Column="0" LastChildFill="True" Background="{DynamicResource PrimaryHueMidBrush}">
                 <!--<ListBox x:Name="DrumsList" DockPanel.Dock="Bottom"/>-->
-                <ListBox x:Name="DrumsList" DockPanel.Dock="Bottom" ItemsSource="{StaticResource ModelsList}" SelectedIndex="0"/>
+                <ListBox x:Name="DrumsList" DockPanel.Dock="Bottom" ItemsSource="{StaticResource ModelsList}" SelectedIndex="2"/>
             </DockPanel>
 
             <DockPanel x:Name="DrumSettingsPanel" Grid.Column="1" LastChildFill="False">

@@ -15,5 +15,10 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.DrumModels
         public EmptyDrumPad(byte channel) : base(DrumType.EmptyDrumPad, channel, false)
         {
         }
+
+        public override void ResetToDefault()
+        {
+            Name = "---";
+        }
     }
 }

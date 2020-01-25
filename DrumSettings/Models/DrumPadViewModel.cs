@@ -132,7 +132,9 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
         private byte _gain;
         private ScaleType _scale;
         private byte _lift;
-        
+        private bool _xTalkCancellation;
+        private Int16 _xTalkFactor;
+
         public byte PadNote
         {
             get => _padNote;
@@ -185,6 +187,18 @@ namespace Arkserg.TeensyDrumModule.DrumSettings.Models
         {
             get => _lift;
             set => this.RaiseAndSetIfChanged(ref _lift, value);
+        }
+
+        public bool XTalkCancellation
+        {
+            get => _xTalkCancellation;
+            set => this.RaiseAndSetIfChanged(ref _xTalkCancellation, value);
+        }
+
+        public Int16 XTalkFactor
+        {
+            get => _xTalkFactor;
+            set => this.RaiseAndSetIfChanged(ref _xTalkFactor, value);
         }
     }
 

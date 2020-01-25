@@ -10,6 +10,7 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary.Enums
         ReloadSettings      = 5,
         EnableDrum          = 6,
         DisableDrum         = 7,
+        Restart             = 8,
         //Info                = 9,
     }
 }

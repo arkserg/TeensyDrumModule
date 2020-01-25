@@ -15,7 +15,9 @@ SinglePiezoPad::SinglePiezoPad(JsonObject& json)
 	byte gain = json["Gain"];
 	byte scale = json["Scale"];
 	byte lift = json["Lift"];
-	piezoReader_ = new PiezoReader(channel_, 0, thresholdMin, thresholdMax, scan, hold, decay, gain, scale, lift);
+	bool xTalkCancellation = json["XTalkCancellation"];
+	int xTalkFactor = json["XTalkFactor"];
+	piezoReader_ = new PiezoReader(channel_, 0, thresholdMin, thresholdMax, scan, hold, decay, gain, scale, lift, xTalkCancellation, xTalkFactor);
 }
 
 void SinglePiezoPad::serializeParameters(JsonObject& result)
@@ -30,6 +32,8 @@ void SinglePiezoPad::serializeParameters(JsonObject& result)
 	result["Gain"] = piezoReader_->gain_;
 	result["Scale"] = piezoReader_->scaleType_;
 	result["Lift"] = piezoReader_->lift_;
+	result["XTalkCancellation"] = piezoReader_->xTalkCancellation_;
+	result["XTalkFactor"] = piezoReader_->xTalkFactor_;
 }
 
 SinglePiezoPad::~SinglePiezoPad()

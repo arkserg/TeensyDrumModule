@@ -240,6 +240,13 @@ namespace Arkserg.TeensyDrumModule.DrumModuleLibrary
             return result?.Drum;
         }
 
+        public async Task<bool> RestartModuleAsync()
+        {
+            var command = new RestartCommand(CommandId);
+            var result = await InvokeCommandAsync(command);
+            return result != null;
+        }
+
         #endregion
 
         public void Dispose()
